@@ -1,0 +1,44 @@
+Todo List:
+----------
+Create a connection between client and server
+
+Create a website which will run 
+ -with a dns projectname.domain.suffix
+ -php website with bootstrap
+Convert .py assets to dll??? and main to .exe
+COMPRESS TO SHIT THE ASSETS! not like last time with 100mb worth of images
+
+
+
+Client Side:
+- implement kivy gui | Crossplatform!
+- create a "recent chats screen" to the left
+- create a search bar for chats
+- create a chat window, [ default is a screen with a logo ]
+- display neat features such as current time, date and year
+- add ability to change chat background
+- add dark mode / light mode / custom UI colors
+
+- add search user [ by username / optional : IP ]
+- add ability to send messages between users -> USER1 -> SERVER -> USER2 | Via  
+threads
+- add ability to send files that are max 10mb
+- add ability to VOICE CHAT via VOIP | LATER - > Voice chat with groups
+- add ability to create group chats with admin permissions
+- add ability to favorite chats + create a favorite tab
+- add ability to favorite messages -> try to make dynamic
+- CHECK IF WHEN TYPING CAN BE DISPLAYED FOR OTHER USER LIKE IN WHATSAPP
+
+
+Server Side:
+- Add chat database
+
+
+WEBSITE:
+- Login / Register
+- About page
+- Community Forum -> restrict non logged on users from adding and commenting
+- Search Users page - > will be stored on a txt file [ use file handling php ]
+- Add a features page which will explain about customisation and features
+
+* BE AS MINIMAL WITH DESIGN AS POSSIBLE! -> Bootstrap

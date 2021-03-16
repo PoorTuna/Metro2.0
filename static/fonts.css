@@ -1,0 +1,14 @@
+@font-face {
+    font-family: metro;
+		font-style: normal;
+		font-weight: 400;
+		src: url("/static/assets/fonts/agitpop.ttf") format('truetype');
+	}
+
+.box h1{
+	font-family: metro;
+}
+
+.nav h1{
+	font-family: metro;
+}

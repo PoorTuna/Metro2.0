@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{%block title%}MetroRegister{%endblock%}
+{%block content%}
+
+	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'form.css')}}">
+		<form  class = "box" method = "post" action = "" style= "text-align:center">
+			<h1 style="color:#FFC30F;font-size:35px;font-family:Metro}">Metro Registeration</h1>
+			</br>
+			<label for="mail" style ="color:white;font-size:20px">Email</label>
+			<input type = "email" id = "mail" name = "email" required>
+			<label for="user" style ="color:white;font-size:20px">Username</label>
+			<input type = "text" id = "user" name = "username" required>
+			<label for="pass" style ="color:white;font-size:20px">Password</label>
+			<input type = "password" id = "pass" name = "password" required>
+			<label for="pass" style ="color:white;font-size:10px">never share your password with anyone!</label>
+			<input type = "submit" value="Sign Up">
+			<p style ="color:white;font-size:10px">already have a user? <a style = "color:#FFC30F" href="/login">Sign In</a></p>
+			<p style ="color:white;font-size:10px">{{err}}</p>
+		</form>
+
+{%endblock%}

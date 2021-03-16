@@ -1,0 +1,31 @@
+python csv
+
+
+check if you can transfer camera images and stream it via python
+us pyaudio to check if you can transfer audio between two users
+
+
+USE BCRYPT FOR PASSWORDS HASHING!
+
+
+when uploading a files in html (enctype="multipart/form-data" in forms)
+<form method = "POST" action ="" enctype="multipart/form-data">
+
+
+Localization:
+https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Web_Localizability/Creating_localizable_web_applications
+
+
+SVG Waves / SVG animation
+https://getwaves.io/
+
+BAN IP:
+ip_address = flask.request.remote_addr
+
+METRO YELLOW HEX:
+#FFC30F
+
+
+WHEN FINISHED IN REPL:
+add requirements.txt and then insert every module imported like flask_login and stuff because specifically pycharm will know how to download them automatically!
+also in addition to that if oren in the future gets stuck on it please ask alon since he showed us -> future and past, how to do it. 16/3/21 :)

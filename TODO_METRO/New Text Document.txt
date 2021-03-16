@@ -1,0 +1,3 @@
+pyaudio - for calls
+video libray -> check in internet
+tts -> add support
