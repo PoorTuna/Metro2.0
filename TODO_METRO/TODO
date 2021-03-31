@@ -11,20 +11,48 @@ USE BCRYPT FOR PASSWORDS HASHING!
 when uploading a files in html (enctype="multipart/form-data" in forms)
 <form method = "POST" action ="" enctype="multipart/form-data">
 
+CSS:
+use ids instead of h1 when doing fonts #something then it will work.
+.something <- is a class which u can use to design things
+p.something <- class for <p> tags
 
 Localization:
 https://developer.mozilla.org/en-US/docs/Mozilla/Localization/Web_Localizability/Creating_localizable_web_applications
-
 
 SVG Waves / SVG animation
 https://getwaves.io/
 
 BAN IP:
 ip_address = flask.request.remote_addr
+if user wishes to ban user with ip then add another list of banned ips to chat format
+
+Minigames:
+when doing collisions make a class i.e: boxes, walls. Add a function which checks x range and y range. much easier checks with a function which gets x,y to check if they are within the box collisions!
+
+Popup:
+add a popup every hour to remind users to take a break
 
 METRO YELLOW HEX:
 #FFC30F
 
+SESSIONS
+solve html parameter problem
+
+Chat
+make general chat, chat system with users + inside databse store users chat ids that they are in and when they are kicked delete from database. if banned expand their banned servers list in the chat format
+
+CHAT FORMAT:
+useful headers like time created and link to group avatar,users,banned users,banned ips, chat content.
+If users change group icon then make sure to use elif with the URLS and Uploading to stop from changing it twice a time.
+
+EMAIL SYSTEM:
+for lost passwords emails shall be sent with a random code which will be generated on the spot and then will be available for 5 mins! THE TEMPLATE FOR THE CODE IS INSIDE THE REPL TEST!!
+
+for minigames graphics: playcanvas, physics javascript, Vue, graphics js
+
+
+Deploy html url:
+https://www.heroku.com/
 
 WHEN FINISHED IN REPL:
 add requirements.txt and then insert every module imported like flask_login and stuff because specifically pycharm will know how to download them automatically!

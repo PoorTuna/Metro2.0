@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{%block title%}MetroStation{%endblock%}
+
+{%block content%}
+	<!-- SOCKETIO CLIENT LIBRARY -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+
+		const socket = io('https://' + document.domain + ':' + location.port,{ secure: true });
+		var chat_switch = 1;
+
+		socket.on('connect', function() {
+			console.log("connected");
+		});
+
+		socket.on("message", function(msg) {
+			console.log("recieved message");
+			$("#chat").append('<li>'+msg+'</li>');
+		});
+
+		$('#sendbutton').on('click', function() {
+			if($('#myMessage').val()){
+			socket.send($('#myMessage').val() + "SEPERATOR$%XD" + chat_switch);
+			$('#myMessage').val("");
+			};
+	});
+
+		$('#general').on('click', function() {
+			chat_switch = 1;
+	});
+	
+		$('#private').on('click', function() {
+			chat_switch = 2;
+	});
+
+});
+	</script>
+
+	{% if session['user'] %}
+	<div class="container">
+		<h1>Chats:</h1>
+			<ul class="list-group">
+					<li class="list-group-item">
+						<strong><button id="general">General Chat</button></strong>
+						<strong><button id="private">Private Chat</button></strong>
+					</li>
+				<li class="list-group-item">
+					<ul id="chat"></ul>
+					<input type="text" id="myMessage">
+					<button id="sendbutton">Send</button>
+				</li>
+			</ul>
+	</div>
+	{% endif %}
+
+{%endblock%}
