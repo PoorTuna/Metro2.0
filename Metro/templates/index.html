@@ -12,22 +12,43 @@
 		const socket = io('https://' + document.domain + ':' + location.port,{ secure: true });
 		var chat_switch = 1;
 
+		// Notify user when connected in logs
 		socket.on('connect', function() {
 			console.log("connected");
 		});
 
+		// Message recieving function
 		socket.on("message", function(msg) {
 			console.log("recieved message");
+			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
 			$("#chat").append('<li>'+msg+'</li>');
 		});
 
+		//Connect html input and js socketio to send messages 
 		$('#sendbutton').on('click', function() {
 			if($('#myMessage').val()){
 			socket.send($('#myMessage').val() + "SEPERATOR$%XD" + chat_switch);
 			$('#myMessage').val("");
 			};
-	});
+		});
 
+		//Allow users to press enter when using input instead of clicking the button
+		var input = document.getElementById("myMessage");
+		input.addEventListener("keyup", function(event) {
+			// Number 13 is the "Enter" key on the keyboard
+			if (event.keyCode === 13) {
+				// Cancel the default action, if needed
+				event.preventDefault();
+				// Trigger the button element with a click
+				if($('#myMessage').val()){
+					socket.send($('#myMessage').val() + "SEPERATOR$%XD" + chat_switch);
+					$('#myMessage').val("");
+				};
+
+			}
+		});
+
+	//random stuff for now
 		$('#general').on('click', function() {
 			chat_switch = 1;
 	});
@@ -39,20 +60,66 @@
 });
 	</script>
 
-	{% if session['user'] %}
-	<div class="container">
-		<h1>Chats:</h1>
-			<ul class="list-group">
-					<li class="list-group-item">
-						<strong><button id="general">General Chat</button></strong>
-						<strong><button id="private">Private Chat</button></strong>
+	{% if not session['user'] %}
+		<strong><b>Welcome to the official Metro platform! Log in to continue! </b></strong>
+	{% else %}
+	<script>
+		function openNav() {
+			document.getElementById("mySidenav").style.width = "250px";
+			document.getElementById("main").style.marginLeft = "250px";
+		}
+
+		/* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
+		function closeNav() {
+			document.getElementById("mySidenav").style.width = "0";
+			document.getElementById("main").style.marginLeft = "0";
+		}
+	</script>
+
+	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index.css')}}">
+	
+			<!-- Upper Navbar -->
+		<nav class="top_nav infront navbar navbar-expand-sm navbar-dark bg-primary">
+			<ul class="navbar-nav">
+				<li class="nav-item">
+					<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
 					</li>
-				<li class="list-group-item">
-					<ul id="chat"></ul>
-					<input type="text" id="myMessage">
-					<button id="sendbutton">Send</button>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Link 1</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Link 2</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="#">Link 3</a>
 				</li>
 			</ul>
+		</nav>
+
+		<!-- SideNav -->
+		<div id="mySidenav" class="sidenav">
+			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+			{% for item in range(100) %}
+				<a href="{{item + 1}}"><img src="lmao">Chat{{item + 1}}</a>
+				<a href="{{item + 1}}"><img src="lmao">Server{{item + 1}}</a>
+			{% endfor %}
+		</div>
+
+		<!-- Bottom navbar -->
+		<nav class="bottom_nav infront navbar navbar-expand-sm navbar-dark bg-primary">
+			<ul class="navbar-nav">
+					<input class="bottom_input" type="text" id="myMessage">
+					<button class="right_button" id="sendbutton">Send</button>
+			</ul>
+		</nav>
+
+	<!-- MAIN CHAT BOX -->
+	<div class="navbar-fixed-top center mainbox" style="background-color:white">
+		<br><br><br><br>
+		<ul>
+			<li id="chat"> This is the begining of your conversation!</li>
+		</ul>
+
 	</div>
 	{% endif %}
 

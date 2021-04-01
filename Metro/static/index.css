@@ -1,0 +1,106 @@
+
+
+/* Positions: */
+.top_nav{
+	position: absolute;
+	top: 12.5%;
+	left: 12.5%;
+	width: 75%;
+	height: 8%;
+}
+
+.bottom_nav{
+	position: absolute;
+	top: 87.5%;
+	left: 12.5%;
+	width: 75%;
+	height: 8%;
+
+}
+
+.left_sidenav{
+	position: absolute;
+	top: 87.5%;
+	left: 12.5%;
+	width: 75%;
+	height: 75%;
+	transform: translate(-50%,-50%);
+}
+
+.bottom_input{
+	width: 80%;
+
+}
+
+.right_button{
+	position: absolute;
+	right: 80%;
+}
+
+.left_pos_nav{
+	position: absolute;
+	left: 0;
+}
+
+.center {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+
+/* mainbox features */
+.mainbox{
+	position: absolute;
+	border: 1px solid black;
+	width: 75%;
+	height: 75%;
+  padding: 5px;
+	overflow: hidden;
+	overflow-y: scroll;
+}
+
+
+/* The side navigation menu */
+.sidenav {
+  height: 75%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: absolute; /* Stay in place */
+  z-index: 12; /* Stay on top */
+  top: 12.5%;
+  left: 12.5%;
+  background-color: #1a1a1a; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}

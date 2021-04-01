@@ -1,6 +1,6 @@
 from flask import Flask
 # Time module
-from datetime import timedelta
+from datetime import timedelta,datetime
 # Database module:
 from flask_sqlalchemy import SQLAlchemy
 # Flask Login Manager module:
@@ -17,7 +17,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = "somethingverysecure"
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///metro.db"
 app.permanent_session_lifetime = timedelta(days = 3) # Define how long a permanent session last in the system.
-
 
 #Flask SocketIO:
 socketio = SocketIO(app, async_mode="eventlet", cors_allowed_origins="*")

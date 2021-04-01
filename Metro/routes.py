@@ -97,13 +97,6 @@ def logout():
 	session.pop('user', None)
 	return redirect(url_for("index"))
 
-# @app.route("/createuser") # Temp
-# def createtemp():
-# 	temp_user = metro_user(username = "testname", password = "testpass", email = "test@gmail.com")
-# 	db.session.add(temp_user)
-# 	db.session.commit()
-# 	return redirect(url_for("index"))
-
 @app.route("/<name>")
 def something(name):
 	return render_template("error/404.html", url = name)

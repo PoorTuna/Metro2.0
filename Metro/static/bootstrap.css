@@ -11,6 +11,38 @@
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+ /* CUSTOM SCROLLBAR */
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+	 background-color: transparent;
+	 z-index: 0;
+}
+
+ ::-webkit-scrollbar-thumb ~ ::-webkit-scrollbar-track:hover{
+        background: linear-gradient(#1a1a1a,#191919);
+    }
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    background: none;
+		opacity: 0.5;
+}
+::-webkit-scrollbar-thumb:hover {
+    border-radius: 10px;
+    background: linear-gradient(#1a1a1a,#191919);
+		opacity: 0.1;
+}
+/* END CUSTOM SCROLLBAR */
+
+.infront{
+	z-index: 10;
+}
+
 
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600&display=swap");
 :root {
@@ -6492,7 +6524,11 @@ a.close.disabled {
 }
 
 .bg-primary {
+	if({{session['user']}}){
   background-color: #1a1a1a !important;
+	}else{
+	background-color: #ffffff !important;
+	}
 }
 
 a.bg-primary:hover, a.bg-primary:focus,

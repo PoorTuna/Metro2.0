@@ -8,6 +8,24 @@
   transform: translate(-50%,-50%);
   background: #1a1a1a;
 	border-radius: 25px;
+	margin: auto;
+}
+
+@media only screen and (max-width: 2560px) and (max-height: 1440px) {
+	.box{
+		width: 25%;
+		padding: 20px;	
+	}
+
+	.h1{
+		font-size: 22px;
+	}
+	.label{
+		font-size: 10px;
+	}
+	.p{
+		font-size: 5px;
+	}
 }
 
 .box input[type = "text"],.box input[type = "password"],.box input[type = "email"]{

@@ -11,6 +11,12 @@ USE BCRYPT FOR PASSWORDS HASHING!
 when uploading a files in html (enctype="multipart/form-data" in forms)
 <form method = "POST" action ="" enctype="multipart/form-data">
 
+ICONS:
+https://fontawesome.com/
+
+Bootstrap Tutorial:
+https://www.w3schools.com/bootstrap4/bootstrap_containers.asp
+
 CSS:
 use ids instead of h1 when doing fonts #something then it will work.
 .something <- is a class which u can use to design things
@@ -39,6 +45,7 @@ SESSIONS
 solve html parameter problem
 
 Chat
+USE MODAL IN CSS FOR SETTINGS AND STUFF LIKE THAT
 make general chat, chat system with users + inside databse store users chat ids that they are in and when they are kicked delete from database. if banned expand their banned servers list in the chat format
 
 CHAT FORMAT:

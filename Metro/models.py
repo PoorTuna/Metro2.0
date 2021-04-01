@@ -9,6 +9,9 @@ class metro_user(UserMixin, db.Model):
 	password = db.Column(db.String(128), nullable=False)
 	balance = db.Column(db.Integer,default = 50)
 
+# class metro_chat(db.Model):
+# 	pass
+
 @login_manager.user_loader
 def load_user(user_id):
 	return metro_user.query.get(int(user_id))
