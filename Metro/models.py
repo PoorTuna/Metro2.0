@@ -19,7 +19,7 @@ class metro_chat(db.Model):
 	string_id = db.Column(db.String(20), unique = True, nullable=False, default = "")
 	file_dir = db.Column(db.String(12), unique = True, nullable=False)
 	title = db.Column(db.String(12), unique = True, nullable=False)
-	time_created = db.Column(db.String(12), unique = True, nullable=False)
+	time_created = db.Column(db.String(12), nullable=False)
 	# users
 	# admins
 	# banned_users

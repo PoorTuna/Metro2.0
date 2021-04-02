@@ -7,6 +7,17 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	
 	<script type="text/javascript" charset="utf-8">
+	var tts = new SpeechSynthesisUtterance();
+
+	
+	// function voices_xd(){
+	// 	var synth = window.speechSynthesis;
+	// 	var voices = synth.getVoices();
+	// 	console.log(voices);
+	// 	tts.voice = voices[2];
+
+	// }
+
 	$(document).ready(function() {
 
 		const socket = io('https://' + document.domain + ':' + location.port,{ secure: true });
@@ -20,8 +31,10 @@
 		// Message recieving function
 		socket.on("message", function(msg) {
 			console.log("recieved message");
-			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
 			$("#chat").append('<li>'+msg+'</li>');
+			tts.text = msg;
+			//speechSynthesis.speak(tts);
 		});
 
 		//Connect html input and js socketio to send messages 
@@ -64,19 +77,16 @@
 		<strong><b>Welcome to the official Metro platform! Log in to continue! </b></strong>
 	{% else %}
 	<script>
+		/* SideNav function */
 		function openNav() {
 			document.getElementById("mySidenav").style.width = "250px";
-			document.getElementById("main").style.marginLeft = "250px";
 		}
 
 		/* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
 		function closeNav() {
 			document.getElementById("mySidenav").style.width = "0";
-			document.getElementById("main").style.marginLeft = "0";
 		}
-	</script>
 
-	<script>
 		/* Auto Scroll Function */
 		var userHasNotScrolled = true;
 		
@@ -95,47 +105,38 @@
 			userHasNotScrolled = true;
 		}
 		setInterval(auto_scroll, 10);
+		/* Set Title on top nav */
+		function set_title(title){
+			document.getElementById("footertitle").innerHTML = title;
+		}
 	</script>
 
 	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index.css')}}">
-	
-			<!-- Upper Navbar -->
-		<nav class="top_nav infront navbar navbar-expand-sm navbar-dark bg-primary">
-			<ul class="navbar-nav">
-				<li class="nav-item">
-					<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-					</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Link 1</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Link 2</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Link 3</a>
-				</li>
-			</ul>
-		</nav>
+			<!-- Upper Footer -->
+		<footer class="top_footer infront bg-primary">
+				<span class = "top_footer_burger" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+				<img class = "top_footer_image" src="lmao">
+				<a class="top_footer_title" href="javascript:void(0)" id="footertitle" style="color: #818181;;font-size: 25px;">General</a>
+		</footer>
 
 		<!-- SideNav -->
 		<div id="mySidenav" class="sidenav">
 			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-			{% for item in range(100) %}
-				<a href="{{item + 1}}"><img src="lmao">Chat{{item + 1}}</a>
-				<a href="{{item + 1}}"><img src="lmao">Server{{item + 1}}</a>
+			<hr style="height:1px;background-color:#FFC30F">
+			{% for item in chats %}
+				<a href="javascript:void(0)" onclick=set_title("{{item.title}}")><img src="lmao">{{item.title}}</a>
+				<hr style="height:1px;background-color:#FFC30F">
 			{% endfor %}
 		</div>
 
-		<!-- Bottom navbar -->
-		<nav class="bottom_nav infront navbar navbar-expand-sm navbar-dark bg-primary">
-			<ul class="navbar-nav">
-					<input class="bottom_input" type="text" id="myMessage">
-					<button class="right_button" id="sendbutton">Send</button>
-			</ul>
-		</nav>
+		<!-- Bottom Footer -->
+		<footer class="bottom_footer infront bg-primary">
+			<input class="bottom_input" type="text" id="myMessage">
+			<button class="bottom_button right_button" id="sendbutton">Send</button>
+		</footer>
 
 	<!-- MAIN CHAT BOX -->
-	<div class="mainbox center" style="background-color:white" id="mainbox_chat" onscroll =disable_auto_scroll()>
+	<div class="mainbox center" style="background-color:white" id="mainbox_chat" onscroll ="disable_auto_scroll()">
 		<br><br><br><br>
 		<ul>
 			<li id="chat"> This is the beginning of your conversation!</li>

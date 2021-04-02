@@ -1,7 +1,7 @@
 
 
 /* Positions: */
-.top_nav{
+.top_footer{
 	position: absolute;
 	top: 12.5%;
 	left: 12.5%;
@@ -9,7 +9,7 @@
 	height: 8%;
 }
 
-.bottom_nav{
+.bottom_footer{
 	position: absolute;
 	top: 87.5%;
 	left: 12.5%;
@@ -27,14 +27,12 @@
 	transform: translate(-50%,-50%);
 }
 
-.bottom_input{
-	width: 80%;
-
-}
-
 .right_button{
 	position: absolute;
-	right: 80%;
+	left: 82%;
+	top: 50%;
+	transform: translate(0,-50%);
+	
 }
 
 .left_pos_nav{
@@ -102,4 +100,52 @@
 @media screen and (max-height: 450px) {
   .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
+}
+
+
+/* bottom nav */
+.bottom_input{
+	width: 50%;
+	height: 50%;
+	top: 50%;
+	right: 50%;
+	border: 0;
+	padding-left: 1.2%;
+	text-align: left;
+	outline: none;
+	border-radius: 20px;
+	transform: translate(50%,50%);
+}
+
+.bottom_button{
+	width: 10%;
+	height: 10%;
+  background: none;
+  border: 2px solid #FFC30F;
+  padding: 20px 40px;
+	line-height: 0;
+  outline: none;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+
+}
+.bottom_button:hover{
+  background: #FFC30F;
+}
+
+.top_footer_burger{
+	right: 5%;
+	top: 50%;
+}
+
+.top_footer_title{
+	right: 50%;
+	top: 50%;
+	transform: translate(-50%,-50%);
+}
+
+.top_footer_img{
+	right: 30%;
+	top: 50%;
 }
