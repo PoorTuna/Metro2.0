@@ -111,6 +111,7 @@ def handle_disconnect():
 
 @socketio.on("message")
 def handle_message(msg):
+	print(request.sid)
 	msg = msg.split("SEPERATOR$%XD")
 	room_id = msg[1]
 	message_recvd = msg[0]

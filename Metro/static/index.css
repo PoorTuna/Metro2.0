@@ -56,10 +56,9 @@
 	width: 75%;
 	height: 75%;
   padding: 5px;
-	overflow: hidden;
+	overflow: auto;
 	overflow-y: scroll;
 }
-
 
 /* The side navigation menu */
 .sidenav {

@@ -22,9 +22,6 @@
 	 z-index: 0;
 }
 
- ::-webkit-scrollbar-thumb ~ ::-webkit-scrollbar-track:hover{
-        background: linear-gradient(#1a1a1a,#191919);
-    }
  
 /* Handle */
 ::-webkit-scrollbar-thumb {
@@ -34,7 +31,7 @@
 }
 ::-webkit-scrollbar-thumb:hover {
     border-radius: 10px;
-    background: linear-gradient(#1a1a1a,#191919);
+    background: #1a1a1a;
 		opacity: 0.1;
 }
 /* END CUSTOM SCROLLBAR */

@@ -76,6 +76,27 @@
 		}
 	</script>
 
+	<script>
+		/* Auto Scroll Function */
+		var userHasNotScrolled = true;
+		
+		function disable_auto_scroll(){
+			userHasNotScrolled = false;
+		}
+
+		function auto_scroll(){
+			var $panel = $('.mainbox');
+			var shouldScroll = $panel[0].scrollHeight - $panel.height() <= $panel.scrollTop() + 50;
+			if (userHasNotScrolled){
+				if (shouldScroll) {
+						$panel.scrollTop($panel[0].scrollHeight);
+				}
+			}
+			userHasNotScrolled = true;
+		}
+		setInterval(auto_scroll, 10);
+	</script>
+
 	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index.css')}}">
 	
 			<!-- Upper Navbar -->
@@ -114,13 +135,13 @@
 		</nav>
 
 	<!-- MAIN CHAT BOX -->
-	<div class="navbar-fixed-top center mainbox" style="background-color:white">
+	<div class="mainbox center" style="background-color:white" id="mainbox_chat" onscroll =disable_auto_scroll()>
 		<br><br><br><br>
 		<ul>
-			<li id="chat"> This is the begining of your conversation!</li>
+			<li id="chat"> This is the beginning of your conversation!</li>
 		</ul>
-
 	</div>
+
 	{% endif %}
 
 {%endblock%}
