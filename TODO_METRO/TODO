@@ -35,8 +35,15 @@ if user wishes to ban user with ip then add another list of banned ips to chat f
 Minigames:
 when doing collisions make a class i.e: boxes, walls. Add a function which checks x range and y range. much easier checks with a function which gets x,y to check if they are within the box collisions!
 
+Chats: 
+add option to enable or disable history on creation.
+
 Popup:
 add a popup every hour to remind users to take a break
+
+Accessability:
+-add Tts.
+-add profanity filtering.
 
 METRO YELLOW HEX:
 #FFC30F

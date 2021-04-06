@@ -6,77 +6,12 @@
 	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	
-	<script type="text/javascript" charset="utf-8">
-	var tts = new SpeechSynthesisUtterance();
-
-	
-	// function voices_xd(){
-	// 	var synth = window.speechSynthesis;
-	// 	var voices = synth.getVoices();
-	// 	console.log(voices);
-	// 	tts.voice = voices[2];
-
-	// }
-
-	$(document).ready(function() {
-
-		const socket = io('https://' + document.domain + ':' + location.port,{ secure: true });
-		var chat_switch = 1;
-
-		// Notify user when connected in logs
-		socket.on('connect', function() {
-			console.log("connected");
-		});
-
-		// Message recieving function
-		socket.on("message", function(msg) {
-			console.log("recieved message");
-			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
-			$("#chat").append('<li>'+msg+'</li>');
-			tts.text = msg;
-			//speechSynthesis.speak(tts);
-		});
-
-		//Connect html input and js socketio to send messages 
-		$('#sendbutton').on('click', function() {
-			if($('#myMessage').val()){
-			socket.send($('#myMessage').val() + "SEPERATOR$%XD" + chat_switch);
-			$('#myMessage').val("");
-			};
-		});
-
-		//Allow users to press enter when using input instead of clicking the button
-		var input = document.getElementById("myMessage");
-		input.addEventListener("keyup", function(event) {
-			// Number 13 is the "Enter" key on the keyboard
-			if (event.keyCode === 13) {
-				// Cancel the default action, if needed
-				event.preventDefault();
-				// Trigger the button element with a click
-				if($('#myMessage').val()){
-					socket.send($('#myMessage').val() + "SEPERATOR$%XD" + chat_switch);
-					$('#myMessage').val("");
-				};
-
-			}
-		});
-
-	//random stuff for now
-		$('#general').on('click', function() {
-			chat_switch = 1;
-	});
-	
-		$('#private').on('click', function() {
-			chat_switch = 2;
-	});
-
-});
-	</script>
-
 	{% if not session['user'] %}
 		<strong><b>Welcome to the official Metro platform! Log in to continue! </b></strong>
 	{% else %}
-	<script>
+
+	<script type="text/javascript" charset="utf-8">
+		var tts = new SpeechSynthesisUtterance();
 		/* SideNav function */
 		function openNav() {
 			document.getElementById("mySidenav").style.width = "250px";
@@ -105,41 +40,124 @@
 			userHasNotScrolled = true;
 		}
 		setInterval(auto_scroll, 10);
+
+	
+		// function change_voices(){
+		// 	var synth = window.speechSynthesis;
+		// 	var voices = synth.getVoices();
+		// 	console.log(voices);
+		// 	tts.voice = voices[2];
+		// }
+
+		$(document).ready(function() {
+
+		const socket = io('https://' + document.domain + ':' + location.port ,{ secure: true });
+		const private_socket = io('https://' + document.domain + ':' + location.port + "/private_chat" ,{ secure: true });
+	
+		// Notify user when connected in logs
+		socket.on('connect', function() {
+			console.log("connected to global chat");
+		});
+
+		// Message recieving function
+		socket.on("message", function(msg) {
+			console.log("recieved message");
+			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
+			$("#chat").append('<li>'+msg+'</li>');
+			tts.text = msg;
+			//speechSynthesis.speak(tts);
+		});
+		// Private Message recieving function
+		private_socket.on("private_message", function(msg) {
+			console.log("recieved private message");
+			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
+			$("#chat").append('<li style="color:red">'+ "[W] " + msg +'</li>');
+			tts.text = msg;
+			//speechSynthesis.speak(tts);
+		});
+
+		//Connect html input and js socketio to send messages 
+		$('#sendbutton').on('click', function() {
+			send_msg();
+		});
+
+		//Allow users to press enter when using input instead of clicking the button
+		var input = document.getElementById("myMessage");
+		input.addEventListener("keyup", function(event) {
+			// Number 13 is the "Enter" key on the keyboard
+			if (event.keyCode === 13) {
+				// Cancel the default action, if needed
+				event.preventDefault();
+				// Trigger the button element with a click
+				send_msg();
+			}
+		});
+
+
+		/* Send Message */
+		function send_msg(){
+			if($('#myMessage').val()){
+			var msg_listed = $('#myMessage').val().split(" ");
+			var invalid_command = true;
+			/* Check if user wants to send a private message */
+			if(msg_listed.length >= 3){
+				if(msg_listed[0] == "/w"){
+					private_socket.emit("private_message", $('#myMessage').val());
+					$('#myMessage').val("");
+					console.log("private message sent");
+					invalid_command = false;
+				}
+
+			}
+			/* Send Global Message */
+			if(invalid_command){
+			socket.emit("message", $('#myMessage').val());
+			$('#myMessage').val("");
+			}
+			}
+		}
 		/* Set Title on top nav */
 		function set_title(title){
 			document.getElementById("footertitle").innerHTML = title;
 		}
+		/* Send chatname */
+		function send_private_chat_name(cname){
+			private_socket.emit("private_chatname", cname)
+		}
+
+	});
 	</script>
 
+	<!-- CSS styling -->
 	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index.css')}}">
-			<!-- Upper Footer -->
-		<footer class="top_footer infront bg-primary">
-				<span class = "top_footer_burger" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-				<img class = "top_footer_image" src="lmao">
-				<a class="top_footer_title" href="javascript:void(0)" id="footertitle" style="color: #818181;;font-size: 25px;">General</a>
-		</footer>
 
-		<!-- SideNav -->
-		<div id="mySidenav" class="sidenav">
-			<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+	<!-- SideNav -->
+	<div id="mySidenav" class="sidenav">
+		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<hr style="height:1px;background-color:#FFC30F">
+		{% for item in chats %}
+			<a href="javascript:void(0)" onclick=set_title("{{item.title}}");send_private_chat_name("{{item.title}}")><img src="lmao">{{item.title}}</a>
 			<hr style="height:1px;background-color:#FFC30F">
-			{% for item in chats %}
-				<a href="javascript:void(0)" onclick=set_title("{{item.title}}")><img src="lmao">{{item.title}}</a>
-				<hr style="height:1px;background-color:#FFC30F">
-			{% endfor %}
-		</div>
+		{% endfor %}
+	</div>
 
-		<!-- Bottom Footer -->
-		<footer class="bottom_footer infront bg-primary">
-			<input class="bottom_input" type="text" id="myMessage">
-			<button class="bottom_button right_button" id="sendbutton">Send</button>
-		</footer>
+	<!-- Upper Footer -->
+	<footer class="top_footer infront bg-primary">
+		<span class = "top-footer-burger" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
+		<img class = "top-footer-img" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}" style="width:64px;height:64px">
+		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size: 25px">General</a>
+	</footer>
+
+	<!-- Bottom Footer -->
+	<footer class="bottom_footer infront bg-primary">
+		<input class="bottom_input" type="text" id="myMessage"  style="color:#FFC30F;background-color:#505050">
+		<button class="bottom_button right_button" id="sendbutton">Send</button>
+	</footer>
 
 	<!-- MAIN CHAT BOX -->
-	<div class="mainbox center" style="background-color:white" id="mainbox_chat" onscroll ="disable_auto_scroll()">
-		<br><br><br><br>
+	<div class="mainbox center" style="color:white" id="mainbox_chat" onscroll ="disable_auto_scroll()">
 		<ul>
-			<li id="chat"> This is the beginning of your conversation!</li>
+			<li id="chat" style="padding-top:8%"> This is the beginning of your conversation!</li>
 		</ul>
 	</div>
 

@@ -19,7 +19,7 @@
 /* Track */
 ::-webkit-scrollbar-track {
 	 background-color: transparent;
-	 z-index: 0;
+	 z-index: 11;
 }
 
  
@@ -31,8 +31,9 @@
 }
 ::-webkit-scrollbar-thumb:hover {
     border-radius: 10px;
-    background: #1a1a1a;
+    background: #0a0a0a;
 		opacity: 0.1;
+	 	z-index: 11;
 }
 /* END CUSTOM SCROLLBAR */
 
@@ -96,9 +97,8 @@ body {
   font-size: 0.875rem;
   font-weight: 400;
   line-height: 1.5;
-  color: #55595c;
-  text-align: left;
-  background-color: #fff;
+  color: #FFFFFF;
+  background-color: #101010;
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {
@@ -396,7 +396,7 @@ h1, h2, h3, h4, h5, h6,
   margin-bottom: 0.5rem;
   font-weight: 600;
   line-height: 1.2;
-  color: #1a1a1a;
+  color: #FFFFFF;
 }
 
 h1, .h1 {

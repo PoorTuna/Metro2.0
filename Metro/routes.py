@@ -107,7 +107,7 @@ def logout():
 	return redirect(url_for("index"))
 
 #TEMP
-@app.route("/create_chat<num>")
+@app.route("/create_chat/<num>")
 @login_required
 def create_chat(num):
 	#Check if the chat already exists, if not create new one.
@@ -128,40 +128,41 @@ def create_chat(num):
 	return redirect(url_for("index"))
 
 #TEMP
-@app.route("/show_chat<num>")
+@app.route("/show_chat/<num>")
 @login_required
 def show_chat(num):
 	curr_chat = metro_chat.query.filter_by(title=f"Test{num}").first()
-	for user in curr_chat.chat_backref:
-		print(user.username)
-	print(flask_login.current_user.chat_list[0])
+	if curr_chat:
+		for user in curr_chat.chat_backref:
+			print(user.username)
+		print(flask_login.current_user.chat_list[0])
 	return redirect(url_for("index"))
 
-
 @app.route("/<name>")
+@app.errorhandler(404)
 def something(name):
 	return render_template("error/404.html", url = name)
 
 @socketio.on('connect')
 def handle_connect():
-	print("user has connected xd")
+	print(f"{flask_login.current_user} : {flask_login.current_user.username} has connected with session id {request.sid}")
+	flask_login.current_user._session_id = request.sid
+	db.session.commit()
 
 @socketio.on('disconnect')
 def handle_disconnect():
-	print("user has disconnected")
+	print(f"{flask_login.current_user} : {flask_login.current_user.username} has disconnected.")
+	flask_login.current_user._session_id = None
+	db.session.commit()
 
 @socketio.on("message")
 def handle_message(msg):
-	print(request.sid)
-	msg = msg.split("SEPERATOR$%XD")
-	room_id = msg[1]
-	message_recvd = msg[0]
-	print(room_id)
-	if message_recvd:
+	print(flask_login.current_user._session_id)
+	if msg:
 		if flask_login.current_user.is_authenticated:
-			send(f"{flask_login.current_user.username} : {message_recvd}", broadcast=True)
+			emit("message", f"{flask_login.current_user.username} : {msg}", broadcast=True)
 		else:
-			send(f"Anonymous : {message_recvd}", broadcast=True)
+			emit("message", f"Anonymous : {msg}", broadcast=True)
 
 @socketio.on('join')
 def on_join(data):
@@ -176,3 +177,26 @@ def on_leave(data):
     room = data['room']
     leave_room(room)
     send(username + ' has left the room.', room=room)
+
+# Private namespace test
+
+@socketio.on('private_chatname', namespace="/private_chat")
+def recv_private_chatname(chatname):
+	print(chatname)
+
+@socketio.on('private_message', namespace = "/private_chat")
+def recv_private_message(msg):
+	refined_msg = msg.split(" ")
+	if len(refined_msg) >= 3:
+		if refined_msg[0] == "/w":
+			message = msg[len(refined_msg[0]) + len(refined_msg[1]) + 2:]
+
+			recipient = metro_user.query.filter_by(username = refined_msg[1]).first()
+			if recipient:
+				print(recipient._session_id)
+				if recipient._session_id:
+					emit("private_message", f"{flask_login.current_user.username} : {message}", room=recipient._session_id)
+				else:
+					emit('private_message', f"User : {recipient.username} is not online!")
+			else:
+				emit('private_message', f"User : {refined_msg[1]} does not exist!")

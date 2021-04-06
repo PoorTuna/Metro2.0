@@ -134,18 +134,23 @@
   background: #FFC30F;
 }
 
-.top_footer_burger{
-	right: 5%;
+.top-footer-burger{
+	position: absolute;
+	left: 5%;
 	top: 50%;
+	transform: translate(0,-50%);
 }
 
-.top_footer_title{
+.top-footer-title{
+	position: absolute;
 	right: 50%;
 	top: 50%;
-	transform: translate(-50%,-50%);
+	transform: translate(50%,-50%);
 }
 
-.top_footer_img{
-	right: 30%;
+.top-footer-img{
+	position: absolute;
+	right: 55%;
 	top: 50%;
+	transform: translate(0,-50%);
 }
