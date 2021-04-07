@@ -1,11 +1,22 @@
+# Flask imports
 from flask import redirect, url_for, render_template, request,session, flash
+# Database models imports
 from .models import db, metro_user, metro_chat, metro_association_table, login_manager
+# Password hashing import
 import bcrypt
+# Flask-Login imports
 import flask_login
 from flask_login import login_user, login_required, logout_user
+# Flask Socket IO imports
 from . import socketio
 from flask_socketio import send, emit, join_room, leave_room, close_room, rooms, disconnect
+# Import app in a way to prevent circular imports
 from flask import current_app as app
+# Chat ids random string imports
+import random
+import string
+# Date and Time import
+from datetime import datetime
 
 
 @login_manager.unauthorized_handler
@@ -111,12 +122,19 @@ def logout():
 @login_required
 def create_chat(num):
 	#Check if the chat already exists, if not create new one.
-	if not metro_chat.query.filter_by(string_id = f"random{num}").first():
-		db.session.add(metro_chat(string_id = f"random{num}", title=f"Test{num}",file_dir = f"xd{num}.data", time_created = f"{num}april"))
+	if not metro_chat.query.filter_by(title = num).first():
+		curr_time = datetime.now().strftime("%d/%m/%y") 
+		curr_chat = metro_chat(string_id = f"random{num}", title=num, file_dir = f"{num}.data", time_created = curr_time)
+		letters = string.ascii_letters
+		curr_chat.string_id = ''.join(random.choice(letters) for i in range(10))
+		db.session.add(curr_chat)
+		db.session.commit()
+		# Must be seperated to after the chat recieves id when commited firstly.
+		curr_chat.string_id += str(curr_chat.id)
 		db.session.commit()
 
 	#Gets the created chat and checks if the user already exists in the chat list, if not adds him
-	curr_chat = metro_chat.query.filter_by(string_id = f"random{num}").first()
+	curr_chat = metro_chat.query.filter_by(title=num).first()
 	if curr_chat:
 		print(curr_chat.chat_backref)
 		print(type(curr_chat.chat_backref))
@@ -131,11 +149,14 @@ def create_chat(num):
 @app.route("/show_chat/<num>")
 @login_required
 def show_chat(num):
-	curr_chat = metro_chat.query.filter_by(title=f"Test{num}").first()
+	curr_chat = metro_chat.query.filter_by(title=num).first()
 	if curr_chat:
-		for user in curr_chat.chat_backref:
+		for user in curr_chat.chat_backref: # access to related users from chat
 			print(user.username)
-		print(flask_login.current_user.chat_list[0])
+		print(curr_chat.string_id)
+		print(curr_chat.time_created)
+		print(curr_chat.title)
+		#print(flask_login.current_user.chat_list[0]) access to related chats from user
 	return redirect(url_for("index"))
 
 @app.route("/<name>")
@@ -157,7 +178,6 @@ def handle_disconnect():
 
 @socketio.on("message")
 def handle_message(msg):
-	print(flask_login.current_user._session_id)
 	if msg:
 		if flask_login.current_user.is_authenticated:
 			emit("message", f"{flask_login.current_user.username} : {msg}", broadcast=True)
@@ -180,10 +200,13 @@ def on_leave(data):
 
 # Private namespace test
 
-@socketio.on('private_chatname', namespace="/private_chat")
-def recv_private_chatname(chatname):
-	print(chatname)
+@socketio.on('join_private', namespace="/private_chat")
+def recv_private_chatname(cid):
+	if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
+		if flask_login.current_user in curr_chat.chat_backref:
+			print(cid)
 
+# Whisper system:
 @socketio.on('private_message', namespace = "/private_chat")
 def recv_private_message(msg):
 	refined_msg = msg.split(" ")
@@ -193,9 +216,9 @@ def recv_private_message(msg):
 
 			recipient = metro_user.query.filter_by(username = refined_msg[1]).first()
 			if recipient:
-				print(recipient._session_id)
 				if recipient._session_id:
 					emit("private_message", f"{flask_login.current_user.username} : {message}", room=recipient._session_id)
+					emit("private_message", f"To {recipient.username} : {message}", room=flask_login.current_user._session_id)
 				else:
 					emit('private_message', f"User : {recipient.username} is not online!")
 			else:

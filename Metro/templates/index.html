@@ -49,7 +49,6 @@
 		// 	tts.voice = voices[2];
 		// }
 
-		$(document).ready(function() {
 
 		const socket = io('https://' + document.domain + ':' + location.port ,{ secure: true });
 		const private_socket = io('https://' + document.domain + ':' + location.port + "/private_chat" ,{ secure: true });
@@ -71,7 +70,7 @@
 		private_socket.on("private_message", function(msg) {
 			console.log("recieved private message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
-			$("#chat").append('<li style="color:red">'+ "[W] " + msg +'</li>');
+			$("#chat").append('<li style="color:#FFC30F">'+ "[W] " + msg +'</li>');
 			tts.text = msg;
 			//speechSynthesis.speak(tts);
 		});
@@ -82,6 +81,7 @@
 		});
 
 		//Allow users to press enter when using input instead of clicking the button
+		$(document).ready(function() {
 		var input = document.getElementById("myMessage");
 		input.addEventListener("keyup", function(event) {
 			// Number 13 is the "Enter" key on the keyboard
@@ -92,7 +92,8 @@
 				send_msg();
 			}
 		});
-
+			
+			});
 
 		/* Send Message */
 		function send_msg(){
@@ -118,14 +119,13 @@
 		}
 		/* Set Title on top nav */
 		function set_title(title){
-			document.getElementById("footertitle").innerHTML = title;
+			document.querySelector("#footertitle span").innerHTML = title;
 		}
 		/* Send chatname */
-		function send_private_chat_name(cname){
-			private_socket.emit("private_chatname", cname)
+		function join_chat(cid){
+			private_socket.emit("join_private", cid)
 		}
 
-	});
 	</script>
 
 	<!-- CSS styling -->
@@ -136,7 +136,7 @@
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<hr style="height:1px;background-color:#FFC30F">
 		{% for item in chats %}
-			<a href="javascript:void(0)" onclick=set_title("{{item.title}}");send_private_chat_name("{{item.title}}")><img src="lmao">{{item.title}}</a>
+			<a href="javascript:void(0)" onclick=set_title("{{item.title}}");join_chat("{{item.string_id}}")><img src="lmao">{{item.title}}</a>
 			<hr style="height:1px;background-color:#FFC30F">
 		{% endfor %}
 	</div>
@@ -144,8 +144,7 @@
 	<!-- Upper Footer -->
 	<footer class="top_footer infront bg-primary">
 		<span class = "top-footer-burger" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-		<img class = "top-footer-img" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}" style="width:64px;height:64px">
-		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size: 25px">General</a>
+		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size: 25px"><img class = "top-footer-img" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}"> <span>General</span></a>
 	</footer>
 
 	<!-- Bottom Footer -->

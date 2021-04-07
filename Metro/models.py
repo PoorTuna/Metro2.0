@@ -1,3 +1,4 @@
+# Flask-Login incorporation import + Flask-SQLALCHEMY database reference
 from flask_login import UserMixin
 from . import db, login_manager
 
@@ -19,9 +20,8 @@ class metro_chat(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	string_id = db.Column(db.String(20), unique = True, nullable=False, default = "")
 	file_dir = db.Column(db.String(12), unique = True, nullable=False)
-	title = db.Column(db.String(12), unique = True, nullable=False)
+	title = db.Column(db.String(25), unique = True, nullable=False)
 	time_created = db.Column(db.String(12), nullable=False)
-	# users
 	# admins
 	# banned_users
 

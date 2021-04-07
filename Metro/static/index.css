@@ -103,7 +103,7 @@
 }
 
 
-/* bottom nav */
+/* bottom footer */
 .bottom_input{
 	width: 50%;
 	height: 50%;
@@ -134,23 +134,41 @@
   background: #FFC30F;
 }
 
+/* top footer */
 .top-footer-burger{
 	position: absolute;
-	left: 5%;
+	left: 2%;
 	top: 50%;
 	transform: translate(0,-50%);
 }
 
 .top-footer-title{
 	position: absolute;
-	right: 50%;
 	top: 50%;
-	transform: translate(50%,-50%);
+	left: 50%;
+	transform: translate(-50%,-50%);
 }
 
 .top-footer-img{
 	position: absolute;
-	right: 55%;
+	width: 64px;
+	height: 64px;
+	text-align: center;
 	top: 50%;
-	transform: translate(0,-50%);
+	left: 0;
+	transform: translate(-125%,-50%);
+}
+
+.top_footer span {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+/* When you mouse over the navigation links, change their color */
+.top_footer span:hover {
+  color: #f1f1f1;
 }
