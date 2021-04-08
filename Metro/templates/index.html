@@ -51,8 +51,6 @@
 
 
 		const socket = io('https://' + document.domain + ':' + location.port ,{ secure: true });
-		const private_socket = io('https://' + document.domain + ':' + location.port + "/private_chat" ,{ secure: true });
-	
 		// Notify user when connected in logs
 		socket.on('connect', function() {
 			console.log("connected to global chat");
@@ -67,7 +65,7 @@
 			//speechSynthesis.speak(tts);
 		});
 		// Private Message recieving function
-		private_socket.on("private_message", function(msg) {
+		socket.on("private_message", function(msg) {
 			console.log("recieved private message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
 			$("#chat").append('<li style="color:#FFC30F">'+ "[W] " + msg +'</li>');
@@ -98,25 +96,10 @@
 		/* Send Message */
 		function send_msg(){
 			if($('#myMessage').val()){
-			var msg_listed = $('#myMessage').val().split(" ");
-			var invalid_command = true;
-			/* Check if user wants to send a private message */
-			if(msg_listed.length >= 3){
-				if(msg_listed[0] == "/w"){
-					private_socket.emit("private_message", $('#myMessage').val());
-					$('#myMessage').val("");
-					console.log("private message sent");
-					invalid_command = false;
-				}
-				
-
-			}
-			/* Send Global Message */
-			if(invalid_command){
+			/* Send Message */
 			console.log("sent message");
 			socket.emit("message", $('#myMessage').val());
 			$('#myMessage').val("");
-			}
 
 			}
 		}
@@ -126,7 +109,7 @@
 		}
 		/* Send chatname */
 		function join_chat(cid){
-			private_socket.emit("join_private", cid)
+			socket.emit("join_private", cid)
 		}
 
 	</script>
