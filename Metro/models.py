@@ -12,7 +12,7 @@ class metro_user(UserMixin, db.Model):
 	username = db.Column(db.String(12), unique = True, nullable=False)
 	email = db.Column(db.String(30), unique = True, nullable=False)
 	password = db.Column(db.String(128), nullable=False)
-	balance = db.Column(db.Integer,default = 50)
+	_balance = db.Column(db.Integer,default = 50)
 	chat_list = db.relationship('metro_chat', secondary=metro_association_table, backref=db.backref('chat_backref', lazy = 'dynamic'))
 	_session_id = db.Column(db.String(60), unique = True)
 

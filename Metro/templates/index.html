@@ -108,13 +108,16 @@
 					console.log("private message sent");
 					invalid_command = false;
 				}
+				
 
 			}
 			/* Send Global Message */
 			if(invalid_command){
+			console.log("sent message");
 			socket.emit("message", $('#myMessage').val());
 			$('#myMessage').val("");
 			}
+
 			}
 		}
 		/* Set Title on top nav */

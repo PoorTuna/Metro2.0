@@ -9,7 +9,7 @@ import flask_login
 from flask_login import login_user, login_required, logout_user
 # Flask Socket IO imports
 from . import socketio
-from flask_socketio import send, emit, join_room, leave_room, close_room, rooms, disconnect
+from flask_socketio import send, emit, join_room, leave_room, close_room, rooms, disconnect, rooms
 # Import app in a way to prevent circular imports
 from flask import current_app as app
 # Chat ids random string imports
@@ -17,7 +17,6 @@ import random
 import string
 # Date and Time import
 from datetime import datetime
-
 
 @login_manager.unauthorized_handler
 def unauthorized():
@@ -169,6 +168,8 @@ def handle_connect():
 	print(f"{flask_login.current_user} : {flask_login.current_user.username} has connected with session id {request.sid}")
 	flask_login.current_user._session_id = request.sid
 	db.session.commit()
+	session['chat_id'] = "general"
+	join_room(session['chat_id'])
 
 @socketio.on('disconnect')
 def handle_disconnect():
@@ -180,23 +181,11 @@ def handle_disconnect():
 def handle_message(msg):
 	if msg:
 		if flask_login.current_user.is_authenticated:
-			emit("message", f"{flask_login.current_user.username} : {msg}", broadcast=True)
+			emit("message", f"{flask_login.current_user.username} : {msg}", room=session['chat_id'])
 		else:
-			emit("message", f"Anonymous : {msg}", broadcast=True)
-
-@socketio.on('join')
-def on_join(data):
-    username = data['username']
-    room = data['room']
-    join_room(room)
-    send(username + ' has entered the room.', room=room)
-
-@socketio.on('leave')
-def on_leave(data):
-    username = data['username']
-    room = data['room']
-    leave_room(room)
-    send(username + ' has left the room.', room=room)
+			emit("message", f"Anonymous : {msg}", room=session['chat_id'])
+	
+	print(f" MESSAGE : {session['chat_id']}")
 
 # Private namespace test
 
@@ -204,8 +193,11 @@ def on_leave(data):
 def recv_private_chatname(cid):
 	if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
 		if flask_login.current_user in curr_chat.chat_backref:
-			print(cid)
-
+			leave_room(session['chat_id'])
+			session['chat_id'] = cid
+			join_room(session['chat_id'])
+			print(rooms(request.sid))
+			
 # Whisper system:
 @socketio.on('private_message', namespace = "/private_chat")
 def recv_private_message(msg):
