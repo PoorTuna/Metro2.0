@@ -121,8 +121,11 @@
 	<div id="mySidenav" class="sidenav">
 		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 		<hr style="height:1px;background-color:#FFC30F">
+		
+		<a href="javascript:void(0)" onclick=set_title("General");join_chat("general")><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">general</a>
+		<hr style="height:1px;background-color:#FFC30F">
 		{% for item in chats %}
-			<a href="javascript:void(0)" onclick=set_title("{{item.title}}");join_chat("{{item.string_id}}")><img src="lmao">{{item.title}}</a>
+			<a href="javascript:void(0)" onclick=set_title("{{item.title}}");join_chat("{{item.string_id}}")><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}">{{item.title}}</a>
 			<hr style="height:1px;background-color:#FFC30F">
 		{% endfor %}
 	</div>
