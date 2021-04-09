@@ -40,8 +40,9 @@
 			userHasNotScrolled = true;
 		}
 		setInterval(auto_scroll, 10);
-
-	
+		function close_cchat_modal(){
+			$('cchat_modal').modal('hide');
+		}
 		// function change_voices(){
 		// 	var synth = window.speechSynthesis;
 		// 	var voices = synth.getVoices();
@@ -128,13 +129,13 @@
 	<div id="mySidenav" class="sidenav">
 		<a href="javascript:void(0)" class="closebtn fas fa-times" onclick="closeNav()"></a>
 
-		<a href="javascript:void(0)" class="addchat fas fa-plus" onclick="createChat()"></a>
+		<a href="javascript:void(0)" class="addchat fas fa-plus" data-toggle="modal" data-target="#cchat_modal"></a>
 		<hr style="height:1px;background-color:#FFC30F">
 		
-		<a href="javascript:void(0)" onclick=set_title("general");join_chat("general")><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">general</a>
+		<a href="javascript:void(0)" onclick=set_title("general");join_chat("general")><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">General</a>
 		<hr style="height:1px;background-color:#FFC30F">
 		{% for item in chats %}
-			<a href="javascript:void(0)" onclick=set_title("{{item.title}}");join_chat("{{item.string_id}}")><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}">{{item.title}}</a>
+			<a href="javascript:void(0)" onclick=set_title("{{item.title}}");join_chat("{{item.string_id}}")><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}">{{item.title.capitalize()}}</a>
 			<hr style="height:1px;background-color:#FFC30F">
 		{% endfor %}
 	</div>
@@ -159,6 +160,35 @@
 			<li id="chat" style="padding-top:8%"> This is the beginning of your conversation!</li>
 		</ul>
 	</div>
+	<!-- Modal - Add a chat -->
+		<div class="modal fade center-modal" id="cchat_modal" role="dialog">
+				<div class="modal-dialog">
+			
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
+						<h4 style="color:#FFC30F;font-weight:10" class="fas fa-subway modal-title cchat-modal-icon-left"></h4>
+						<h4 style="color:#FFC30F" class="modal-title cchat-modal-title-left">Create a Station</h4>
+					</div>
+					<form method = "post" action = "">
+						<div class="modal-body">
+							<label for="cchat_modal_title fas" style="color:#FFC30F;font-weight: 900">Title</label>
+							<input type="text" class ="form-control" id="cchat_modal_title" name="cchat_modal_title_name" placeholder="Your Station's name | Max 25" maxlength="25">
+							
+						</div>
+						<div class="modal-footer">
+							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_cchat_modal()">
+
+						</div>
+					</form>
+				</div>
+				
+			</div>
+		</div>
+  
+	</div>
+
 
 	{% endif %}
 

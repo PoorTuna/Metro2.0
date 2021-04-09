@@ -18,9 +18,9 @@ class metro_user(UserMixin, db.Model):
 
 class metro_chat(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
-	string_id = db.Column(db.String(20), unique = True, nullable=False, default = "")
-	file_dir = db.Column(db.String(12), unique = True, nullable=False)
-	title = db.Column(db.String(25), unique = True, nullable=False)
+	string_id = db.Column(db.String(20), unique = True, nullable=True)
+	file_dir = db.Column(db.String(12), unique = True, nullable=True)
+	title = db.Column(db.String(25), unique = False, nullable=False)
 	time_created = db.Column(db.String(12), nullable=False)
 	# admins
 	# banned_users

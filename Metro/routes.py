@@ -20,15 +20,52 @@ def unauthorized():
     # do stuff
     return redirect(url_for("index"))
 
-@app.route("/")
+@app.route("/", methods=['GET', 'POST'])
 def index():
 	if flask_login.current_user.is_authenticated:
-		#Checks on whether the user is in the chat
+
+		delayed_curr_time = None
+		delayed_last_time = None
+
+		# Checks on whether the user posted a request
+		if request.method == "POST":
+			# Checks if the user tried to spam the request button
+			allow_request = False
+			if delayed_curr_time != None and delayed_last_time != None:
+				delayed_curr_time = datetime.now()
+
+				print((delayed_curr_time - delayed_last_time).total_seconds())
+				if (delayed_curr_time - delayed_last_time).total_seconds() > 10:
+					delayed_curr_time = None
+					allow_request = True
+			else:
+				delayed_last_time = datetime.now()
+				delayed_curr_time = datetime.now()
+				allow_request = True
+
+			if allow_request:
+				if chat_title := request.form["cchat_modal_title_name"]:
+					if len(chat_title) <= 25:
+						curr_time = datetime.now().strftime("%d/%m/%y") 
+
+						curr_chat = metro_chat(string_id = None, title=chat_title, time_created = curr_time)
+
+						# Random string id generation
+						letters = string.ascii_letters
+						curr_chat.string_id = ''.join(random.choice(letters) for i in range(10))
+						db.session.add(curr_chat)
+						db.session.commit()
+						# Must be seperated to after the chat recieves id when commited firstly.
+						curr_chat.string_id += str(curr_chat.id)
+						curr_chat.file_dir = f"{curr_chat.string_id}.data"
+						curr_chat.chat_backref.append(flask_login.current_user) # Add user to the backref
+						db.session.commit()
+
 		chats = []
-		for item in flask_login.current_user.chat_list:
-				for user in item.chat_backref:
-					if user == flask_login.current_user:
-						chats.append(item) 
+		for m_chat in flask_login.current_user.chat_list:
+				for m_user in m_chat.chat_backref:
+					if m_user == flask_login.current_user:
+						chats.append(m_chat) 
 
 		return render_template("index.html", chats = chats)
 	return render_template("index.html")
@@ -41,9 +78,9 @@ def login():
 				flask_login.current_user = metro_user.query.get(int(session['user']))
 				return redirect(url_for("index")) #User in session
 		except:
-			pass		
+			pass
 		if request.method == 'POST':
-			flask_login.logout_user()
+			flask_login.logout_user() # ??? from future oren 
 			form_username = request.form["username"]
 			form_password = request.form["password"]
 

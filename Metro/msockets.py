@@ -85,4 +85,8 @@ def recv_private_chatname(cid):
 		leave_room(session['chat_id'])
 		session['chat_id'] = "general"
 		join_room(session['chat_id'])
-			
+
+#@socketio.on('create_chat')
+#def recv_chat_details(chat):
+#	chat = chat.split("%$#seprtxd")
+	
