@@ -1,19 +1,16 @@
 
 # Flask Socket IO imports
 from . import socketio
-from flask_socketio import send, emit, join_room, leave_room, close_room, rooms, disconnect, rooms
+from flask_socketio import send, emit, join_room, leave_room, close_room, disconnect, rooms
 
 # Flask imports
-from flask import redirect, url_for, render_template, request,session, flash
+from flask import request,session
+
 # Database models imports
-from .models import db, metro_user, metro_chat, metro_association_table, login_manager
+from .models import db, metro_user, metro_chat
 
 # Flask-Login imports
 import flask_login
-from flask_login import login_user, login_required, logout_user
-
-# Import app in a way to prevent circular imports
-from flask import current_app as app
 
 # Socket IO connect handler
 @socketio.on('connect')

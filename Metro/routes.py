@@ -1,7 +1,7 @@
 # Flask imports
-from flask import redirect, url_for, render_template, request,session, flash
+from flask import redirect, url_for, render_template, request,session
 # Database models imports
-from .models import db, metro_user, metro_chat, metro_association_table, login_manager
+from .models import db, metro_user, metro_chat, login_manager
 # Password hashing import
 import bcrypt
 # Flask-Login imports
