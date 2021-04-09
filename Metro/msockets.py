@@ -2,13 +2,10 @@
 # Flask Socket IO imports
 from . import socketio
 from flask_socketio import send, emit, join_room, leave_room, close_room, disconnect, rooms
-
 # Flask imports
 from flask import request,session
-
 # Database models imports
 from .models import db, metro_user, metro_chat
-
 # Flask-Login imports
 import flask_login
 
@@ -18,8 +15,20 @@ def handle_connect():
 	print(f"{flask_login.current_user} : {flask_login.current_user.username} has connected with session id {request.sid}")
 	flask_login.current_user._session_id = request.sid
 	db.session.commit()
-	session['chat_id'] = 'general'
-	join_room(session['chat_id'])
+	try:
+		if session['chat_id']:
+			if curr_chat := metro_chat.query.filter_by(_session_id=session['chat_id']).first():
+				emit('last_title', curr_chat.title)
+				join_room(session['chat_id'])
+			
+			else:
+				emit('last_title', 'general')
+				session['chat_id'] = 'general'
+				join_room(session['chat_id'])
+	except:
+		emit('last_title', 'general')
+		session['chat_id'] = 'general'
+		join_room(session['chat_id'])
 
 # Socket IO disconnect handler
 @socketio.on('disconnect')
@@ -29,13 +38,10 @@ def handle_disconnect():
 	db.session.commit()
 	# Change back to general chat after user disconnects
 	leave_room(session['chat_id'])
-	session['chat_id'] = "general"
-	join_room(session['chat_id'])
-			
+
 # Socket IO recive handler
 @socketio.on("message")
 def handle_message(msg):
-	print("dxd")
 	refined_msg = msg.split(" ")
 
 	# Command Structure

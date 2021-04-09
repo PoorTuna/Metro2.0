@@ -90,10 +90,16 @@
 /* Position and style the close button (top right corner) */
 .sidenav .closebtn {
   position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
+  top: 2%;
+  right: 5%;
+  font-size: 24px;
+}
+
+.sidenav .addchat {
+  position: absolute;
+  top: 2%;
+	right: 75%;
+  font-size: 24px;
 }
 
 .sidenav sidenav-img-pos{
@@ -142,6 +148,13 @@
 .top-footer-burger{
 	position: absolute;
 	left: 2%;
+	top: 50%;
+	transform: translate(0,-50%);
+}
+
+.top-footer-options{
+	position: absolute;
+	right: 2%;
 	top: 50%;
 	transform: translate(0,-50%);
 }

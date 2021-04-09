@@ -7,7 +7,6 @@ import bcrypt
 # Flask-Login imports
 import flask_login
 from flask_login import login_user, login_required, logout_user
-
 # Import app in a way to prevent circular imports
 from flask import current_app as app
 # Chat ids random string imports
@@ -71,7 +70,6 @@ def login():
 		return render_template("login.html", err = "")
 	return redirect(url_for("index"))
 
-
 @app.route("/register", methods=['GET', 'POST'])
 def register():
 	# DONT FORGET TO VALIDATE USER AND PASSWORD LENGTH BEFORE -> MAX 12 CHAR FOR USER UNLIMITED PASS?
@@ -92,7 +90,6 @@ def register():
 
 		return render_template("register.html")
 	return redirect(url_for("index"))
-	
 
 @app.route("/features")
 def features():

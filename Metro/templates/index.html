@@ -73,6 +73,13 @@
 			//speechSynthesis.speak(tts);
 		});
 
+		socket.on("last_title", function(title) {
+			console.log("recieved last title");
+			title = title.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
+			set_title(title)
+
+		});
+
 		//Connect html input and js socketio to send messages 
 		$('#sendbutton').on('click', function() {
 			send_msg();
@@ -119,10 +126,12 @@
 
 	<!-- SideNav -->
 	<div id="mySidenav" class="sidenav">
-		<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+		<a href="javascript:void(0)" class="closebtn fas fa-times" onclick="closeNav()"></a>
+
+		<a href="javascript:void(0)" class="addchat fas fa-plus" onclick="createChat()"></a>
 		<hr style="height:1px;background-color:#FFC30F">
 		
-		<a href="javascript:void(0)" onclick=set_title("General");join_chat("general")><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">general</a>
+		<a href="javascript:void(0)" onclick=set_title("general");join_chat("general")><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">general</a>
 		<hr style="height:1px;background-color:#FFC30F">
 		{% for item in chats %}
 			<a href="javascript:void(0)" onclick=set_title("{{item.title}}");join_chat("{{item.string_id}}")><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}">{{item.title}}</a>
@@ -133,7 +142,9 @@
 	<!-- Upper Footer -->
 	<footer class="top_footer infront bg-primary">
 		<span class = "top-footer-burger" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size: 25px"><img class = "top-footer-img" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}"> <span>General</span></a>
+		<span class = "top-footer-options fas fa-ellipsis-v" style="font-size:30px;cursor:pointer" onclick="openOptions()"></span>
+
+		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size: 25px"><img class = "top-footer-img" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}"> <span>general</span></a>
 	</footer>
 
 	<!-- Bottom Footer -->
