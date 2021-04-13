@@ -14,6 +14,8 @@ import random
 import string
 # Date and Time import
 from datetime import datetime
+# Email Validation:
+import re
 
 @login_manager.unauthorized_handler
 def unauthorized():
@@ -115,18 +117,22 @@ def register():
 	# DONT FORGET TO VALIDATE USER AND PASSWORD LENGTH BEFORE -> MAX 12 CHAR FOR USER UNLIMITED PASS?
 	if not flask_login.current_user.is_authenticated:
 		if request.method == "POST":
+			regex = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
 			form_username = request.form["username"]
 			form_password = request.form["password"]
 			form_email = request.form["email"]
-			if metro_user.query.filter_by(username = form_username).first():
-				return render_template("register.html", err = "Username already exists.")
-			elif metro_user.query.filter_by(email = form_email).first():
-				return render_template("register.html", err = "Email already exists.")
-			
-			hashed_password = bcrypt.hashpw(form_password.encode(), bcrypt.gensalt())
-			db.session.add(metro_user(username = form_username, password = hashed_password, email = form_email))
-			db.session.commit()
-			return redirect(url_for("login"))
+			if len(form_password) >= 8 and len(form_username) <= 12 and re.search(regex, form_email):
+				if metro_user.query.filter_by(username = form_username).first():
+					return render_template("register.html", err = "Username already exists.")
+				elif metro_user.query.filter_by(email = form_email).first():
+					return render_template("register.html", err = "Email already exists.")
+				
+				hashed_password = bcrypt.hashpw(form_password.encode(), bcrypt.gensalt())
+				db.session.add(metro_user(username = form_username, password = hashed_password, email = form_email))
+				db.session.commit()
+				return redirect(url_for("login"))
+			else:
+				return render_template("register.html", err ="Invalid Input, Nice Try :)")
 
 		return render_template("register.html")
 	return redirect(url_for("index"))

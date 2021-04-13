@@ -41,12 +41,12 @@ left: 10%;
 }
 
 @-webkit-keyframes move-right {
-	from {margin-left: -30%}
+	from {margin-left:-30%}
 	to {margin-left:100%;}
 }
 
 @-webkit-keyframes move-left {
-	from {margin-left:190%;}
+	from {margin-left:300%;}
 	to {margin-left:-30%;}
 }
 
