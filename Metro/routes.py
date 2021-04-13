@@ -23,7 +23,6 @@ def unauthorized():
 @app.route("/", methods=['GET', 'POST'])
 def index():
 	if flask_login.current_user.is_authenticated:
-
 		delayed_curr_time = None
 		delayed_last_time = None
 
@@ -31,21 +30,25 @@ def index():
 		if request.method == "POST":
 			# Checks if the user tried to spam the request button
 			allow_request = False
-			if delayed_curr_time != None and delayed_last_time != None:
-				delayed_curr_time = datetime.now()
-
-				print((delayed_curr_time - delayed_last_time).total_seconds())
-				if (delayed_curr_time - delayed_last_time).total_seconds() > 10:
-					delayed_curr_time = None
-					allow_request = True
-			else:
+			
+			if delayed_curr_time == None and delayed_last_time == None:
 				delayed_last_time = datetime.now()
 				delayed_curr_time = datetime.now()
 				allow_request = True
 
+
+			elif (delayed_curr_time - delayed_last_time).total_seconds() > 10.0:
+				delayed_curr_time = None
+				delayed_last_time = None
+				allow_request = True
+
+			else:
+				print("Blocked request!")
+				delayed_curr_time = datetime.now()
+
 			if allow_request:
 				if chat_title := request.form["cchat_modal_title_name"]:
-					if len(chat_title) <= 25:
+					if len(chat_title) <= 25 and len(chat_title) >= 4:
 						curr_time = datetime.now().strftime("%d/%m/%y") 
 
 						curr_chat = metro_chat(string_id = None, title=chat_title, time_created = curr_time)

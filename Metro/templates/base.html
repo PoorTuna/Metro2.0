@@ -8,6 +8,7 @@
 		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'fonts.css')}}">
 		<!-- Font Awesome Icons -->
 		<script src="https://kit.fontawesome.com/114aaee4b8.js" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
 	</head>
 
 	<body>
@@ -23,8 +24,6 @@
 					<li class="nav-item">
 						{% if session['user'] %}
 						<a class="nav-link" href="/logout">Logout</a>
-						{% else %}
-						<a class="nav-link" href="/login">Login</a>
 						{% endif %}
 					</li>
 					<li class="nav-item">

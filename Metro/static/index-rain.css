@@ -1,0 +1,26 @@
+/* Rain effects */
+html{
+  height:100%;
+}
+body {
+	overflow:hidden;
+}
+
+.drop {
+  background: rgba(255, 255, 255, 0.2);
+	width:1px;
+	height:89px;
+	position: absolute;
+	bottom:200px;
+	-webkit-animation: fall .63s linear infinite;
+  -moz-animation: fall .63s linear infinite;
+	z-index: 3;
+  
+}
+/* animate the drops*/
+@-webkit-keyframes fall {
+	to {margin-top:900px;}
+}
+@-moz-keyframes fall {
+	to {margin-top:900px;}
+}

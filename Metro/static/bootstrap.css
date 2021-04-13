@@ -6521,12 +6521,10 @@ a.close.disabled {
 }
 
 .bg-primary {
-	if({{session['user']}}){
   background-color: #1a1a1a !important;
-	}else{
-	background-color: #ffffff !important;
-	}
+
 }
+
 
 a.bg-primary:hover, a.bg-primary:focus,
 button.bg-primary:hover,

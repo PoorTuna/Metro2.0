@@ -7,9 +7,79 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	
 	{% if not session['user'] %}
-		<strong><b>Welcome to the official Metro platform! Log in to continue! </b></strong>
-	{% else %}
+		
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index-rain.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index-dark-login.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index-train.css')}}">
 
+
+		<section class="rain"></section>
+		<!-- Rain in JS -->
+		<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				document.body.classList.add("rain");
+				
+				// number of drops created.
+				var nbDrop = 100;
+		
+				// function to generate a random number range.
+				function randRange( minNum, maxNum) {
+					return (Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum);
+				}
+
+				// function to generate drops
+				function createRain() {
+
+					for( i=1;i<nbDrop;i++) {
+					var dropLeft = randRange(0,window.innerWidth);
+					var dropTop = randRange(-1000,window.innerHeight);
+
+					$('.rain').append('<div class="drop" id="drop'+i+'"></div>');
+					$('#drop'+i).css('left',dropLeft);
+					$('#drop'+i).css('top',dropTop);
+					}
+
+				}
+				// Make it rain
+				createRain();
+			});
+		</script>
+		<audio autoplay loop autoplay="autoplay" id="metro_ambience">
+			<source src="{{url_for('static',filename = 'assets/audio/metro_ambience.mp3')}}" type="audio/mpeg">
+		</audio>
+
+		<script>
+  		var audio = document.getElementById("metro_ambience");
+  		audio.volume = 0.2;
+		</script>
+
+		<a href="/login">
+		<div class="body-text">
+			<span id="L">L</span>
+			<span id="O">O</span>
+			<span id="G">G</span>
+			<span id="L">&#8205;</span>
+			<span id="I">I</span>
+			<span id="N">N</span>
+		</div></a>
+		<!-- Train and Rails with animations -->
+		<div class="train-hider-right train-hider-color"></div>
+		<div class="train-hider-left train-hider-color"></div>
+
+		<img class="train train-moving-right train-bottom" src="{{url_for('static',filename = 'assets/images/train/metro-train.png')}}" style="opacity: 0.3">
+		<div class="rail rail-bottom"></div>
+
+		<img class="train train-moving-left train-top" src="{{url_for('static',filename = 'assets/images/train/metro-train.png')}}" style="opacity: 0.3">
+		<div class="rail rail-top"></div>
+
+		<!-- Train fade blocks -->
+		<div class="train-fade-box top-left-fade fade-right"></div>
+		<div class="train-fade-box top-right-fade fade-left"></div>
+		
+		<div class="train-fade-box bottom-left-fade fade-right"></div>
+		<div class="train-fade-box bottom-right-fade fade-left"></div>
+		
+	{% else %}
 	<script type="text/javascript" charset="utf-8">
 		var tts = new SpeechSynthesisUtterance();
 		/* SideNav function */
@@ -119,6 +189,10 @@
 		function join_chat(cid){
 			socket.emit("join_private", cid)
 		}
+		/* Disable button to prevent request spamming */
+		$('#cchat_createbtn').on('click', function() {
+			$("#cchat_createbtn").attr("disabled", true);
+		});
 
 	</script>
 
@@ -143,7 +217,16 @@
 	<!-- Upper Footer -->
 	<footer class="top_footer infront bg-primary">
 		<span class = "top-footer-burger" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
-		<span class = "top-footer-options fas fa-ellipsis-v" style="font-size:30px;cursor:pointer" onclick="openOptions()"></span>
+		<div class="dropdown">
+			<button class="top-footer-options fas fa-ellipsis-v btn dropdown-toggle" type="button" id="options_topfooter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size:30px;cursor:pointer" onclick="openOptions()">
+			</button>
+
+			<div class="dropdown-menu top-footer-options" aria-labelledby="options_topfooter">
+				<a class="dropdown-item" href="#">Settings</a>
+				<a class="dropdown-item" href="#">Info</a>
+				<a class="dropdown-item" href="#" style ="color:red">Delete Server</a>
+			</div>
+		</div>
 
 		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size: 25px"><img class = "top-footer-img" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}"> <span>general</span></a>
 	</footer>
@@ -168,17 +251,17 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
-						<h4 style="color:#FFC30F;font-weight:10" class="fas fa-subway modal-title cchat-modal-icon-left"></h4>
-						<h4 style="color:#FFC30F" class="modal-title cchat-modal-title-left">Create a Station</h4>
+						<h4 style="color:#FFC30F" class="fas fa-subway modal-title cchat-modal-icon-left"></h4>
+						<h4 style="color:#FFC30F" class="modal-title cchat-modal-title-left">New Station</h4>
 					</div>
 					<form method = "post" action = "">
 						<div class="modal-body">
 							<label for="cchat_modal_title fas" style="color:#FFC30F;font-weight: 900">Title</label>
-							<input type="text" class ="form-control" id="cchat_modal_title" name="cchat_modal_title_name" placeholder="Your Station's name | Max 25" maxlength="25">
-							
+							<input type="text" class ="form-control" id="cchat_modal_title" name="cchat_modal_title_name" placeholder="Your Station's name | Max 25" maxlength="25" minlength="4">
+			
 						</div>
 						<div class="modal-footer">
-							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_cchat_modal()">
+							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_cchat_modal();this.form.submit(); this.disabled=true; this.value='Establishing…';" id="cchat_createbtn">
 
 						</div>
 					</form>

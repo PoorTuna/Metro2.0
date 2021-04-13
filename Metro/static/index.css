@@ -76,7 +76,7 @@
 .cchat-modal-icon-left{
 	position: absolute;
   left: 3%;
-	top: 6%;
+	top: 5%;
 }
 /* The side navigation menu */
 .sidenav {
@@ -176,7 +176,7 @@
 	position: absolute;
 	right: 2%;
 	top: 50%;
-	transform: translate(0,-50%);
+	transform: translate(0,25%);
 }
 
 .top-footer-title{
