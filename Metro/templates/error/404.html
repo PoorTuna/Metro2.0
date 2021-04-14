@@ -1,8 +1,42 @@
 {% extends "base.html" %}
 {%block content%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/display-triangle.js')}}"></script>
 
-<div>404 Error!</div> </br>
-<div> sorry but the page you requested "{{url}}" doesn't exist | <a href="/" style="color:#FFC30F">go to main page</a> </div>
+<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'rain.css')}}">
+<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'light-text.css')}}">
+<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = '404-train.css')}}">
 
+<section class="rain"></section>
+<!-- Rain in JS -->
+<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/rain.js')}}"></script>
+<!-- Error Triangle -->
+<div class="exclamation-text-404" id="error_triangle">
+<span id="O" class="fas fa-exclamation-triangle"></span>
+</div>
 
+<!-- Error Train + Rail -->
+
+<img class="train train-moving-right" src="{{url_for('static',filename = 'assets/images/train/metro-train.png')}}" style="opacity: 0.3" id="error_train">
+<div class="rail rail-bottom"></div>
+<!-- Train block hider -->
+<div class="train-hider-right train-hider-color"></div>
+<div class="train-hider-left train-hider-color"></div>
+<!-- Train fade blocks -->
+<div class="train-fade-box left-fade fade-right"></div>
+<div class="train-fade-box right-fade fade-left"></div>
+
+<a href="/">
+<div class="body-text-404">
+	<span id="L">4</span>
+	<span id="O">0</span>
+	<span id="G">4</span>
+</div></a>
+
+<!-- Train Moving Sounds -->
+<audio autoplay loop autoplay="autoplay" id="metro_ambience">
+	<source src="{{url_for('static',filename = 'assets/audio/metro_ambience.mp3')}}" type="audio/mpeg">
+</audio>
+
+<script src="{{url_for('static',filename = 'assets/js/playaudio.js')}}"></script>
 {%endblock%}

@@ -1,6 +1,27 @@
 :root {
 	--white:#f1f1f1
 }
+.exclamation-text-404{
+	display: none;
+	font-size: 3vw;
+	color: var(--white);
+	position: absolute;
+	letter-spacing: 0.2em;
+	top: 35%;
+	left: 50%;
+	transform: translate(-50%,-60%);
+}
+
+.body-text-404{
+	font-size: 3vw;
+	color: var(--white);
+	position: absolute;
+	letter-spacing: 0.2em;
+	top: 60%;
+	left: 50%;
+	transform: translate(-50%,-60%);
+}
+
 .body-text{
 	font-size: 3vw;
 	color: var(--white);

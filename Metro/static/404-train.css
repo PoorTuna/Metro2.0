@@ -1,53 +1,41 @@
+.error-mark{
+	position: absolute;
+	left: 50%;
+	top: 30%;
+	font-size: 10%;
+	height: 10%;
+	display: block;
+}
 .rail {
 	position: absolute;
   height: 5px;
   width: 50%;
   background-color: #555;
   border-radius: 24px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,0);
 }
 
-.rail-bottom{
-	top: 70%;
-	left: 50%;
-	transform: translate(-50%,0);
-}
-.rail-top{
-	top: 30%;
-	left: 50%;
-	transform: translate(-50%,0);
-}
 .train{
 	position: absolute;
 	width: 30%;
 	height: 10%;
 	z-index: 0;
+	top: 40%;
+	transform: translate(-50%,0);
 }
+
+
 .train-moving-right{
-  animation: move-right 30s infinite;
-}
-.train-moving-left{
-  animation: move-left 30s infinite;
-}
-
-.train-bottom{
-transform: scaleY(-1);
-top: 70%;
-left: 0;
-}
-
-.train-top{
-top: 20%;
-left: 10%;
+	animation-fill-mode: forwards;
+  animation: move-right 15s forwards;
+	
 }
 
 @-webkit-keyframes move-right {
-	from {margin-left:-30%}
-	to {margin-left:100%;}
-}
-
-@-webkit-keyframes move-left {
-	from {margin-left:300%;}
-	to {margin-left:-30%;}
+	from {margin-left:0%}
+	to {margin-left:50%;}
 }
 
 .train-hider-color{
@@ -76,7 +64,7 @@ left: 10%;
 	position: absolute;
 	/* background-color: linear-gradient(transparent,#101010); */
 	width: 5%;
-	height: 10%;
+	height: 11%;
 	z-index: 1;
 }
 .fade-left{
@@ -86,36 +74,11 @@ left: 10%;
 	background-image: linear-gradient(to right, #101010,transparent);
 }
 
-.top-left-fade{
-	top: 21%;
+.left-fade{
+	top: 40%;
 	left: 25%;
 }
-.top-right-fade{
-	top: 21%;
+.right-fade{
+	top: 40%;
 	left: 70%;
-}
-.bottom-right-fade{
-	top: 70%;
-	left: 70%;
-}
-.bottom-left-fade{
-	top: 70%;
-	left: 25%;
-}
-
-.left-img{
-	position: absolute;
-	top: 50%;
-	left: 70%;
-	transform: translate(-70%,-50%);
-	width: 10%;
-	height: 20%;
-}
-.right-img{
-	position: absolute;
-	top: 50%;
-	left: 30%;
-	transform: translate(-30%,-50%);
-	width: 10%;
-	height: 20%;
 }

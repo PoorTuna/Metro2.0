@@ -8,50 +8,19 @@
 	
 	{% if not session['user'] %}
 		
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index-rain.css')}}">
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index-dark-login.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'rain.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'light-text.css')}}">
 		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index-train.css')}}">
 
 
 		<section class="rain"></section>
 		<!-- Rain in JS -->
-		<script type="text/javascript" charset="utf-8">
-			$(document).ready(function() {
-				document.body.classList.add("rain");
-				
-				// number of drops created.
-				var nbDrop = 100;
-		
-				// function to generate a random number range.
-				function randRange( minNum, maxNum) {
-					return (Math.floor(Math.random() * (maxNum - minNum + 1)) + minNum);
-				}
-
-				// function to generate drops
-				function createRain() {
-
-					for( i=1;i<nbDrop;i++) {
-					var dropLeft = randRange(0,window.innerWidth);
-					var dropTop = randRange(-1000,window.innerHeight);
-
-					$('.rain').append('<div class="drop" id="drop'+i+'"></div>');
-					$('#drop'+i).css('left',dropLeft);
-					$('#drop'+i).css('top',dropTop);
-					}
-
-				}
-				// Make it rain
-				createRain();
-			});
-		</script>
+		<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/rain.js')}}"></script>
+		<!-- Train Moving Sounds -->
 		<audio autoplay loop autoplay="autoplay" id="metro_ambience">
 			<source src="{{url_for('static',filename = 'assets/audio/metro_ambience.mp3')}}" type="audio/mpeg">
 		</audio>
-
-		<script>
-  		var audio = document.getElementById("metro_ambience");
-  		audio.volume = 0.2;
-		</script>
+		<script src="{{url_for('static',filename = 'assets/js/playaudio.js')}}"></script>
 
 		<a href="/login">
 		<div class="body-text">
@@ -62,10 +31,15 @@
 			<span id="I">I</span>
 			<span id="N">N</span>
 		</div></a>
-		<!-- Train and Rails with animations -->
+
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}" style="opacity: 0.008">
+		<img class="right-img" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}" style="opacity: 0.008">
+
+		<div class="rail rail-bottom"></div>
+		<!-- Train block hider -->
 		<div class="train-hider-right train-hider-color"></div>
 		<div class="train-hider-left train-hider-color"></div>
-
+		<!-- Train and Rails with animations -->
 		<img class="train train-moving-right train-bottom" src="{{url_for('static',filename = 'assets/images/train/metro-train.png')}}" style="opacity: 0.3">
 		<div class="rail rail-bottom"></div>
 
