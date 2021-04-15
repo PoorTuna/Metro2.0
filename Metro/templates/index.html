@@ -69,10 +69,10 @@
 		<a href="javascript:void(0)" class="addchat fas fa-plus" data-toggle="modal" data-target="#cchat_modal"></a>
 		<hr style="height:1px;background-color:#FFC30F">
 		
-		<a href="javascript:void(0)" onclick=set_title("general");join_chat("general")><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">General</a>
+		<a href="javascript:void(0)" onclick=join_chat("general");set_title("general")><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">General</a>
 		<hr style="height:1px;background-color:#FFC30F">
 		{% for item in chats %}
-			<a href="javascript:void(0)" onclick=set_title("{{item.title}}");join_chat("{{item.string_id}}")><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}">{{item.title.capitalize()}}</a>
+			<a href="javascript:void(0)" onclick=join_chat("{{item.string_id}}");set_title("{{item.title}}")><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}">{{item.title.capitalize()}}</a>
 			<hr style="height:1px;background-color:#FFC30F">
 		{% endfor %}
 	</div>
@@ -91,7 +91,7 @@
 			</div>
 		</div>
 		
-		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size: 25px" onclick="javascript:void(0)"  data-toggle="modal" data-target="#amchat_modal">
+		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size: 25px" onclick="javascript:void(0)"  data-toggle="modal" data-target="">
 		<img class = "top-footer-img" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}"> 
 		<span id="footer_title_text">general</span>
 		</a>

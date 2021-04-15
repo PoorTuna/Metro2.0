@@ -1,43 +1,32 @@
-
 # Flask Socket IO imports
 from . import socketio
 from flask_socketio import send, emit, join_room, leave_room, close_room, disconnect, rooms
 # Flask imports
-from flask import request,session
+from flask import request
 # Database models imports
 from .models import db, metro_user, metro_chat
+from .routes import session
 # Flask-Login imports
 import flask_login
 
 # Socket IO connect handler
 @socketio.on('connect')
 def handle_connect():
-	print(f"{flask_login.current_user} : {flask_login.current_user.username} has connected with session id {request.sid}")
+	if flask_login.current_user.is_authenticated:
+		print(f"{flask_login.current_user} : {flask_login.current_user.username} has connected with session id {request.sid}")
 	flask_login.current_user._session_id = request.sid
 	db.session.commit()
-	try:
-		if session['chat_id']:
-			if curr_chat := metro_chat.query.filter_by(_session_id=session['chat_id']).first():
-				emit('last_title', curr_chat.title)
-				join_room(session['chat_id'])
-			
-			else:
-				emit('last_title', 'general')
-				session['chat_id'] = 'general'
-				join_room(session['chat_id'])
-	except:
-		emit('last_title', 'general')
-		session['chat_id'] = 'general'
-		join_room(session['chat_id'])
-
+	session['chatID'] = "general"
+	
 # Socket IO disconnect handler
 @socketio.on('disconnect')
 def handle_disconnect():
-	print(f"{flask_login.current_user} : {flask_login.current_user.username} has disconnected.")
+	if flask_login.current_user.is_authenticated:
+		print(f"{flask_login.current_user} : {flask_login.current_user.username} has disconnected.")
 	flask_login.current_user._session_id = None
 	db.session.commit()
 	# Change back to general chat after user disconnects
-	leave_room(session['chat_id'])
+	leave_room(session['chatID'])
 
 # Socket IO recive handler
 @socketio.on("message")
@@ -67,9 +56,9 @@ def handle_message(msg):
 	# Normal Messages:
 	elif msg:
 		if flask_login.current_user.is_authenticated:
-			emit("message", f"{flask_login.current_user.username} : {msg}", room=session['chat_id'])
+			emit("message", f"{flask_login.current_user.username} : {msg}", room=session['chatID'])
 		else:
-			emit("message", f"Anonymous : {msg}", room=session['chat_id'])
+			emit("message", f"Anonymous : {msg}", room=session['chatID'])
 
 # Socket IO change chat handler
 @socketio.on('join_private')
@@ -77,14 +66,15 @@ def recv_private_chatname(cid):
 	if cid != "general":
 		if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
 			if flask_login.current_user in curr_chat.chat_backref:
-				leave_room(session['chat_id'])
-				session['chat_id'] = cid
-				join_room(session['chat_id'])
+				leave_room(session['chatID'])
+				session['chatID'] = cid
+				print("xd")
+				join_room(session['chatID'])
 
-	else:
-		leave_room(session['chat_id'])
-		session['chat_id'] = "general"
-		join_room(session['chat_id'])
+	elif cid == "general":
+		leave_room(session['chatID'])
+		session['chatID'] = "general"
+		join_room(session['chatID'])
 
 #@socketio.on('create_chat')
 #def recv_chat_details(chat):

@@ -17,6 +17,8 @@ from datetime import datetime
 # Email Validation:
 import re
 
+from .msockets import *
+
 @login_manager.unauthorized_handler
 def unauthorized():
     # do stuff
@@ -52,11 +54,10 @@ def index():
 					return redirect(url_for("index"))
 
 			if chat_member:
-				if session['chat_id'] and session['chat_id'] != "general":
-					curr_chat_id = session['chat_id']
-					if curr_chat := metro_chat.query.filter_by(_string_id=curr_chat_id).first():
+				if session['chatID'] and session['chatID'] != "general":
+					if curr_chat := metro_chat.query.filter_by(string_id=session['chatID']).first():
 						if flask_login.current_user in curr_chat.chat_backref:
-							if curr_user  := metro_user.query.filter_by(username=form_chat_member).first():
+							if curr_user := metro_user.query.filter_by(username=chat_member).first():
 								if curr_user not in curr_chat.chat_backref:
 									curr_chat.chat_backref.append(curr_user)
 									db.session.commit()
@@ -200,4 +201,4 @@ def show_chat():
 def something(name):
 	return render_template("error/404.html", url = name)
 
-from .msockets import *
+
