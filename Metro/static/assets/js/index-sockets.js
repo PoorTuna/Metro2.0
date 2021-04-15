@@ -24,7 +24,7 @@
 		socket.on("last_title", function(title) {
 			console.log("recieved last title");
 			title = title.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
-			set_title(title)
+			set_title(title);
 
 		});
 
@@ -45,7 +45,7 @@
 				send_msg();
 			}
 		});
-			
+		
 			});
 
 		/* Send Message */

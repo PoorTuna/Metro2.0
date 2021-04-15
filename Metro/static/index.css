@@ -78,6 +78,18 @@
   left: 3%;
 	top: 5%;
 }
+
+.amchat-modal-title-left{
+	position: absolute;
+  left: 7%;
+	top: 3%;
+}
+.amchat-modal-icon-left{
+	position: absolute;
+  left: 3%;
+	top: 5%;
+}
+
 /* The side navigation menu */
 .sidenav {
   height: 75%; /* 100% Full-height */

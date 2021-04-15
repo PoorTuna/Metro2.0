@@ -20,57 +20,53 @@ import re
 @login_manager.unauthorized_handler
 def unauthorized():
     # do stuff
-    return redirect(url_for("index"))
+    return render_template("error/404.html")
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
 	if flask_login.current_user.is_authenticated:
-		delayed_curr_time = None
-		delayed_last_time = None
 
 		# Checks on whether the user posted a request
 		if request.method == "POST":
-			# Checks if the user tried to spam the request button
-			allow_request = False
+			chat_member = None
+			chat_title = None
+			if "cchat_modal_title_name" in request.form:
+				chat_title = request.form["cchat_modal_title_name"]
+			elif "amchat_modal_member_name" in request.form:
+				chat_member = request.form["amchat_modal_member_name"]
 			
-			if delayed_curr_time == None and delayed_last_time == None:
-				delayed_last_time = datetime.now()
-				delayed_curr_time = datetime.now()
-				allow_request = True
+			if chat_title:
+				if len(chat_title) <= 25 and len(chat_title) >= 4:
+					curr_time = datetime.now().strftime("%d/%m/%y") 
+					curr_chat = metro_chat(string_id = None, title=chat_title, time_created = curr_time)
+					# Random string id generation
+					letters = string.ascii_letters
+					curr_chat.string_id = ''.join(random.choice(letters) for i in range(10))
+					db.session.add(curr_chat)
+					db.session.commit()
+					# Must be seperated to after the chat recieves id when commited firstly.
+					curr_chat.string_id += str(curr_chat.id)
+					curr_chat.file_dir = f"{curr_chat.string_id}.data"
+					curr_chat.chat_backref.append(flask_login.current_user) # Add user to the backref
+					db.session.commit()
+					return redirect(url_for("index"))
 
-
-			elif (delayed_curr_time - delayed_last_time).total_seconds() > 10.0:
-				delayed_curr_time = None
-				delayed_last_time = None
-				allow_request = True
-
-			else:
-				print("Blocked request!")
-				delayed_curr_time = datetime.now()
-
-			if allow_request:
-				if chat_title := request.form["cchat_modal_title_name"]:
-					if len(chat_title) <= 25 and len(chat_title) >= 4:
-						curr_time = datetime.now().strftime("%d/%m/%y") 
-
-						curr_chat = metro_chat(string_id = None, title=chat_title, time_created = curr_time)
-
-						# Random string id generation
-						letters = string.ascii_letters
-						curr_chat.string_id = ''.join(random.choice(letters) for i in range(10))
-						db.session.add(curr_chat)
-						db.session.commit()
-						# Must be seperated to after the chat recieves id when commited firstly.
-						curr_chat.string_id += str(curr_chat.id)
-						curr_chat.file_dir = f"{curr_chat.string_id}.data"
-						curr_chat.chat_backref.append(flask_login.current_user) # Add user to the backref
-						db.session.commit()
+			if chat_member:
+				if session['chat_id'] and session['chat_id'] != "general":
+					curr_chat_id = session['chat_id']
+					if curr_chat := metro_chat.query.filter_by(_string_id=curr_chat_id).first():
+						if flask_login.current_user in curr_chat.chat_backref:
+							if curr_user  := metro_user.query.filter_by(username=form_chat_member).first():
+								if curr_user not in curr_chat.chat_backref:
+									curr_chat.chat_backref.append(curr_user)
+									db.session.commit()
+									return redirect(url_for("index"))
 
 		chats = []
 		for m_chat in flask_login.current_user.chat_list:
 				for m_user in m_chat.chat_backref:
 					if m_user == flask_login.current_user:
-						chats.append(m_chat) 
+						chats.append(m_chat)
 
 		return render_template("index.html", chats = chats)
 	return render_template("index.html")
@@ -157,7 +153,7 @@ def logout():
 	session.pop('user', None)
 	return redirect(url_for("index"))
 
-#TEMP
+# TEMP
 @app.route("/create_chat/<num>")
 @login_required
 def create_chat(num):
@@ -185,17 +181,17 @@ def create_chat(num):
 			print("user already exists in the chat!")
 	return redirect(url_for("index"))
 
-#TEMP
-@app.route("/show_chat/<num>")
+# TEMP
+@app.route("/show_chat")
 @login_required
-def show_chat(num):
-	curr_chat = metro_chat.query.filter_by(title=num).first()
-	if curr_chat:
-		for user in curr_chat.chat_backref: # access to related users from chat
+def show_chat():
+	for chat in flask_login.current_user.chat_list: # access to related users from chat
+		print(chat.title)
+		print("-----")
+		for user in chat.chat_backref:
 			print(user.username)
-		print(curr_chat.string_id)
-		print(curr_chat.time_created)
-		print(curr_chat.title)
+		print("--END--")
+		print("   ")
 		#print(flask_login.current_user.chat_list[0]) access to related chats from user
 	return redirect(url_for("index"))
 

@@ -57,6 +57,7 @@
 
 	<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/index-utility.js')}}"></script>
 	<script src="{{url_for('static',filename = 'assets/js/index-sockets.js')}}"></script>
+	<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/index-modals.js')}}"></script>
 
 	<!-- CSS styling -->
 	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index.css')}}">
@@ -89,8 +90,12 @@
 				<a class="dropdown-item" href="#" style ="color:red">Delete Server</a>
 			</div>
 		</div>
-
-		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size: 25px"><img class = "top-footer-img" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}"> <span>general</span></a>
+		
+		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size: 25px" onclick="javascript:void(0)"  data-toggle="modal" data-target="#amchat_modal">
+		<img class = "top-footer-img" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}"> 
+		<span id="footer_title_text">general</span>
+		</a>
+		
 	</footer>
 
 	<!-- Bottom Footer -->
@@ -107,16 +112,16 @@
 	</div>
 	<!-- Modal - Add a chat -->
 		<div class="modal fade center-modal" id="cchat_modal" role="dialog">
+			<form method = "post" action = "/">
 				<div class="modal-dialog">
 			
-				<!-- Modal content-->
+				<!-- Modal add chat content-->
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
 						<h4 style="color:#FFC30F" class="fas fa-subway modal-title cchat-modal-icon-left"></h4>
 						<h4 style="color:#FFC30F" class="modal-title cchat-modal-title-left">New Station</h4>
 					</div>
-					<form method = "post" action = "">
 						<div class="modal-body">
 							<label for="cchat_modal_title fas" style="color:#FFC30F;font-weight: 900">Title</label>
 							<input type="text" class ="form-control" id="cchat_modal_title" name="cchat_modal_title_name" placeholder="Your Station's name | Max 25" maxlength="25" minlength="4">
@@ -126,14 +131,35 @@
 							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_cchat_modal();this.form.submit(); this.disabled=true; this.value='Establishing…';" id="cchat_createbtn">
 
 						</div>
-					</form>
+					</div>	
 				</div>
-				
-			</div>
+			</form>
 		</div>
-  
-	</div>
 
+	<!-- Modal - Add members to a group -->
+		<div class="modal fade center-modal" id="amchat_modal" role="dialog">
+			<form method = "post" action = "/">
+				<div class="modal-dialog">
+			
+				<!-- Modal add chat content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
+						<h4 style="color:#FFC30F" class="fas fa-subway modal-title amchat-modal-icon-left"></h4>
+						<h4 style="color:#FFC30F" class="modal-title amchat-modal-title-left">Recruit new members</h4>
+					</div>
+						<div class="modal-body">
+							<label for="amchat_modal_title fas" style="color:#FFC30F;font-weight: 900">Member's Nickname</label>
+							<input type="text" class ="form-control" id="amchat_modal_member_name_id" name="amchat_modal_member_name" placeholder="Member's Name" maxlength="12">
+						</div>
+						<div class="modal-footer">
+							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_amchat_modal();this.form.submit(); this.disabled=true; this.value='Recruiting…';" id="amchat_createbtn">
+						</div>
+
+					</div>	
+				</div>
+			</form>
+		</div>
 
 	{% endif %}
 

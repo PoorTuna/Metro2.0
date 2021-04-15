@@ -1,5 +1,6 @@
 	var tts = new SpeechSynthesisUtterance();
 		/* SideNav function */
+
 		function openNav() {
 			document.getElementById("mySidenav").style.width = "250px";
 		}
@@ -36,4 +37,3 @@
 		// 	console.log(voices);
 		// 	tts.voice = voices[2];
 		// }
-
