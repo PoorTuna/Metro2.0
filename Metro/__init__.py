@@ -18,6 +18,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = "somethingverysecure"
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///metro.db"
 app.config['SESSION_TYPE'] = "sqlalchemy"
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days = 3)
+app.config['SESSION_PERMANENT'] = True
 
 #SQLAlchemy FLASK:
 db = SQLAlchemy(app)

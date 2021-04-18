@@ -71,8 +71,8 @@
 		
 		<a href="javascript:void(0)" onclick=join_chat("general");set_title("general")><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">General</a>
 		<hr style="height:1px;background-color:#FFC30F">
-		{% for item in chats %}
-			<a href="javascript:void(0)" onclick=join_chat("{{item.string_id}}");set_title("{{item.title}}")><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}">{{item.title.capitalize()}}</a>
+		{% for chat in chats %}
+			<a class="sidenav-title-a" href="javascript:void(0)" onclick=join_chat('{{chat.string_id}}');set_title('{{chat.title}}')><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}">{{chat.title}}</a>
 			<hr style="height:1px;background-color:#FFC30F">
 		{% endfor %}
 	</div>
@@ -81,17 +81,18 @@
 	<footer class="top_footer infront bg-primary">
 		<span class = "top-footer-burger" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
 		<div class="dropdown">
-			<button class="top-footer-options fas fa-ellipsis-v btn dropdown-toggle" type="button" id="options_topfooter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size:30px;cursor:pointer" onclick="openOptions()">
+			
+			<button class="top-footer-options fas fa-ellipsis-v btn dropdown-toggle" type="button" id="options_topfooter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size:30px;cursor:pointer">
 			</button>
 
-			<div class="dropdown-menu top-footer-options" aria-labelledby="options_topfooter">
-				<a class="dropdown-item" href="#">Settings</a>
-				<a class="dropdown-item" href="#">Info</a>
-				<a class="dropdown-item" href="#" style ="color:red">Delete Server</a>
+			<div class="dropdown-menu dropdown-menu-colors" aria-labelledby="options_topfooter">
+				<a class="dropdown-item" href="javascript:void(0)">Settings</a>
+				<a class="dropdown-item" href="javascript:void(0)">Info</a>
+				<a class="dropdown-item" href="" onclick="delete_server('{{session['chatID']}}')" style ="color:#FFC30F">Delete Server</a>
 			</div>
 		</div>
 		
-		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size: 25px" onclick="javascript:void(0)"  data-toggle="modal" data-target="">
+		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size:25px;text-decoration:none" onclick="javascript:void(0)"  data-toggle="modal" data-target="">
 		<img class = "top-footer-img" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}"> 
 		<span id="footer_title_text">general</span>
 		</a>
@@ -154,6 +155,58 @@
 						</div>
 						<div class="modal-footer">
 							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_amchat_modal();this.form.submit(); this.disabled=true; this.value='Recruiting…';" id="amchat_createbtn">
+						</div>
+
+					</div>	
+				</div>
+			</form>
+		</div>
+
+	<!-- DropDown Functionality Section -->
+
+	<!-- Modal - DROPDOWN SETTINGS -->
+		<div class="modal fade center-modal" id="ddsettings_modal" role="dialog">
+			<form method = "post" action = "/">
+				<div class="modal-dialog">
+			
+				<!-- DROPDOWN SETTINGS content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
+						<h4 style="color:#FFC30F" class="fas fa-subway modal-title ddsettings-modal-icon-left"></h4>
+						<h4 style="color:#FFC30F" class="modal-title ddsettings-modal-title-left">Recruit new members</h4>
+					</div>
+						<div class="modal-body">
+							<label for="ddsettings_modal_title fas" style="color:#FFC30F;font-weight: 900">Member's Nickname</label>
+							<input type="text" class ="form-control" id="ddsettings_modal_member_name_id" name="ddsettings_modal_member_name" placeholder="Member's Name" maxlength="12">
+						</div>
+						<div class="modal-footer">
+							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_ddsettings_modal();this.form.submit(); this.disabled=true; this.value='Recruiting…';" id="ddsettings_createbtn">
+						</div>
+
+					</div>	
+				</div>
+			</form>
+		</div>
+
+	<!-- Modal - DROPDOWN INFO -->
+		<div class="modal fade center-modal" id="ddinfo_modal" role="dialog">
+			<form method = "post" action = "/">
+				<div class="modal-dialog">
+			
+				<!-- Modal DROPDOWN INFO content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
+						<h4 style="color:#FFC30F" class="fas fa-subway modal-title ddinfo-modal-icon-left"></h4>
+						<h4 style="color:#FFC30F" class="modal-title ddinfo-modal-title-left">Recruit new members</h4>
+					</div>
+						<div class="modal-body">
+							<label for="ddinfo_modal_title fas" style="color:#FFC30F;font-weight: 900">Member's Nickname</label>
+							<input type="text" class ="form-control" id="ddinfo_modal_member_name_id" name="ddinfo_modal_member_name" placeholder="Member's Name" maxlength="12">
+						</div>
+						<div class="modal-footer">
+							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_ddinfo_modal();this.form.submit(); this.disabled=true; this.value='Recruiting…';" id="ddinfo_createbtn">
 						</div>
 
 					</div>	

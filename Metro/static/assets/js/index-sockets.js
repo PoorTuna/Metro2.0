@@ -60,13 +60,17 @@
 		}
 		/* Set Title on top nav */
 		function set_title(title){
-			document.querySelector("#footertitle span").innerHTML = title;
+			document.querySelector("#footertitle span").innerText = title;
 		}
 		/* Send chatname */
 		function join_chat(cid){
-			socket.emit("join_private", cid)
+			socket.emit("join_private", cid);
 		}
 		/* Disable button to prevent request spamming */
 		$('#cchat_createbtn').on('click', function() {
 			$("#cchat_createbtn").attr("disabled", true);
 		});
+
+	function delete_server(cid){
+		socket.emit("delete_prviate", cid);
+	}

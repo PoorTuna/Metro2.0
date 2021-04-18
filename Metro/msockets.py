@@ -68,7 +68,6 @@ def recv_private_chatname(cid):
 			if flask_login.current_user in curr_chat.chat_backref:
 				leave_room(session['chatID'])
 				session['chatID'] = cid
-				print("xd")
 				join_room(session['chatID'])
 
 	elif cid == "general":
@@ -76,7 +75,12 @@ def recv_private_chatname(cid):
 		session['chatID'] = "general"
 		join_room(session['chatID'])
 
-#@socketio.on('create_chat')
-#def recv_chat_details(chat):
-#	chat = chat.split("%$#seprtxd")
+@socketio.on('delete_prviate')
+def delete_chat_handle(cid):
+	if cid != "general":
+		if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
+			if flask_login.current_user in curr_chat.chat_backref:
+				db.session.delete(curr_chat)
+				db.session.commit()
+				print("deleted.")
 	

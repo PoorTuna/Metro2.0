@@ -10,7 +10,7 @@ $(document).ready(function() {
 	}
 
 	document.addEventListener("click", function(event) {
-		footer_text = document.querySelector("#footertitle span").innerHTML;
+		footer_text = document.querySelector("#footertitle span").innerText;
 		prevent_general_add();
 	});
 
