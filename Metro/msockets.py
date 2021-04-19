@@ -8,6 +8,8 @@ from .models import db, metro_user, metro_chat
 from .routes import session
 # Flask-Login imports
 import flask_login
+#Import OS
+import os
 
 # Socket IO connect handler
 @socketio.on('connect')
@@ -80,7 +82,7 @@ def delete_chat_handle(cid):
 	if cid != "general":
 		if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
 			if flask_login.current_user in curr_chat.chat_backref:
+				os.rmdir(f"Metro/{curr_chat.file_dir}")
 				db.session.delete(curr_chat)
 				db.session.commit()
-				print("deleted.")
 	

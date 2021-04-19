@@ -16,8 +16,10 @@ import string
 from datetime import datetime
 # Email Validation:
 import re
-
+# Import SocketIO file
 from .msockets import *
+# Import OS
+import os
 
 @login_manager.unauthorized_handler
 def unauthorized():
@@ -30,15 +32,25 @@ def index():
 
 		# Checks on whether the user posted a request
 		if request.method == "POST":
+			# Adding members form vars:
 			chat_member = None
+			# Creating chat form vars:
 			chat_title = None
+			# Changing chat attributes form vars:
+			chat_img = None
+			new_chat_title = None
+
 			if "cchat_modal_title_name" in request.form:
 				chat_title = request.form["cchat_modal_title_name"]
-			elif "amchat_modal_member_name" in request.form:
+			if "amchat_modal_member_name" in request.form:
 				chat_member = request.form["amchat_modal_member_name"]
-			
+			if "ddsettings_modal_title" in request.form:
+				new_chat_title = request.form["ddsettings_modal_title"]
+			if "ddsettings_modal_logo" in request.form:
+				chat_img = request.form["ddsettings_modal_logo"]
+
 			if chat_title:
-				if len(chat_title) <= 25 and len(chat_title) >= 4:
+				if len(chat_title) <= 25 and len(chat_title) > 0:
 					curr_time = datetime.now().strftime("%d/%m/%y") 
 					curr_chat = metro_chat(string_id = None, title=chat_title, time_created = curr_time)
 					# Random string id generation
@@ -48,28 +60,52 @@ def index():
 					db.session.commit()
 					# Must be seperated to after the chat recieves id when commited firstly.
 					curr_chat.string_id += str(curr_chat.id)
-					curr_chat.file_dir = f"{curr_chat.string_id}.data"
+					curr_chat.file_dir = f"static/assets/chats/{curr_chat.string_id}{curr_chat.title}/"
 					curr_chat.chat_backref.append(flask_login.current_user) # Add user to the backref
 					db.session.commit()
+					# Create chat folder:
+					os.makedirs(f"Metro/static/assets/chats/{curr_chat.string_id}{curr_chat.title}/")
 					return redirect(url_for("index"))
 
-			if chat_member:
-				if session['chatID'] and session['chatID'] != "general":
-					if curr_chat := metro_chat.query.filter_by(string_id=session['chatID']).first():
-						if flask_login.current_user in curr_chat.chat_backref:
-							if curr_user := metro_user.query.filter_by(username=chat_member).first():
-								if curr_user not in curr_chat.chat_backref:
-									curr_chat.chat_backref.append(curr_user)
+			if session['chatID'] and session['chatID'] != "general":
+				if curr_chat := metro_chat.query.filter_by(string_id=session['chatID']).first():
+					if flask_login.current_user in curr_chat.chat_backref:
+						if chat_member:
+							if requested_user := metro_user.query.filter_by(username=chat_member).first():
+								if requested_user not in curr_chat.chat_backref:
+									curr_chat.chat_backref.append(requested_user)
 									db.session.commit()
 									return redirect(url_for("index"))
 
+						if new_chat_title:
+							if len(new_chat_title) <= 25 and len(new_chat_title) > 0:
+								curr_chat.title = new_chat_title
+								os.rename(f"Metro/{curr_chat.file_dir}", f"Metro/static/assets/chats/{curr_chat.string_id}{new_chat_title}")
+								curr_chat.file_dir = f"static/assets/chats/{curr_chat.string_id}{new_chat_title}/"
+								db.session.commit()
+
+						if chat_img:
+							print("lmao x2")
+
+						return redirect(url_for("index"))
+
 		chats = []
+		chat_data = None
+
 		for m_chat in flask_login.current_user.chat_list:
 				for m_user in m_chat.chat_backref:
 					if m_user == flask_login.current_user:
 						chats.append(m_chat)
 
-		return render_template("index.html", chats = chats)
+		# if 'chatID' in session:
+		# 	if session['chatID'] != "general":
+		# 		if current_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
+		# 			with open(current_chat.file_dir, "a+") as fd:
+		# 				chat_data = fd.readlines() 
+		# else:
+		# 	chat_data = ""
+
+		return render_template("index.html", chats = chats, chat_data = chat_data)
 	return render_template("index.html")
 
 @app.route("/login", methods=['GET', 'POST'])

@@ -101,6 +101,8 @@
   color: #818181;
   display: block;
   transition: 0.3s;
+	white-space: nowrap;
+  overflow: hidden;
 }
 
 /* When you mouse over the navigation links, change their color */

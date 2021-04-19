@@ -96,7 +96,6 @@
 		<img class = "top-footer-img" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}"> 
 		<span id="footer_title_text">general</span>
 		</a>
-		
 	</footer>
 
 	<!-- Bottom Footer -->
@@ -125,7 +124,7 @@
 					</div>
 						<div class="modal-body">
 							<label for="cchat_modal_title fas" style="color:#FFC30F;font-weight: 900">Title</label>
-							<input type="text" class ="form-control" id="cchat_modal_title" name="cchat_modal_title_name" placeholder="Your Station's name | Max 25" maxlength="25" minlength="4">
+							<input type="text" class ="form-control" id="cchat_modal_title" name="cchat_modal_title_name" placeholder="Your Station's name | Max 25" maxlength="25" minlength="1">
 			
 						</div>
 						<div class="modal-footer">
@@ -178,7 +177,8 @@
 					</div>
 						<div class="modal-body">
 							<label for="ddsettings_modal_title fas" style="color:#FFC30F;font-weight: 900">New Designated Name</label>
-							<input type="text" class ="form-control" id="ddsettings_modal_member_name_id" name="ddsettings_modal_title" placeholder="Title" maxlength="12">
+							<input type="text" class ="form-control" id="ddsettings_modal_member_name_id" name="ddsettings_modal_title" placeholder="Title" maxlength="25" minlength="1">
+							
 						</div>
 						<div class="modal-footer">
 							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_ddsettings_modal();this.form.submit(); this.disabled=true; this.value='Upgrading…';" id="ddsettings_createbtn">
