@@ -23,14 +23,14 @@
 		<script src="{{url_for('static',filename = 'assets/js/playaudio.js')}}"></script>
 
 		<a href="/login">
-		<div class="body-text">
-			<span id="L">L</span>
-			<span id="O">O</span>
-			<span id="G">G</span>
-			<span id="L">&#8205;</span>
-			<span id="I">I</span>
-			<span id="N">N</span>
-		</div></a>
+			<div class="body-text">
+				<span id="L">M</span>
+				<span id="O">E</span>
+				<span id="G">T</span>
+				<span id="L">R</span>
+				<span id="I">O</span>
+			</div>
+		</a>
 
 		<img class="left-img" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}" style="opacity: 0.008">
 		<img class="right-img" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}" style="opacity: 0.008">
@@ -69,10 +69,10 @@
 		<a href="javascript:void(0)" class="addchat fas fa-plus" data-toggle="modal" data-target="#cchat_modal"></a>
 		<hr style="height:1px;background-color:#FFC30F">
 		
-		<a href="javascript:void(0)" onclick=join_chat("general");set_title("general")><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">General</a>
+		<a href="javascript:void(0)" onclick=join_chat("general");set_title("general")><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">general</a>
 		<hr style="height:1px;background-color:#FFC30F">
 		{% for chat in chats %}
-			<a class="sidenav-title-a" href="javascript:void(0)" onclick=join_chat('{{chat.string_id}}');set_title('{{chat.title}}')><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}">{{chat.title}}</a>
+			<a class="sidenav-title-a" href="javascript:void(0)" onclick="join_chat('{{chat.string_id}}');set_title('{{chat.title}}');"><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}">{{chat.title}}</a>
 			<hr style="height:1px;background-color:#FFC30F">
 		{% endfor %}
 	</div>
@@ -82,12 +82,12 @@
 		<span class = "top-footer-burger" style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776;</span>
 		<div class="dropdown">
 			
-			<button class="top-footer-options fas fa-ellipsis-v btn dropdown-toggle" type="button" id="options_topfooter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size:30px;cursor:pointer">
+			<button class="top-footer-options fas fa-ellipsis-v btn dropdown-toggle" type="button" id="options_topfooter" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size:30px;cursor:pointer;display:none">
 			</button>
 
 			<div class="dropdown-menu dropdown-menu-colors" aria-labelledby="options_topfooter">
-				<a class="dropdown-item" href="javascript:void(0)">Settings</a>
-				<a class="dropdown-item" href="javascript:void(0)">Info</a>
+				<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#ddsettings_modal">Settings</a>
+				<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#ddinfo_modal">Info</a>
 				<a class="dropdown-item" href="" onclick="delete_server('{{session['chatID']}}')" style ="color:#FFC30F">Delete Server</a>
 			</div>
 		</div>
@@ -120,8 +120,8 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
-						<h4 style="color:#FFC30F" class="fas fa-subway modal-title cchat-modal-icon-left"></h4>
-						<h4 style="color:#FFC30F" class="modal-title cchat-modal-title-left">New Station</h4>
+						<h4 style="color:#FFC30F" class="fas fa-subway modal-title modal-icon-left"></h4>
+						<h4 style="color:#FFC30F" class="modal-title modal-title-left">New Station</h4>
 					</div>
 						<div class="modal-body">
 							<label for="cchat_modal_title fas" style="color:#FFC30F;font-weight: 900">Title</label>
@@ -146,8 +146,8 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
-						<h4 style="color:#FFC30F" class="fas fa-subway modal-title amchat-modal-icon-left"></h4>
-						<h4 style="color:#FFC30F" class="modal-title amchat-modal-title-left">Recruit new members</h4>
+						<h4 style="color:#FFC30F" class="fas fa-subway modal-title modal-icon-left"></h4>
+						<h4 style="color:#FFC30F" class="modal-title modal-title-left">Recruit new members</h4>
 					</div>
 						<div class="modal-body">
 							<label for="amchat_modal_title fas" style="color:#FFC30F;font-weight: 900">Member's Nickname</label>
@@ -173,15 +173,15 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
-						<h4 style="color:#FFC30F" class="fas fa-subway modal-title ddsettings-modal-icon-left"></h4>
-						<h4 style="color:#FFC30F" class="modal-title ddsettings-modal-title-left">Recruit new members</h4>
+						<h4 style="color:#FFC30F" class="fas fa-subway modal-title modal-icon-left"></h4>
+						<h4 style="color:#FFC30F" class="modal-title modal-title-left">Station Workshop</h4>
 					</div>
 						<div class="modal-body">
-							<label for="ddsettings_modal_title fas" style="color:#FFC30F;font-weight: 900">Member's Nickname</label>
-							<input type="text" class ="form-control" id="ddsettings_modal_member_name_id" name="ddsettings_modal_member_name" placeholder="Member's Name" maxlength="12">
+							<label for="ddsettings_modal_title fas" style="color:#FFC30F;font-weight: 900">New Designated Name</label>
+							<input type="text" class ="form-control" id="ddsettings_modal_member_name_id" name="ddsettings_modal_title" placeholder="Title" maxlength="12">
 						</div>
 						<div class="modal-footer">
-							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_ddsettings_modal();this.form.submit(); this.disabled=true; this.value='Recruiting…';" id="ddsettings_createbtn">
+							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_ddsettings_modal();this.form.submit(); this.disabled=true; this.value='Upgrading…';" id="ddsettings_createbtn">
 						</div>
 
 					</div>	
@@ -195,18 +195,17 @@
 				<div class="modal-dialog">
 			
 				<!-- Modal DROPDOWN INFO content-->
-				<div class="modal-content">
+				<div class="modal-content" style="color:red">
 					<div class="modal-header">
 						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
-						<h4 style="color:#FFC30F" class="fas fa-subway modal-title ddinfo-modal-icon-left"></h4>
-						<h4 style="color:#FFC30F" class="modal-title ddinfo-modal-title-left">Recruit new members</h4>
+						<h4 style="color:#FFC30F" class="fas fa-subway modal-title modal-icon-left"></h4>
+						<h4 style="color:#FFC30F" class="modal-title modal-title-left">Station Billboard</h4>
 					</div>
 						<div class="modal-body">
-							<label for="ddinfo_modal_title fas" style="color:#FFC30F;font-weight: 900">Member's Nickname</label>
-							<input type="text" class ="form-control" id="ddinfo_modal_member_name_id" name="ddinfo_modal_member_name" placeholder="Member's Name" maxlength="12">
+							<p>Funny monkey info goes here like members list</p>
 						</div>
 						<div class="modal-footer">
-							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_ddinfo_modal();this.form.submit(); this.disabled=true; this.value='Recruiting…';" id="ddinfo_createbtn">
+							<p>Time created and author goes here</p>
 						</div>
 
 					</div>	

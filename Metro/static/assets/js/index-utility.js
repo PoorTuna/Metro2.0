@@ -28,9 +28,7 @@
 			userHasNotScrolled = true;
 		}
 		setInterval(auto_scroll, 10);
-		function close_cchat_modal(){
-			$('cchat_modal').modal('hide');
-		}
+		
 		// function change_voices(){
 		// 	var synth = window.speechSynthesis;
 		// 	var voices = synth.getVoices();

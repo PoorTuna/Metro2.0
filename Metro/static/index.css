@@ -68,23 +68,12 @@
   right: 5%;
   font-size: 24px;
 }
-.cchat-modal-title-left{
+.modal-title-left{
 	position: absolute;
   left: 7%;
 	top: 3%;
 }
-.cchat-modal-icon-left{
-	position: absolute;
-  left: 3%;
-	top: 5%;
-}
-
-.amchat-modal-title-left{
-	position: absolute;
-  left: 7%;
-	top: 3%;
-}
-.amchat-modal-icon-left{
+.modal-icon-left{
 	position: absolute;
   left: 3%;
 	top: 5%;
