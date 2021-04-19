@@ -46,8 +46,10 @@ def index():
 				chat_member = request.form["amchat_modal_member_name"]
 			if "ddsettings_modal_title" in request.form:
 				new_chat_title = request.form["ddsettings_modal_title"]
-			if "ddsettings_modal_logo" in request.form:
-				chat_img = request.form["ddsettings_modal_logo"]
+			
+			print(request.files)
+			if "ddsettings_modal_logo" in request.files:
+				chat_img = request.files["ddsettings_modal_logo"]
 
 			if chat_title:
 				if len(chat_title) <= 25 and len(chat_title) > 0:
@@ -80,12 +82,18 @@ def index():
 						if new_chat_title:
 							if len(new_chat_title) <= 25 and len(new_chat_title) > 0:
 								curr_chat.title = new_chat_title
-								os.rename(f"Metro/{curr_chat.file_dir}", f"Metro/static/assets/chats/{curr_chat.string_id}{new_chat_title}")
+								os.rename(f"Metro/{curr_chat.file_dir}", f"Metro/static/assets/chats/{curr_chat.string_id}{new_chat_title}/")
 								curr_chat.file_dir = f"static/assets/chats/{curr_chat.string_id}{new_chat_title}/"
 								db.session.commit()
-
+						
 						if chat_img:
-							print("lmao x2")
+							if logoname := chat_img.filename:
+								print(chat_img.filename)
+								if logoname.split(".")[1] in ALLOWED_EXTENSIONS:
+									if os.path.exists(f"Metro/{curr_chat.file_dir}/logo.png"):
+										os.remove(f"Metro/{curr_chat.file_dir}/logo.png")
+									chat_img.save(f"Metro/{curr_chat.file_dir}/logo.png")
+									
 
 						return redirect(url_for("index"))
 
@@ -236,5 +244,3 @@ def show_chat():
 @app.errorhandler(404)
 def something(name):
 	return render_template("error/404.html", url = name)
-
-

@@ -72,7 +72,7 @@
 		<a href="javascript:void(0)" onclick=join_chat("general");set_title("general")><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">general</a>
 		<hr style="height:1px;background-color:#FFC30F">
 		{% for chat in chats %}
-			<a class="sidenav-title-a" href="javascript:void(0)" onclick="join_chat('{{chat.string_id}}');set_title('{{chat.title}}');"><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}">{{chat.title}}</a>
+			<a class="sidenav-title-a" href="javascript:void(0)" onclick="join_chat('{{chat.string_id}}');set_title('{{chat.title}}');"><img class ="sidenav-img-pos" style = "width:64px;height:64px" src="{{chat.file_dir}}/logo.png">{{chat.title}}</a>
 			<hr style="height:1px;background-color:#FFC30F">
 		{% endfor %}
 	</div>
@@ -149,7 +149,7 @@
 						<h4 style="color:#FFC30F" class="modal-title modal-title-left">Recruit new members</h4>
 					</div>
 						<div class="modal-body">
-							<label for="amchat_modal_title fas" style="color:#FFC30F;font-weight: 900">Member's Nickname</label>
+							<label for="amchat_modal_member_name" style="color:#FFC30F;font-weight: 900">Member's Nickname</label>
 							<input type="text" class ="form-control" id="amchat_modal_member_name_id" name="amchat_modal_member_name" placeholder="Member's Name" maxlength="12">
 						</div>
 						<div class="modal-footer">
@@ -178,6 +178,8 @@
 						<div class="modal-body">
 							<label for="ddsettings_modal_title fas" style="color:#FFC30F;font-weight: 900">New Designated Name</label>
 							<input type="text" class ="form-control" id="ddsettings_modal_member_name_id" name="ddsettings_modal_title" placeholder="Title" maxlength="25" minlength="1">
+							<label for="ddsettings_modal_logo" style="color:#FFC30F;font-weight: 900">New Logo</label><br>
+							<input type="file" name="ddsettings_modal_logo" id="ddsettings_modal_logo_id" style="color:#FFC30F">
 							
 						</div>
 						<div class="modal-footer">

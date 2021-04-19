@@ -20,6 +20,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///metro.db"
 app.config['SESSION_TYPE'] = "sqlalchemy"
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days = 3)
 app.config['SESSION_PERMANENT'] = True
+app.config['ALLOWED_EXTENSIONS'] = {'.jpg', '.jpeg', '.png', '.gif'}
 
 #SQLAlchemy FLASK:
 db = SQLAlchemy(app)
