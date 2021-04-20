@@ -46,8 +46,6 @@ def index():
 				chat_member = request.form["amchat_modal_member_name"]
 			if "ddsettings_modal_title" in request.form:
 				new_chat_title = request.form["ddsettings_modal_title"]
-			
-			print(request.files)
 			if "ddsettings_modal_logo" in request.files:
 				chat_img = request.files["ddsettings_modal_logo"]
 
@@ -88,8 +86,8 @@ def index():
 						
 						if chat_img:
 							if logoname := chat_img.filename:
-								print(chat_img.filename)
-								if logoname.split(".")[1] in ALLOWED_EXTENSIONS:
+
+								if "." + logoname.split(".")[1] in app.config['ALLOWED_EXTENSIONS']:
 									if os.path.exists(f"Metro/{curr_chat.file_dir}/logo.png"):
 										os.remove(f"Metro/{curr_chat.file_dir}/logo.png")
 									chat_img.save(f"Metro/{curr_chat.file_dir}/logo.png")
