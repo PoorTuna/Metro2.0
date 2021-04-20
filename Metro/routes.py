@@ -20,6 +20,8 @@ import re
 from .msockets import *
 # Import OS
 import os
+# Import shutil for copying images
+from shutil import copyfile
 
 @login_manager.unauthorized_handler
 def unauthorized():
@@ -65,6 +67,9 @@ def index():
 					db.session.commit()
 					# Create chat folder:
 					os.makedirs(f"Metro/static/assets/chats/{curr_chat.string_id}{curr_chat.title}/")
+					# Create default chat img
+					copyfile(f"Metro/static/assets/images/logo/logo.png", f"Metro/{curr_chat.file_dir}/logo.png")
+
 					return redirect(url_for("index"))
 
 			if session['chatID'] and session['chatID'] != "general":

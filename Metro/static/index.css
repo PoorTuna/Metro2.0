@@ -197,6 +197,7 @@
 	top: 50%;
 	left: 0;
 	transform: translate(-125%,-50%);
+	border-radius: 50%;
 }
 
 .top_footer span {

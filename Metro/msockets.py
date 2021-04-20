@@ -82,7 +82,11 @@ def delete_chat_handle(cid):
 	if cid != "general":
 		if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
 			if flask_login.current_user in curr_chat.chat_backref:
-				os.rmdir(f"Metro/{curr_chat.file_dir}")
+				if os.path.exists(f"Metro/{curr_chat.file_dir}"):
+					for metro_file in os.listdir(f"Metro/{curr_chat.file_dir}"):
+						os.remove(f"Metro/{curr_chat.file_dir}/{metro_file}")
+		
+					os.rmdir(f"Metro/{curr_chat.file_dir}")
 				db.session.delete(curr_chat)
 				db.session.commit()
 	

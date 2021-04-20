@@ -27,7 +27,7 @@
 			}
 			userHasNotScrolled = true;
 		}
-		setInterval(auto_scroll, 10);
+		setInterval(auto_scroll, 0);
 		
 		// function change_voices(){
 		// 	var synth = window.speechSynthesis;
@@ -36,4 +36,6 @@
 		// 	tts.voice = voices[2];
 		// }
 
-		
+		function change_title_src(source){
+			document.getElementById("title_img_id").src = source;
+		}
