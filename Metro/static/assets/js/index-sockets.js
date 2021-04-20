@@ -65,6 +65,7 @@
 		/* Send chatname */
 		function join_chat(cid){
 			socket.emit("join_private", cid);
+			$("#chat").empty();
 		}
 		/* Disable button to prevent request spamming */
 		$('#cchat_createbtn').on('click', function() {
@@ -72,5 +73,5 @@
 		});
 
 	function delete_server(cid){
-		socket.emit("delete_prviate", cid);
+		socket.emit("delete_private", cid);
 	}

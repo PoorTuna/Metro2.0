@@ -58,9 +58,22 @@ def handle_message(msg):
 	# Normal Messages:
 	elif msg:
 		if flask_login.current_user.is_authenticated:
-			emit("message", f"{flask_login.current_user.username} : {msg}", room=session['chatID'])
-		else:
-			emit("message", f"Anonymous : {msg}", room=session['chatID'])
+			if "chatID" in session:
+				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
+					if session['chatID'] == "general":
+						emit("message", f"{flask_login.current_user.username} : {msg}", room=session['chatID'])
+					else:
+						if os.path.exists(f"Metro/{curr_chat.file_dir}/chat.data"):
+							with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
+								formated_msg = f"{flask_login.current_user.username} : {msg}"
+								metro_filehandler.write(formated_msg + '\r\n')
+								emit("message", formated_msg, room=session['chatID'])
+						else:
+							with open(f"Metro/{curr_chat.file_dir}/chat.data", "x") as metro_filehandler:
+								metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
+								formated_msg = f"{flask_login.current_user.username} : {msg}"
+								metro_filehandler.write(formated_msg + '\r\n')
+								emit("message", formated_msg, room=session['chatID'])
 
 # Socket IO change chat handler
 @socketio.on('join_private')
@@ -77,7 +90,23 @@ def recv_private_chatname(cid):
 		session['chatID'] = "general"
 		join_room(session['chatID'])
 
-@socketio.on('delete_prviate')
+	if session['chatID'] and session['chatID'] != "general":
+		if curr_chat := metro_chat.query.filter_by(string_id=session['chatID']).first():
+			if flask_login.current_user in curr_chat.chat_backref:
+				#Get the chat data to the user.
+				if os.path.exists(f"Metro/{curr_chat.file_dir}/chat.data"):
+					with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
+						metro_filehandler.seek(0)
+						chat_data = metro_filehandler.readlines()
+						for line in chat_data:
+							emit("message", line, room=session['chatID'])
+				else:
+					with open(f"Metro/{curr_chat.file_dir}/chat.data", "x") as metro_filehandler:
+						first_msg = "This is the beginning of your conversation!"
+						metro_filehandler.write(first_msg + '\r\n')
+						emit("message", first_msg, room=session['chatID'])
+
+@socketio.on('delete_private')
 def delete_chat_handle(cid):
 	if cid != "general":
 		if curr_chat := metro_chat.query.filter_by(string_id = cid).first():

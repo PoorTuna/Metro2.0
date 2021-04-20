@@ -41,6 +41,8 @@ def index():
 			# Changing chat attributes form vars:
 			chat_img = None
 			new_chat_title = None
+			# Chat data variable
+			chat_data = []
 
 			if "cchat_modal_title_name" in request.form:
 				chat_title = request.form["cchat_modal_title_name"]
@@ -75,6 +77,10 @@ def index():
 			if session['chatID'] and session['chatID'] != "general":
 				if curr_chat := metro_chat.query.filter_by(string_id=session['chatID']).first():
 					if flask_login.current_user in curr_chat.chat_backref:
+						#Get the chat data to the user.
+						with open(f"Metro/{current_chat.file_dir}/chat.data", "a+") as fd:
+							chat_data = fd.readlines() 
+
 						if chat_member:
 							if requested_user := metro_user.query.filter_by(username=chat_member).first():
 								if requested_user not in curr_chat.chat_backref:
@@ -107,14 +113,6 @@ def index():
 				for m_user in m_chat.chat_backref:
 					if m_user == flask_login.current_user:
 						chats.append(m_chat)
-
-		# if 'chatID' in session:
-		# 	if session['chatID'] != "general":
-		# 		if current_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
-		# 			with open(current_chat.file_dir, "a+") as fd:
-		# 				chat_data = fd.readlines() 
-		# else:
-		# 	chat_data = ""
 
 		return render_template("index.html", chats = chats, chat_data = chat_data)
 	return render_template("index.html")
@@ -201,33 +199,6 @@ def logout():
 	session.pop('user', None)
 	return redirect(url_for("index"))
 
-# TEMP
-@app.route("/create_chat/<num>")
-@login_required
-def create_chat(num):
-	#Check if the chat already exists, if not create new one.
-	if not metro_chat.query.filter_by(title = num).first():
-		curr_time = datetime.now().strftime("%d/%m/%y") 
-		curr_chat = metro_chat(string_id = f"random{num}", title=num, file_dir = f"{num}.data", time_created = curr_time)
-		letters = string.ascii_letters
-		curr_chat.string_id = ''.join(random.choice(letters) for i in range(10))
-		db.session.add(curr_chat)
-		db.session.commit()
-		# Must be seperated to after the chat recieves id when commited firstly.
-		curr_chat.string_id += str(curr_chat.id)
-		db.session.commit()
-
-	#Gets the created chat and checks if the user already exists in the chat list, if not adds him
-	curr_chat = metro_chat.query.filter_by(title=num).first()
-	if curr_chat:
-		print(curr_chat.chat_backref)
-		print(type(curr_chat.chat_backref))
-		if flask_login.current_user not in curr_chat.chat_backref:
-			curr_chat.chat_backref.append(flask_login.current_user)
-			db.session.commit()
-		else:
-			print("user already exists in the chat!")
-	return redirect(url_for("index"))
 
 # TEMP
 @app.route("/show_chat")
