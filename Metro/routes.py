@@ -76,7 +76,7 @@ def index():
 				if curr_chat := metro_chat.query.filter_by(string_id=session['chatID']).first():
 					if flask_login.current_user in curr_chat.chat_backref:
 						#Get the chat data to the user.
-						with open(f"Metro/{current_chat.file_dir}/chat.data", "a+") as fd:
+						with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as fd:
 							chat_data = fd.readlines() 
 
 						if chat_member:
@@ -192,6 +192,7 @@ def about():
 @app.route("/logout")
 @login_required
 def logout():
+	flask_login.current_user._session_id = None
 	logout_user()
 	session.pop('user', None)
 	return redirect(url_for("index"))

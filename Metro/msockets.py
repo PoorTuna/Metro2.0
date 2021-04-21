@@ -20,7 +20,7 @@ def handle_connect():
 	db.session.commit()
 	session['chatID'] = "general"
 	join_room(session['chatID'])
-	emit("message", "This station is anonymous. No logs saved. ", room=session['chatID'])
+	emit("message", "This station is anonymous. No logs saved. ", room=				flask_login.current_user._session_id)
 	
 # Socket IO disconnect handler
 @socketio.on('disconnect')
@@ -44,7 +44,6 @@ def handle_message(msg):
 			
 			if refined_msg[0] == "/w":
 				message = msg[len(refined_msg[0]) + len(refined_msg[1]) + 2:]
-
 				recipient = metro_user.query.filter_by(username = refined_msg[1]).first()
 				if recipient:
 					if recipient._session_id:
@@ -69,13 +68,13 @@ def handle_message(msg):
 							with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
 								formated_msg = f"{flask_login.current_user.username} : {msg}"
 								metro_filehandler.write(formated_msg + '\r\n')
-								emit("message", formated_msg, room=session['chatID'])
+								emit("message", formated_msg, room=flask_login.current_user._session_id)
 						else:
 							with open(f"Metro/{curr_chat.file_dir}/chat.data", "x") as metro_filehandler:
 								metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
 								formated_msg = f"{flask_login.current_user.username} : {msg}"
 								metro_filehandler.write(formated_msg + '\r\n')
-								emit("message", formated_msg, room=session['chatID'])
+								emit("message", formated_msg, room=flask_login.current_user._session_id)
 
 # Socket IO change chat handler
 @socketio.on('join_private')
@@ -91,7 +90,7 @@ def recv_private_chatname(cid):
 		leave_room(session['chatID'])
 		session['chatID'] = "general"
 		join_room(session['chatID'])
-		emit("message", "This station is anonymous. No logs saved.", room=session['chatID'])
+		emit("message", "This station is anonymous. No logs saved.", room=				flask_login.current_user._session_id)
 
 	if session['chatID'] and session['chatID'] != "general":
 		if curr_chat := metro_chat.query.filter_by(string_id=session['chatID']).first():
@@ -102,12 +101,12 @@ def recv_private_chatname(cid):
 						metro_filehandler.seek(0)
 						chat_data = metro_filehandler.readlines()
 						for line in chat_data:
-							emit("message", line, room=session['chatID'])
+							emit("message", line, room=flask_login.current_user._session_id)
 				else:
 					with open(f"Metro/{curr_chat.file_dir}/chat.data", "x") as metro_filehandler:
 						first_msg = "This is the beginning of your conversation!"
 						metro_filehandler.write(first_msg + '\r\n')
-						emit("message", first_msg, room=session['chatID'])
+						emit("message", first_msg, room=				flask_login.current_user._session_id)
 				# Return members list:
 				for member in curr_chat.chat_backref:
 					# Member state : Online / Offline based on their session id
@@ -116,7 +115,7 @@ def recv_private_chatname(cid):
 					else:
 						member_state = "Offline"
 
-					emit('join_private_info', member.username + "%seperatorXD" + member_state, room=session['chatID'])
+					emit('join_private_info', member.username + "%seperatorXD" + member_state, room=				flask_login.current_user._session_id)
 
 @socketio.on('delete_private')
 def delete_chat_handle(cid):
