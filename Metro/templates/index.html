@@ -93,7 +93,7 @@
 		</div>
 		
 		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size:25px;text-decoration:none" onclick="javascript:void(0)"  data-toggle="modal" data-target="">
-		<img class = "top-footer-img" id="title_img_id" src="{{url_for('static',filename = 'assets/images/logo/logo.png')}}"> 
+		<img class = "top-footer-img" id="title_img_id" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}"> 
 		<span id="footer_title_text">general</span>
 		</a>
 	</footer>
@@ -107,7 +107,7 @@
 	<!-- MAIN CHAT BOX -->
 	<div class="mainbox center" style="color:white" id="mainbox_chat" onscroll ="disable_auto_scroll()">
 		<ul>
-			<li id="chat" style="padding-top:8%">This is the beginning of your conversation!</li>
+			<li id="chat" style="padding-top:8%"></li>
 		</ul>
 	</div>
 	<!-- Modal - Add a chat -->
@@ -204,7 +204,8 @@
 						<h4 style="color:#FFC30F" class="modal-title modal-title-left">Station Billboard</h4>
 					</div>
 						<div class="modal-body">
-							<p>Funny monkey info goes here like members list</p>
+							<label for="members_list_name fas" style="color:#FFC30F;font-weight: 900">Station's Members:</label><br>
+							<span id="members_list" name="members_list_name" style="padding-top:8%"></span>
 						</div>
 						<div class="modal-footer">
 							<p>Time created and author goes here</p>

@@ -41,8 +41,6 @@ def index():
 			# Changing chat attributes form vars:
 			chat_img = None
 			new_chat_title = None
-			# Chat data variable
-			chat_data = []
 
 			if "cchat_modal_title_name" in request.form:
 				chat_title = request.form["cchat_modal_title_name"]
@@ -107,14 +105,13 @@ def index():
 						return redirect(url_for("index"))
 
 		chats = []
-		chat_data = None
 
 		for m_chat in flask_login.current_user.chat_list:
 				for m_user in m_chat.chat_backref:
 					if m_user == flask_login.current_user:
 						chats.append(m_chat)
 
-		return render_template("index.html", chats = chats, chat_data = chat_data)
+		return render_template("index.html", chats = chats)
 	return render_template("index.html")
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -199,20 +196,6 @@ def logout():
 	session.pop('user', None)
 	return redirect(url_for("index"))
 
-
-# TEMP
-@app.route("/show_chat")
-@login_required
-def show_chat():
-	for chat in flask_login.current_user.chat_list: # access to related users from chat
-		print(chat.title)
-		print("-----")
-		for user in chat.chat_backref:
-			print(user.username)
-		print("--END--")
-		print("   ")
-		#print(flask_login.current_user.chat_list[0]) access to related chats from user
-	return redirect(url_for("index"))
 
 @app.route("/<name>")
 @app.errorhandler(404)

@@ -19,14 +19,16 @@ def handle_connect():
 	flask_login.current_user._session_id = request.sid
 	db.session.commit()
 	session['chatID'] = "general"
+	join_room(session['chatID'])
+	emit("message", "This station is anonymous. No logs saved. ", room=session['chatID'])
 	
 # Socket IO disconnect handler
 @socketio.on('disconnect')
 def handle_disconnect():
 	if flask_login.current_user.is_authenticated:
 		print(f"{flask_login.current_user} : {flask_login.current_user.username} has disconnected.")
-	flask_login.current_user._session_id = None
-	db.session.commit()
+		flask_login.current_user._session_id = None
+		db.session.commit()
 	# Change back to general chat after user disconnects
 	leave_room(session['chatID'])
 
@@ -59,10 +61,10 @@ def handle_message(msg):
 	elif msg:
 		if flask_login.current_user.is_authenticated:
 			if "chatID" in session:
-				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
-					if session['chatID'] == "general":
+				if session['chatID'] == "general":
 						emit("message", f"{flask_login.current_user.username} : {msg}", room=session['chatID'])
-					else:
+				else:
+					if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
 						if os.path.exists(f"Metro/{curr_chat.file_dir}/chat.data"):
 							with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
 								formated_msg = f"{flask_login.current_user.username} : {msg}"
@@ -89,6 +91,7 @@ def recv_private_chatname(cid):
 		leave_room(session['chatID'])
 		session['chatID'] = "general"
 		join_room(session['chatID'])
+		emit("message", "This station is anonymous. No logs saved.", room=session['chatID'])
 
 	if session['chatID'] and session['chatID'] != "general":
 		if curr_chat := metro_chat.query.filter_by(string_id=session['chatID']).first():
@@ -105,6 +108,15 @@ def recv_private_chatname(cid):
 						first_msg = "This is the beginning of your conversation!"
 						metro_filehandler.write(first_msg + '\r\n')
 						emit("message", first_msg, room=session['chatID'])
+				# Return members list:
+				for member in curr_chat.chat_backref:
+					# Member state : Online / Offline based on their session id
+					if member._session_id:
+						member_state = "Online"
+					else:
+						member_state = "Offline"
+
+					emit('join_private_info', member.username + "%seperatorXD" + member_state, room=session['chatID'])
 
 @socketio.on('delete_private')
 def delete_chat_handle(cid):

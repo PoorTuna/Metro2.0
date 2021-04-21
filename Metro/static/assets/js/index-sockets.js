@@ -1,12 +1,15 @@
 		const socket = io('https://' + document.domain + ':' + location.port ,{ secure: true });
 		// Notify user when connected in logs
 		socket.on('connect', function() {
-			console.log("connected to global chat");
+			//console.log("connected to the chat");
+		});
+		socket.on('disconnect', function() {
+			//console.log("disconnected from the chat");
 		});
 
 		// Message recieving function
 		socket.on("message", function(msg) {
-			console.log("recieved message");
+			//console.log("recieved message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
 			$("#chat").append('<li>'+msg+'</li>');
 			tts.text = msg;
@@ -14,7 +17,7 @@
 		});
 		// Private Message recieving function
 		socket.on("private_message", function(msg) {
-			console.log("recieved private message");
+			//console.log("recieved private message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
 			$("#chat").append('<li style="color:#FFC30F">'+ "[W] " + msg +'</li>');
 			tts.text = msg;
@@ -22,12 +25,27 @@
 		});
 
 		socket.on("last_title", function(title) {
-			console.log("recieved last title");
+			//console.log("recieved last title");
 			title = title.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
 			set_title(title);
 
 		});
+		// Gets the member list:
+		socket.on("join_private_info", function(member) {
+			//console.log("recieved members list");
+			member = member.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
+			member = member.split("%seperatorXD");
+			member_state = member[1];
+			if(member_state == "Online" ){
+				member_state = "<span class='fas fa-train' style = 'color:lime'></span>";
+			}
+			else{
+				member_state = "<span class='fas fa-train' style = 'color:red'></span>";
+			}
 
+			$("#members_list").append(member_state + '<b><span style="color:#1a1a1a">'+ member[0] +'</span></b><br>');
+
+		});
 		//Connect html input and js socketio to send messages 
 		$('#sendbutton').on('click', function() {
 			send_msg();
@@ -52,7 +70,7 @@
 		function send_msg(){
 			if($('#myMessage').val()){
 			/* Send Message */
-			console.log("sent message");
+			//console.log("sent message");
 			socket.emit("message", $('#myMessage').val());
 			$('#myMessage').val("");
 
@@ -66,6 +84,7 @@
 		function join_chat(cid){
 			socket.emit("join_private", cid);
 			$("#chat").empty();
+			$("#members_list").empty();
 		}
 		/* Disable button to prevent request spamming */
 		$('#cchat_createbtn').on('click', function() {
