@@ -30,6 +30,11 @@ def unauthorized():
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
+	if not flask_login.current_user.is_authenticated:
+		if 'user' in session:
+			if session_user := metro_user.query.get(int(session['user'])):
+				login_user(session_user)
+		 
 	if flask_login.current_user.is_authenticated:
 
 		# Checks on whether the user posted a request
@@ -53,6 +58,9 @@ def index():
 
 			if chat_title:
 				if len(chat_title) <= 25 and len(chat_title) > 0:
+					#Strip chat_title from special characters:
+					chat_title = re.sub('[<>:"/\|?@*$%^&*`~]', '', chat_title)
+					print(chat_title)
 					curr_time = datetime.now().strftime("%d/%m/%y") 
 					curr_chat = metro_chat(string_id = None, title=chat_title, time_created = curr_time)
 					# Random string id generation
@@ -88,6 +96,8 @@ def index():
 
 						if new_chat_title:
 							if len(new_chat_title) <= 25 and len(new_chat_title) > 0:
+								#Strip chat_title from special characters:
+								new_chat_title = re.sub('[<>:"/\|@?*$%^&*`~]', '', new_chat_title)
 								curr_chat.title = new_chat_title
 								os.rename(f"Metro/{curr_chat.file_dir}", f"Metro/static/assets/chats/{curr_chat.string_id}{new_chat_title}/")
 								curr_chat.file_dir = f"static/assets/chats/{curr_chat.string_id}{new_chat_title}/"

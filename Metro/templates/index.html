@@ -86,16 +86,17 @@
 			</button>
 
 			<div class="dropdown-menu dropdown-menu-colors" aria-labelledby="options_topfooter">
+				<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#amchat_modal">Add Members</a>
 				<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#ddsettings_modal">Settings</a>
 				<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#ddinfo_modal">Info</a>
-				<a class="dropdown-item" href="" onclick="delete_server('{{session['chatID']}}')" style ="color:#FFC30F">Delete Station ADD CONFIRMATION</a>
+				<a class="dropdown-item" href="javascript:void(0)" style ="color:#FFC30F"  data-toggle="modal" data-target="#confirm_delete_modal">Deconstruct</a>
 			</div>
 		</div>
 		
-		<a class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size:25px;text-decoration:none" onclick="javascript:void(0)"  data-toggle="modal" data-target="">
+		<span class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size:25px;text-decoration:none" onclick="javascript:void(0)">
 		<img class = "top-footer-img" id="title_img_id" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}"> 
 		<span id="footer_title_text">general</span>
-		</a>
+		</span>
 	</footer>
 
 	<!-- Bottom Footer -->
@@ -124,7 +125,7 @@
 					</div>
 						<div class="modal-body">
 							<label for="cchat_modal_title fas" style="color:#FFC30F;font-weight: 900">Title</label>
-							<input type="text" class ="form-control" id="cchat_modal_title" name="cchat_modal_title_name" placeholder="Your Station's name | Max 25" maxlength="25" minlength="1">
+							<input type="text" class ="form-control" id="cchat_modal_title" name="cchat_modal_title_name" placeholder="Your Station's name | Max 25" maxlength="25" minlength="1" required>
 			
 						</div>
 						<div class="modal-footer">
@@ -150,7 +151,7 @@
 					</div>
 						<div class="modal-body">
 							<label for="amchat_modal_member_name" style="color:#FFC30F;font-weight: 900">Member's Nickname</label>
-							<input type="text" class ="form-control" id="amchat_modal_member_name_id" name="amchat_modal_member_name" placeholder="Member's Name" maxlength="12">
+							<input type="text" class ="form-control" id="amchat_modal_member_name_id" name="amchat_modal_member_name" placeholder="Member's Name" maxlength="12" required>
 						</div>
 						<div class="modal-footer">
 							<input type="submit" class="btn btn-primary" value = "Submit" onclick="close_amchat_modal();this.form.submit(); this.disabled=true; this.value='Recruiting…';" id="amchat_createbtn">
@@ -214,6 +215,30 @@
 					</div>	
 				</div>
 			</form>
+		</div>
+
+
+	<!-- Modal - Confirm Delete -->
+		<div class="modal fade center-modal" id="confirm_delete_modal" role="dialog">
+			<div class="modal-dialog">
+		
+			<!-- Modal Confirm Delete content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
+					<h4 style="color:#FFC30F" class="fas fa-subway modal-title modal-icon-left"></h4>
+					<h4 style="color:#FFC30F" class="modal-title modal-title-left">Deconstruct Station</h4>
+				</div>
+					<div class="modal-body">
+						<label for="confirm_delete_modal_title fas" style="color:#1a1a1a">Are you sure you want to deconstruct this station? This action can't be undone!</label>
+		
+					</div>
+					<div class="modal-footer">
+						<a href= "" class="btn btn-primary" onclick="close_confirm_delete_modal(); this.disabled=true; this.value='Establishing…'; delete_server('{{session['chatID']}}')" id="confirm_delete_deletebtn">Deconstruct</a>
+
+					</div>
+				</div>	
+			</div>
 		</div>
 
 	{% endif %}

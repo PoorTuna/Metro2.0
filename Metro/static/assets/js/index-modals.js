@@ -1,13 +1,5 @@
 $(document).ready(function() {
 	var footer_text;
-	function prevent_general_add(){
-		if(footer_text == "general"){
-			$("#footertitle").attr("data-target", "");
-		}
-		else{
-			$("#footertitle").attr("data-target", "#amchat_modal");
-		}
-	}
 	
 	function prevent_general_menu(){
 		if(footer_text == "general"){
@@ -20,7 +12,6 @@ $(document).ready(function() {
 
 	document.addEventListener("click", function(event) {
 		footer_text = document.querySelector("#footertitle span").innerText;
-		prevent_general_add();
 		prevent_general_menu();
 	});
 
@@ -43,3 +34,6 @@ function close_ddinfo_modal(){
 	$('ddsinfo_modal').modal('hide');
 }
 		
+function close_confirm_delete_modal(){
+	$('confirm_delete_modal').modal('hide');
+}
