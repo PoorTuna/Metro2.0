@@ -13,16 +13,12 @@
 			//console.log("recieved message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
 			$("#chat").append('<li>'+msg+'</li>');
-			// tts.text = msg;
-			//speechSynthesis.speak(tts);
 		});
 		// Private Message recieving function
 		socket.on("private_message", function(msg) {
 			//console.log("recieved private message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
 			$("#chat").append('<li style="color:#FFC30F">'+ "[W] " + msg +'</li>');
-			// tts.text = msg;
-			//speechSynthesis.speak(tts);
 		});
 
 		//TTS Message recieving function
@@ -34,6 +30,14 @@
 			tts.text = username + "says" + msg.slice(username.length + 1);
 			speechSynthesis.speak(tts);
 		});
+		//Delete Messages recieving function
+		socket.on("clean_message", function(msg) {
+			//console.log("recieved private message");
+			$("#chat").empty();
+			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
+			$("#chat").append('<li>'+ msg +'</li>');
+		});
+
 
 		socket.on("last_title", function(title) {
 			//console.log("recieved last title");

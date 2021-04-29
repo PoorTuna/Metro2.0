@@ -58,7 +58,11 @@ def handle_message(msg):
 		elif refined_msg[0] == "/tts":
 			message = msg[len(refined_msg[0])+ 1:]
 			emit("announce_message", f"{flask_login.current_user.username} : {message}", room=session['chatID'])
-
+		elif refined_msg[0] == "/clear" and session['chatID'] != "general":
+			if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
+				with open(f"Metro/{curr_chat.file_dir}/chat.data", "w") as metro_filehandler:
+					metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
+					emit("clean_message", "The chat has been cleaned!", room=session['chatID'])
 		else:
 			emit('private_message', f"Invalid Command {refined_msg[0]}")
 
