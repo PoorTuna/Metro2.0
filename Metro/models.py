@@ -7,6 +7,11 @@ metro_association_table = db.Table('user_chats',
 db.Column('user_id', db.Integer, db.ForeignKey('metro_user.id')),
 db.Column('chat_id', db.String(20), db.ForeignKey('metro_chat.string_id'))
 )
+metro_admin_association_table = db.Table('user_admin_chats',
+db.Column('user_id', db.Integer, db.ForeignKey('metro_user.id')),
+db.Column('chat_id', db.String(20), db.ForeignKey('metro_chat.string_id'))
+)
+
 class metro_user(UserMixin, db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	username = db.Column(db.String(12), unique = True, nullable=False)
@@ -14,6 +19,8 @@ class metro_user(UserMixin, db.Model):
 	password = db.Column(db.String(128), nullable=False)
 	_balance = db.Column(db.Integer,default = 50)
 	chat_list = db.relationship('metro_chat', secondary=metro_association_table, backref=db.backref('chat_backref', lazy = 'dynamic'))
+	chat_admin_list = db.relationship('metro_chat', secondary=metro_admin_association_table, backref=db.backref('chat_admin_backref', lazy = 'dynamic'))
+	chat_owner_list = db.relationship('metro_chat', backref  = "chat_owner_backref")
 	_session_id = db.Column(db.String(60), unique = True)
 
 class metro_chat(db.Model):
@@ -22,8 +29,7 @@ class metro_chat(db.Model):
 	file_dir = db.Column(db.String(12), unique = True, nullable=True)
 	title = db.Column(db.String(25), unique = False, nullable=False)
 	time_created = db.Column(db.String(12), nullable=False)
-	# admins
-	# banned_users
+	owner_id = db.Column(db.Integer,db.ForeignKey('metro_user.id')) # not really usefull by itself
 
 
 @login_manager.user_loader

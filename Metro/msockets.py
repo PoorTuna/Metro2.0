@@ -62,17 +62,26 @@ def handle_message(msg):
 		# TTS Messages:
 		elif refined_msg[0] == "/tts":
 			message = msg[len(refined_msg[0])+ 1:]
-			emit("announce_message", f"{flask_login.current_user.username} : {message}", room=session['chatID'])
+			message = f"{flask_login.current_user.username} : {message}"
+			if session['chatID'] != "general":
+				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
+					with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
+						metro_filehandler.write(message + '\r\n')
+
+			emit("announce_message", message, room=session['chatID'])
 
 		# Clean Chat:
 		elif refined_msg[0] == "/clear" and session['chatID'] != "general":
 			if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
 				if flask_login.current_user in curr_chat.chat_backref:
-					with open(f"Metro/{curr_chat.file_dir}/chat.data", "w") as metro_filehandler:
-						metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
-						emit("clean_message", "The chat has been cleaned!", room=session['chatID'])
+					if flask_login.current_user == curr_chat.chat_owner_backref:
+						with open(f"Metro/{curr_chat.file_dir}/chat.data", "w") as metro_filehandler:
+							metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
+							emit("clean_message", "The chat has been cleaned!", room=session['chatID'])
+					else:
+						emit("private_message", "Only the owner can clean the station log!")
 				else:
-					emit("message", "Invalid permissions!", room=flask_login.current_user._session_id)
+					emit("private_message", "Insufficient permissions!")
 		
 		# Kick member:
 		elif refined_msg[0] == "/kick" and session['chatID'] != "general":
@@ -80,34 +89,95 @@ def handle_message(msg):
 				tokick_name = msg[len(refined_msg[0])+ 1:]
 				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
 					if flask_login.current_user in curr_chat.chat_backref:
-						if tokick := metro_user.query.filter_by(username = tokick_name ).first():
-							if tokick != flask_login.current_user:
-								if tokick != curr_chat.chat_backref[0]:
-									if tokick in curr_chat.chat_backref:
-										curr_chat.chat_backref.remove(tokick) # Remove user from the chat ref
-										db.session.commit()
-										leave_room(session['chatID'], tokick._session_id)
-										kick_msg = f"{tokick.username}, has been kicked by  {flask_login.current_user.username}! Farewell."
-										emit("message", kick_msg, room=session['chatID'])
-										with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
-											metro_filehandler.write(kick_msg + '\r\n')
+						if flask_login.current_user in curr_chat.chat_admin_backref:
+							if tokick := metro_user.query.filter_by(username = tokick_name ).first():
+								if tokick != flask_login.current_user:
+									if tokick != curr_chat.chat_owner_backref:
+										if tokick in curr_chat.chat_backref:
+											curr_chat.chat_backref.remove(tokick) # Remove user from the chat ref
+											db.session.commit()
+											leave_room(session['chatID'], tokick._session_id)
+											kick_msg = f"{tokick.username}, has been expelled from the station by {flask_login.current_user.username}! Farewell."
+											emit("message", kick_msg, room=session['chatID'])
+											with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
+												metro_filehandler.write(kick_msg + '\r\n')
 
-										if tokick._session_id:
-											emit("private_message", f"You have been kicked from {curr_chat.title}, join any station to continue.", room = tokick._session_id)
+											if tokick._session_id:
+												emit("private_message", f"You have been kicked from {curr_chat.title}, join any station to continue.", room = tokick._session_id)
+										else:
+											emit("private_message", "Invalid User!")
 									else:
-										emit("private_message", "Invalid User!")
+										emit("private_message", "Can't kick the Owner!")
 								else:
-									emit("private_message", "Can't kick the Owner!")
+									emit("private_message", "Can't kick yourself!")
 							else:
-								emit("private_message", "Can't kick yourself!")
+								emit("private_message", "Invalid User!")
 						else:
-							emit("private_message", "Invalid User!")
+							emit("private_message", "Insufficient permissions!")
 				else:
-					emit("private_message", "Invalid permissions!")
+					emit("private_message", "Insufficient permissions!")
 			else:
 				emit('private_message', "Invalid /kick format! Try: /kick [user]")
+		
+		# Op member
+		elif refined_msg[0] == "/op" and session['chatID'] != "general":
+			if len(refined_msg) >= 2:
+				toop_name = msg[len(refined_msg[0])+ 1:]
+				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
+					if flask_login.current_user in curr_chat.chat_backref: # check if the current user in chat
+						if flask_login.current_user in curr_chat.chat_admin_backref: # check if current user is an admin
+							if toop := metro_user.query.filter_by(username = toop_name ).first(): # check if the member exists
+								if toop in curr_chat.chat_backref: # check if the member is in the chat
+									if toop not in curr_chat.chat_admin_backref:
+										if toop == curr_chat.chat_owner_backref: # check if the member is
+											emit('private_message', "Owner is already OP!")
+										else:
+											#OP HERE
+											curr_chat.chat_admin_backref.append(toop)
+											db.session.commit()
+											emit('private_message', f"{toop.username} has been added to the administration!")
+											
+									else:
+										emit('private_message', f"{toop.username} is already OP!")
+								else:
+									emit("private_message", "Invalid User!")
+							else:
+								emit("private_message", "Invalid User!")
+						else:
+							emit("private_message", "Insufficient permissions!")
+			else:
+				emit('private_message', "Invalid /op format! Try: /op [user]")
 
+		# Deop member
+		elif refined_msg[0] == "/deop" and session['chatID'] != "general":
+			if len(refined_msg) >= 2:
+				todeop_name = msg[len(refined_msg[0])+ 1:]
+				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
+					if flask_login.current_user in curr_chat.chat_backref: # check if the current user in chat
+						if flask_login.current_user in curr_chat.chat_admin_backref: # check if current user is an admin
+							if todeop := metro_user.query.filter_by(username = todeop_name ).first(): # check if the member exists
+								if todeop in curr_chat.chat_backref: # check if the member is in the chat
+									if todeop in curr_chat.chat_admin_backref:
+										if todeop == curr_chat.chat_owner_backref: # check if the member is
+											emit('private_message', "Can't de-op the Owner ")
+										else:
+											#DEOP HERE
+											curr_chat.chat_admin_backref.remove(todeop)
+											db.session.commit()
+											emit('private_message', f"{todeop.username} has been expelled from the administration by {flask_login.current_user.username}!")
+									else:
+										emit('private_message', f"{todeop.username} is not OP!")
+
+								else:
+									emit("private_message", "Invalid User!")
+							else:
+								emit("private_message", "Invalid User!")
+						else:
+							emit("private_message", "Insufficient permissions!")
+			else:
+				emit('private_message', "Invalid /deop format! Try: /deop [user]")
 		# Invalid Command:
+		
 		else:
 			emit('private_message', f"Invalid Command {refined_msg[0]}")
 
@@ -178,11 +248,14 @@ def delete_chat_handle(cid):
 	if cid != "general":
 		if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
 			if flask_login.current_user in curr_chat.chat_backref:
-				if os.path.exists(f"Metro/{curr_chat.file_dir}"):
-					for metro_file in os.listdir(f"Metro/{curr_chat.file_dir}"):
-						os.remove(f"Metro/{curr_chat.file_dir}/{metro_file}")
+				if flask_login.current_user == curr_chat.chat_owner_backref:
+					if os.path.exists(f"Metro/{curr_chat.file_dir}"):
+						for metro_file in os.listdir(f"Metro/{curr_chat.file_dir}"):
+							os.remove(f"Metro/{curr_chat.file_dir}/{metro_file}")
+			
+						os.rmdir(f"Metro/{curr_chat.file_dir}")
+					db.session.delete(curr_chat)
+					db.session.commit()
+				else:
+					emit("private_message", "Only the owner can deconstruct this station!")
 		
-					os.rmdir(f"Metro/{curr_chat.file_dir}")
-				db.session.delete(curr_chat)
-				db.session.commit()
-	

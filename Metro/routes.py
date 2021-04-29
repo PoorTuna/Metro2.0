@@ -61,7 +61,7 @@ def index():
 					#Strip chat_title from special characters:
 					chat_title = re.sub('[<>:"/\|?@*$%^&*`~]', '', chat_title)
 					print(chat_title)
-					curr_time = datetime.now().strftime("%d/%m/%y") 
+					curr_time = (datetime.now() + timedelta(hours=3)).strftime("%d/%m/%y") 
 					curr_chat = metro_chat(string_id = None, title=chat_title, time_created = curr_time)
 					# Random string id generation
 					letters = string.ascii_letters
@@ -72,6 +72,9 @@ def index():
 					curr_chat.string_id += str(curr_chat.id)
 					curr_chat.file_dir = f"static/assets/chats/{curr_chat.string_id}{curr_chat.title}/"
 					curr_chat.chat_backref.append(flask_login.current_user) # Add user to the backref
+					curr_chat.chat_owner_backref = flask_login.current_user # make the user the owner
+					curr_chat.chat_admin_backref.append(flask_login.current_user) # Add user to the admin backref
+					
 					db.session.commit()
 					# Create chat folder:
 					os.makedirs(f"Metro/static/assets/chats/{curr_chat.string_id}{curr_chat.title}/")
