@@ -82,19 +82,22 @@ def handle_message(msg):
 					if flask_login.current_user in curr_chat.chat_backref:
 						if tokick := metro_user.query.filter_by(username = tokick_name ).first():
 							if tokick != flask_login.current_user:
-								if tokick in curr_chat.chat_backref:
-									curr_chat.chat_backref.remove(tokick) # Remove user from the chat ref
-									db.session.commit()
-									leave_room(session['chatID'], tokick._session_id)
-									kick_msg = f"{tokick.username}, has been kicked by  {flask_login.current_user.username}! Farewell."
-									emit("message", kick_msg, room=session['chatID'])
-									with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
-										metro_filehandler.write(kick_msg + '\r\n')
+								if tokick != curr_chat.chat_backref[0]:
+									if tokick in curr_chat.chat_backref:
+										curr_chat.chat_backref.remove(tokick) # Remove user from the chat ref
+										db.session.commit()
+										leave_room(session['chatID'], tokick._session_id)
+										kick_msg = f"{tokick.username}, has been kicked by  {flask_login.current_user.username}! Farewell."
+										emit("message", kick_msg, room=session['chatID'])
+										with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
+											metro_filehandler.write(kick_msg + '\r\n')
 
-									if tokick._session_id:
-										emit("private_message", f"You have been kicked from {curr_chat.title}, join any station to continue.", room = tokick._session_id)
+										if tokick._session_id:
+											emit("private_message", f"You have been kicked from {curr_chat.title}, join any station to continue.", room = tokick._session_id)
+									else:
+										emit("private_message", "Invalid User!")
 								else:
-									emit("private_message", "Invalid User!")
+									emit("private_message", "Can't kick the Owner!")
 							else:
 								emit("private_message", "Can't kick yourself!")
 						else:
@@ -168,8 +171,8 @@ def recv_private_chatname(cid):
 					else:
 						member_state = "Offline"
 
-					emit('join_private_info', member.username + "%seperatorXD" + member_state, room=				flask_login.current_user._session_id)
-
+					emit('join_private_info', member.username + "%seperatorXD" + member_state, room=flask_login.current_user._session_id)
+				emit('join_private_info_date_author', f'created by {curr_chat.chat_backref[0].username} on the {curr_chat.time_created}', room=flask_login.current_user._session_id)
 @socketio.on('delete_private')
 def delete_chat_handle(cid):
 	if cid != "general":

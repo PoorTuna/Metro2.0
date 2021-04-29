@@ -61,6 +61,14 @@
 			$("#members_list").append(member_state + '<b><span style="color:#1a1a1a">'+ member[0] +'</span></b><br>');
 
 		});
+		// Gets the date created and the author:
+		socket.on("join_private_info_date_author", function(info) {
+			//console.log("recieved members list");
+			info = info.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
+
+			$("#billboard_info").append(info);
+
+		});
 		//Connect html input and js socketio to send messages 
 		$('#sendbutton').on('click', function() {
 			send_msg();
@@ -100,6 +108,7 @@
 			socket.emit("join_private", cid);
 			$("#chat").empty();
 			$("#members_list").empty();
+			$("#billboard_info").empty();
 		}
 		/* Disable button to prevent request spamming */
 		$('#cchat_createbtn').on('click', function() {
