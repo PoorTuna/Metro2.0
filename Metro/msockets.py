@@ -10,6 +10,8 @@ from .routes import session
 import flask_login
 #Import OS
 import os
+#Import time
+from datetime import datetime,timedelta
 
 # Socket IO connect handler
 @socketio.on('connect')
@@ -20,7 +22,6 @@ def handle_connect():
 	db.session.commit()
 	session['chatID'] = "general"
 	join_room(session['chatID'])
-	emit("message", "This station is anonymous. No logs saved. ", room=				flask_login.current_user._session_id)
 	
 # Socket IO disconnect handler
 @socketio.on('disconnect')
@@ -40,9 +41,8 @@ def handle_message(msg):
 	# Command Structure
 	if refined_msg[0][0] == "/":
 		# Whisper System
-		if len(refined_msg) >= 3:
-			
-			if refined_msg[0] == "/w":
+		if refined_msg[0] == "/w":
+			if len(refined_msg) >= 3:
 				message = msg[len(refined_msg[0]) + len(refined_msg[1]) + 2:]
 				recipient = metro_user.query.filter_by(username = refined_msg[1]).first()
 				if recipient:
@@ -53,6 +53,12 @@ def handle_message(msg):
 						emit('private_message', f"User : {recipient.username} is not online!")
 				else:
 					emit('private_message', f"User : {refined_msg[1]} does not exist!")
+			else:
+				emit('private_message', "Invalid /w format! Try: /w [user] [message]")
+		elif refined_msg[0] == "/tts":
+			message = msg[len(refined_msg[0])+ 1:]
+			emit("announce_message", f"{flask_login.current_user.username} : {message}", room=session['chatID'])
+
 		else:
 			emit('private_message', f"Invalid Command {refined_msg[0]}")
 
@@ -64,15 +70,15 @@ def handle_message(msg):
 						emit("message", f"{flask_login.current_user.username} : {msg}", room=session['chatID'])
 				else:
 					if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
+						curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M')
+						formated_msg = f"{curr_time} | {flask_login.current_user.username} : {msg}"
 						if os.path.exists(f"Metro/{curr_chat.file_dir}/chat.data"):
 							with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
-								formated_msg = f"{flask_login.current_user.username} : {msg}"
 								metro_filehandler.write(formated_msg + '\r\n')
 								emit("message", formated_msg, room=flask_login.current_user._session_id)
 						else:
 							with open(f"Metro/{curr_chat.file_dir}/chat.data", "x") as metro_filehandler:
 								metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
-								formated_msg = f"{flask_login.current_user.username} : {msg}"
 								metro_filehandler.write(formated_msg + '\r\n')
 								emit("message", formated_msg, room=flask_login.current_user._session_id)
 

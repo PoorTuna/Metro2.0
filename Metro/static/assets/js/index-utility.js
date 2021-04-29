@@ -11,8 +11,7 @@
 		}
 
 		/* Auto Scroll Function */
-		var userHasNotScrolled = true;
-		
+		var userHasNotScrolled;
 		function disable_auto_scroll(){
 			userHasNotScrolled = false;
 		}
@@ -27,8 +26,7 @@
 			}
 			userHasNotScrolled = true;
 		}
-		setInterval(auto_scroll, 0);
-		
+		setInterval(auto_scroll, 50);
 		// function change_voices(){
 		// 	var synth = window.speechSynthesis;
 		// 	var voices = synth.getVoices();

@@ -11,36 +11,6 @@
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
- /* CUSTOM SCROLLBAR */
-::-webkit-scrollbar {
-    width: 12px;
-}
- 
-/* Track */
-::-webkit-scrollbar-track {
-	 background-color: transparent;
-	 z-index: 11;
-}
-
- 
-/* Handle */
-::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    background: none;
-		opacity: 0.5;
-}
-::-webkit-scrollbar-thumb:hover {
-    border-radius: 10px;
-    background: #0a0a0a;
-		opacity: 0.1;
-	 	z-index: 11;
-}
-/* END CUSTOM SCROLLBAR */
-
-.infront{
-	z-index: 10;
-}
-
 
 @import url("https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600&display=swap");
 :root {

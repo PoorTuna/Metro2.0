@@ -2,6 +2,7 @@
 		// Notify user when connected in logs
 		socket.on('connect', function() {
 			//console.log("connected to the chat");
+			general_message();
 		});
 		socket.on('disconnect', function() {
 			//console.log("disconnected from the chat");
@@ -12,7 +13,7 @@
 			//console.log("recieved message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
 			$("#chat").append('<li>'+msg+'</li>');
-			tts.text = msg;
+			// tts.text = msg;
 			//speechSynthesis.speak(tts);
 		});
 		// Private Message recieving function
@@ -20,8 +21,18 @@
 			//console.log("recieved private message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
 			$("#chat").append('<li style="color:#FFC30F">'+ "[W] " + msg +'</li>');
-			tts.text = msg;
+			// tts.text = msg;
 			//speechSynthesis.speak(tts);
+		});
+
+		//TTS Message recieving function
+		socket.on("announce_message", function(msg) {
+			//console.log("recieved private message");
+			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
+			$("#chat").append('<li>'+ msg +'</li>');
+			username = msg.split(":")[0];
+			tts.text = username + "says" + msg.slice(username.length + 1);
+			speechSynthesis.speak(tts);
 		});
 
 		socket.on("last_title", function(title) {
@@ -93,4 +104,10 @@
 
 	function delete_server(cid){
 		socket.emit("delete_private", cid);
+	}	
+	
+	function general_message(){
+		if ($("#chat").length <= 1){
+			$("#chat").append('<li>' + 'This station is anonymous. No logs saved.' +'</li>');
+		}	
 	}
