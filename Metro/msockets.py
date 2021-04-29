@@ -40,29 +40,65 @@ def handle_message(msg):
 
 	# Command Structure
 	if refined_msg[0][0] == "/":
-		# Whisper System
+		# Whisper Messages:
 		if refined_msg[0] == "/w":
 			if len(refined_msg) >= 3:
 				message = msg[len(refined_msg[0]) + len(refined_msg[1]) + 2:]
 				recipient = metro_user.query.filter_by(username = refined_msg[1]).first()
 				if recipient:
-					if recipient._session_id:
-						emit("private_message", f"{flask_login.current_user.username} : {message}", room=recipient._session_id)
-						emit("private_message", f"To {recipient.username} : {message}", room=flask_login.current_user._session_id)
+					if recipient != flask_login.current_user:
+						if recipient._session_id:
+							emit("private_message", f"{flask_login.current_user.username} : {message}", room=recipient._session_id)
+							emit("private_message", f"To {recipient.username} : {message}", room=flask_login.current_user._session_id)
+						else:
+							emit('private_message', f"User : {recipient.username} is not online!")
 					else:
-						emit('private_message', f"User : {recipient.username} is not online!")
+						emit('private_message', f"Can't message yourself!")
 				else:
 					emit('private_message', f"User : {refined_msg[1]} does not exist!")
 			else:
 				emit('private_message', "Invalid /w format! Try: /w [user] [message]")
+		
+		# TTS Messages:
 		elif refined_msg[0] == "/tts":
 			message = msg[len(refined_msg[0])+ 1:]
 			emit("announce_message", f"{flask_login.current_user.username} : {message}", room=session['chatID'])
+
+		# Clean Chat:
 		elif refined_msg[0] == "/clear" and session['chatID'] != "general":
 			if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
-				with open(f"Metro/{curr_chat.file_dir}/chat.data", "w") as metro_filehandler:
-					metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
-					emit("clean_message", "The chat has been cleaned!", room=session['chatID'])
+				if flask_login.current_user in curr_chat.chat_backref:
+					with open(f"Metro/{curr_chat.file_dir}/chat.data", "w") as metro_filehandler:
+						metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
+						emit("clean_message", "The chat has been cleaned!", room=session['chatID'])
+				else:
+					emit("message", "Invalid permissions!", room=flask_login.current_user._session_id)
+		
+		# Kick member:
+		elif refined_msg[0] == "/kick" and session['chatID'] != "general":
+			if len(refined_msg) >= 2:
+				tokick_name = msg[len(refined_msg[0])+ 1:]
+				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
+					if flask_login.current_user in curr_chat.chat_backref:
+						if tokick := metro_user.query.filter_by(username = tokick_name ).first():
+							if tokick in curr_chat.chat_backref:
+								curr_chat.chat_backref.remove(tokick) # Remove user from the chat ref
+								db.session.commit()
+								leave_room(session['chatID'], tokick._session_id)
+								emit("private_message", f"{tokick.username}, has been kicked! Farewell.",room=session['chatID'])
+
+								if tokick._session_id:
+									emit("private_message", f"You have been kicked from {curr_chat.title}, join any station to continue.", room = tokick._session_id)
+							else:
+								emit("private_message", "Invalid User!")
+						else:
+							emit("private_message", "Invalid User!")
+				else:
+					emit("private_message", "Invalid permissions!")
+			else:
+				emit('private_message', "Invalid /kick format! Try: /kick [user]")
+
+		# Invalid Command:
 		else:
 			emit('private_message', f"Invalid Command {refined_msg[0]}")
 
@@ -74,17 +110,18 @@ def handle_message(msg):
 						emit("message", f"{flask_login.current_user.username} : {msg}", room=session['chatID'])
 				else:
 					if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
-						curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M')
-						formated_msg = f"{curr_time} | {flask_login.current_user.username} : {msg}"
-						if os.path.exists(f"Metro/{curr_chat.file_dir}/chat.data"):
-							with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
-								metro_filehandler.write(formated_msg + '\r\n')
-								emit("message", formated_msg, room=flask_login.current_user._session_id)
-						else:
-							with open(f"Metro/{curr_chat.file_dir}/chat.data", "x") as metro_filehandler:
-								metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
-								metro_filehandler.write(formated_msg + '\r\n')
-								emit("message", formated_msg, room=flask_login.current_user._session_id)
+						if flask_login.current_user in curr_chat.chat_backref:
+							curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M')
+							formated_msg = f"{curr_time} | {flask_login.current_user.username} : {msg}"
+							if os.path.exists(f"Metro/{curr_chat.file_dir}/chat.data"):
+								with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
+									metro_filehandler.write(formated_msg + '\r\n')
+									emit("message", formated_msg, room=flask_login.current_user._session_id)
+							else:
+								with open(f"Metro/{curr_chat.file_dir}/chat.data", "x") as metro_filehandler:
+									metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
+									metro_filehandler.write(formated_msg + '\r\n')
+									emit("message", formated_msg, room=flask_login.current_user._session_id)
 
 # Socket IO change chat handler
 @socketio.on('join_private')
