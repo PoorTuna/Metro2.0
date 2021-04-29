@@ -81,16 +81,22 @@ def handle_message(msg):
 				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
 					if flask_login.current_user in curr_chat.chat_backref:
 						if tokick := metro_user.query.filter_by(username = tokick_name ).first():
-							if tokick in curr_chat.chat_backref:
-								curr_chat.chat_backref.remove(tokick) # Remove user from the chat ref
-								db.session.commit()
-								leave_room(session['chatID'], tokick._session_id)
-								emit("private_message", f"{tokick.username}, has been kicked! Farewell.",room=session['chatID'])
+							if tokick != flask_login.current_user:
+								if tokick in curr_chat.chat_backref:
+									curr_chat.chat_backref.remove(tokick) # Remove user from the chat ref
+									db.session.commit()
+									leave_room(session['chatID'], tokick._session_id)
+									kick_msg = f"{tokick.username}, has been kicked by  {flask_login.current_user.username}! Farewell."
+									emit("message", kick_msg, room=session['chatID'])
+									with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
+										metro_filehandler.write(kick_msg + '\r\n')
 
-								if tokick._session_id:
-									emit("private_message", f"You have been kicked from {curr_chat.title}, join any station to continue.", room = tokick._session_id)
+									if tokick._session_id:
+										emit("private_message", f"You have been kicked from {curr_chat.title}, join any station to continue.", room = tokick._session_id)
+								else:
+									emit("private_message", "Invalid User!")
 							else:
-								emit("private_message", "Invalid User!")
+								emit("private_message", "Can't kick yourself!")
 						else:
 							emit("private_message", "Invalid User!")
 				else:
