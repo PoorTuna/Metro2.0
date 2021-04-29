@@ -115,8 +115,6 @@ def handle_message(msg):
 								emit("private_message", "Invalid User!")
 						else:
 							emit("private_message", "Insufficient permissions!")
-				else:
-					emit("private_message", "Insufficient permissions!")
 			else:
 				emit('private_message', "Invalid /kick format! Try: /kick [user]")
 		
@@ -177,10 +175,55 @@ def handle_message(msg):
 							emit("private_message", "Insufficient permissions!")
 			else:
 				emit('private_message', "Invalid /deop format! Try: /deop [user]")
+		
+		# Balance Command:
+		elif refined_msg[0] == "/bal" or refined_msg[0] == "/balance":
+			emit("private_message", f"You have {flask_login.current_user._balance} bullets")
+
+		# Tip user in room Command:
+		elif refined_msg[0] == "/tip":
+			if len(refined_msg) >= 3:
+				tip_amount = msg[len(refined_msg[0]) + len(refined_msg[1]) + 2:]
+				if tip_amount.isnumeric(): # check if the amount contains numbers only
+					if tip_recipient := metro_user.query.filter_by(username=refined_msg[1]).first():
+						if tip_recipient != flask_login.current_user:
+							if tip_recipient._session_id:
+								if flask_login.current_user._balance >= int(tip_amount):
+									flask_login.current_user._balance -= int(tip_amount)
+									tip_recipient._balance += int(tip_amount)
+									db.session.commit()
+									emit('private_message', f"You tipped {tip_amount} bullets to {tip_recipient.username}!")
+
+									emit('private_message', f"{flask_login.current_user.username} tipped {tip_amount} bullets to you!", room=tip_recipient._session_id)
+
+								else:
+									emit('private_message', "Insufficient bullets!")
+							else:
+								emit('private_message', "User is Offline!")
+						else:
+							emit('private_message', "Can't tip yourself!")
+					else:
+						emit('private_message', "Invalid user!")
+
+				else:
+					emit('private_message', "Invalid amount!")
+
+			else:
+				emit('private_message', "Invalid /tip format! Try: /tip [user] [amount]")
+		
+		# Help Command:		
+		elif len(refined_msg) == 1 and (refined_msg[0] == "/help" or refined_msg[0] == "/?"):
+			if session['chatID'] != "general":
+				permissions = "User: /tip ; /bal ; /balance ; /w ; /tts | Administrator: /op ; /deop ; /kick | Owner: /clear"
+				emit("private_message", permissions)
+			elif session['chatID'] == "general":
+				permissions = "User: /tip ; /bal ; /balance ; /w ; /tts"
+				emit("private_message", permissions)
+			
 		# Invalid Command:
 		
 		else:
-			emit('private_message', f"Invalid Command {refined_msg[0]}")
+			emit('private_message', f"Invalid Command {refined_msg[0]}, try /help!")
 
 	# Regular Messages:
 	elif msg:
