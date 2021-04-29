@@ -62,7 +62,8 @@ def handle_message(msg):
 		# TTS Messages:
 		elif refined_msg[0] == "/tts":
 			message = msg[len(refined_msg[0])+ 1:]
-			message = f"{flask_login.current_user.username} : {message}"
+			curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M')
+			message = f"{curr_time} | {flask_login.current_user.username} : {message}"
 			if session['chatID'] != "general":
 				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
 					with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
@@ -181,7 +182,7 @@ def handle_message(msg):
 		else:
 			emit('private_message', f"Invalid Command {refined_msg[0]}")
 
-	# Normal Messages:
+	# Regular Messages:
 	elif msg:
 		if flask_login.current_user.is_authenticated:
 			if "chatID" in session:

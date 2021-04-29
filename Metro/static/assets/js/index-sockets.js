@@ -26,8 +26,12 @@
 			//console.log("recieved private message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
 			$("#chat").append('<li>'+ msg +'</li>');
-			username = msg.split(":")[0];
-			tts.text = username + "says" + msg.slice(username.length + 1);
+			username_time = msg.split(":")[1]; // the username with time pos 1 and not 0 because of time format Hour:Minute ":" <--- !!!
+
+			username = username_time.split("|")[1]; // the username after time has been cut
+
+			tts.text = username + "says" + msg.slice(username_time.length + 2);
+			console.log(tts.text);
 			speechSynthesis.speak(tts);
 		});
 		//Delete Messages recieving function
