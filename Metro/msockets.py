@@ -214,10 +214,18 @@ def handle_message(msg):
 		# Help Command:		
 		elif len(refined_msg) == 1 and (refined_msg[0] == "/help" or refined_msg[0] == "/?"):
 			if session['chatID'] != "general":
-				permissions = "User: /tip ; /bal ; /balance ; /w ; /tts | Administrator: /op ; /deop ; /kick | Owner: /clear"
-				emit("private_message", permissions)
+				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
+					if flask_login.current_user in curr_chat.chat_backref:
+						permissions = "User: /help ; /? ; /tip ; /bal ; /balance ; /w ; /tts"
+						if flask_login.current_user in curr_chat.chat_admin_backref:
+							permissions += " | Administrator: /op ; /deop ; /kick"
+							if flask_login.current_user == curr_chat.chat_owner_backref:
+								permissions += " | Owner: /clear"
+
+						emit("private_message", permissions)
+						
 			elif session['chatID'] == "general":
-				permissions = "User: /tip ; /bal ; /balance ; /w ; /tts"
+				permissions = "User: /help ; /? ; /tip ; /bal ; /balance ; /w ; /tts"
 				emit("private_message", permissions)
 			
 		# Invalid Command:
