@@ -222,14 +222,24 @@ def handle_message(msg):
 							admins += admin.username + " | "
 
 					emit("private_message", admins)
-				
+		
+		# Show online members Command:	
+		elif len(refined_msg) == 1 and refined_msg[0] == "/members" and session['chatID'] != "general":
+			if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first(): # check if the chat exists.
+				if flask_login.current_user in curr_chat.chat_backref: # check if user is in the chat list
+					members = "Online Members : "
+					for member in curr_chat.chat_backref:
+						if member._session_id:
+							members += member.username + " | "
 
+					emit("private_message", members)
+				
 		# Help Command:		
 		elif len(refined_msg) == 1 and (refined_msg[0] == "/help" or refined_msg[0] == "/?"):
 			if session['chatID'] != "general":
 				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
 					if flask_login.current_user in curr_chat.chat_backref:
-						permissions = "User: /help ; /? ; /admins ;/tip ; /bal ; /balance ; /w ; /tts"
+						permissions = "User: /help ; /? ; /members ; /admins ; /tip ; /bal ; /balance ; /w ; /tts"
 						if flask_login.current_user in curr_chat.chat_admin_backref:
 							permissions += " | Administrator: /op ; /deop ; /kick"
 							if flask_login.current_user == curr_chat.chat_owner_backref:
