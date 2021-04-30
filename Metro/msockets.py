@@ -135,6 +135,8 @@ def handle_message(msg):
 											curr_chat.chat_admin_backref.append(toop)
 											db.session.commit()
 											emit('private_message', f"{toop.username} has been added to the administration!")
+											if toop._session_id:
+												emit('private_message', f"you have been added to the administration by {flask_login.current_user.username}!", room =toop._session_id)
 											
 									else:
 										emit('private_message', f"{toop.username} is already OP!")
