@@ -212,13 +212,24 @@ def handle_message(msg):
 
 			else:
 				emit('private_message', "Invalid /tip format! Try: /tip [user] [amount]")
-		
+		# Show online admins Command:		
+		elif len(refined_msg) == 1 and refined_msg[0] == "/admins" and session['chatID'] != "general":
+			if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first(): # check if the chat exists.
+				if flask_login.current_user in curr_chat.chat_backref: # check if user is in the chat list
+					admins = "Online Admins : "
+					for admin in curr_chat.chat_admin_backref:
+						if admin._session_id:
+							admins += admin.username + " | "
+
+					emit("private_message", admins)
+				
+
 		# Help Command:		
 		elif len(refined_msg) == 1 and (refined_msg[0] == "/help" or refined_msg[0] == "/?"):
 			if session['chatID'] != "general":
 				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
 					if flask_login.current_user in curr_chat.chat_backref:
-						permissions = "User: /help ; /? ; /tip ; /bal ; /balance ; /w ; /tts"
+						permissions = "User: /help ; /? ; /admins ;/tip ; /bal ; /balance ; /w ; /tts"
 						if flask_login.current_user in curr_chat.chat_admin_backref:
 							permissions += " | Administrator: /op ; /deop ; /kick"
 							if flask_login.current_user == curr_chat.chat_owner_backref:
