@@ -11,22 +11,22 @@ COMPRESS TO SHIT THE ASSETS! not like last time with 100mb worth of images
 
 
 Client Side:
-- implement kivy gui | Crossplatform!
-- create a "recent chats screen" to the left
-- create a search bar for chats
-- create a chat window, [ default is a screen with a logo ]
-- display neat features such as current time, date and year
+- implement kivy gui | Crossplatform! {Scrapped}
+- create a "recent chats screen" to the left {Check}
+- create a search bar for chats 
+- create a chat window, [ default is a screen with a logo ] {Check}
+- display neat features such as current time, date and year {Check}
 - add ability to change chat background
 - add dark mode / light mode / custom UI colors
 
-- add search user [ by username / optional : IP ]
+- add search user [ by username / optional : IP ] {Scrapped}
 - add ability to send messages between users -> USER1 -> SERVER -> USER2 | Via  
-threads
-- add ability to send files that are max 10mb
+threads {Check}
+- add ability to send files that are max 10mb {Considered}
 - add ability to VOICE CHAT via VOIP | LATER - > Voice chat with groups
-- add ability to create group chats with admin permissions
-- add ability to favorite chats + create a favorite tab
-- add ability to favorite messages -> try to make dynamic
+- add ability to create group chats with admin permissions {Check}
+- add ability to favorite chats + create a favorite tab {}
+- add ability to favorite messages -> try to make dynamic 
 - CHECK IF WHEN TYPING CAN BE DISPLAYED FOR OTHER USER LIKE IN WHATSAPP
 
 

@@ -104,7 +104,7 @@ def handle_message(msg):
 												metro_filehandler.write(kick_msg + '\r\n')
 
 											if tokick._session_id:
-												emit("private_message", f"You have been kicked from {curr_chat.title}, join any station to continue.", room = tokick._session_id)
+												emit("private_message", f"You have been expelled from {curr_chat.title}, join any station to continue.", room = tokick._session_id)
 										else:
 											emit("private_message", "Invalid User!")
 									else:
@@ -318,6 +318,7 @@ def recv_private_chatname(cid):
 
 					emit('join_private_info', member.username + "%seperatorXD" + member_state, room=flask_login.current_user._session_id)
 				emit('join_private_info_date_author', f'created by {curr_chat.chat_backref[0].username} on the {curr_chat.time_created}', room=flask_login.current_user._session_id)
+
 @socketio.on('delete_private')
 def delete_chat_handle(cid):
 	if cid != "general":

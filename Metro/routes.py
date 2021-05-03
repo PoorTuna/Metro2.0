@@ -18,6 +18,8 @@ from datetime import datetime
 import re
 # Import SocketIO file
 from .msockets import *
+from .mfunctions import *
+
 # Import OS
 import os
 # Import shutil for copying images
@@ -210,6 +212,58 @@ def logout():
 	session.pop('user', None)
 	return redirect(url_for("index"))
 
+@app.route("/forgot")
+def handle_forgot():
+	if not flask_login.current_user.is_authenticated:
+		try:
+			if session['user']:
+				flask_login.current_user = metro_user.query.get(int(session['user']))
+				return redirect(url_for("index")) #User in session
+		except:
+			pass
+			
+		if request.method == 'POST':
+			err_code = ""
+			if 'forgotCODE' not in session:
+				# The email request section
+				form_email = request.form["email"] # form email
+				if email_user := metro_user.query.filter_by(email = form_email).first():
+					session['forgotCODE'] = ''.join(random.choice(string.ascii_letters) for i in range(10)) # Random str for code
+					session['forgotEmail'] = email_user.email
+					metro_send_mail(email_user, session['forgotCODE']) # send mail
+				else:
+					err_code = "Invalid Email!"
+
+			elif 'enteredCODE' not in session or session['enteredCODE'] != session['forgotCODE']:
+				form_code = request.form["entercode"] # form password
+				if form_code:
+					if len(form_code) == 6:
+						session['enteredCODE'] = form_code
+					else:
+							err_code = "Invalid Code Format!"
+			
+			elif session['enteredCODE'] == session['forgotCODE']:
+				# The password changing section
+				form_password = request.form["password"] # form password
+				form_confirm_password = request.form["confirmpassword"] # form password confirmation
+				if form_password and form_confirm_password:
+					if form_password == form_confirm_password and len(form_password) >= 8:
+						if 'forgotEmail' in session:
+							if email_user := metro_user.query.filter_by(email = session['forgotEmail']).first():
+								hashed_password = bcrypt.hashpw(form_password.encode(), bcrypt.gensalt())
+								email_user.password = hashed_password
+								db.session.commit()
+								# Session cleanup just in case:
+								session.pop('forgotEmail', None)
+								session.pop('enteredCODE', None)
+								session.pop('forgotCODE', None)
+
+		return render_template("forgot.html", err = err_code)
+
+
+	return redirect(url_for("index"))
+	# USE SESSIONS INSTEAD!!!! STORE RANDOM CODE IN SESSIONS [SERVER SIDE]
+	# LIMIT THE SESSION TO 5 MIN
 
 @app.route("/<name>")
 @app.errorhandler(404)
