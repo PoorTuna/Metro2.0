@@ -9,14 +9,14 @@ def metro_send_mail(user, code):
 	This function sends via smtp an email using gmail's api.
 	'''
 	EmailAdd = "metroofficialreply@gmail.com" #senders Gmail id over here
-	Pass = "GMAILPASSWORD" #senders Gmail's Password over here 
-	messagefunny = f"Hello {user.username}!"
+	Pass = "metropassword343" #senders Gmail's Password over here 
+	metro_message = f"Hello {user.username}, Your password reset code is : {code}"
 
 	msg = EmailMessage()
-	msg['Subject'] = 'Subject of the Email' # Subject of Email
+	msg['Subject'] = 'Metro Password Recovery' # Subject of Email
 	msg['From'] = EmailAdd
-	msg['To'] = 'byzeintrove@gmail.com' # Reciver of the Mail
-	msg.set_content(messagefunny) # Email body or Content
+	msg['To'] = user.email # Reciver of the Mail
+	msg.set_content(metro_message) # Email body or Content
 
 	#### >> Code from here will send the message << ####
 	with smtplib.SMTP_SSL('smtp.gmail.com',465) as smtp: #Added Gmails SMTP Server

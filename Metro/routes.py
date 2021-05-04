@@ -212,7 +212,7 @@ def logout():
 	session.pop('user', None)
 	return redirect(url_for("index"))
 
-@app.route("/forgot")
+@app.route("/forgot", methods=['GET', 'POST'])
 def handle_forgot():
 	if not flask_login.current_user.is_authenticated:
 		try:
@@ -221,21 +221,29 @@ def handle_forgot():
 				return redirect(url_for("index")) #User in session
 		except:
 			pass
-			
+
+		err_code = ""
+		session.pop('forgotCODE', None)
+		session.pop('enteredCODE', None)
 		if request.method == 'POST':
-			err_code = ""
+			
 			if 'forgotCODE' not in session:
 				# The email request section
 				form_email = request.form["email"] # form email
 				if email_user := metro_user.query.filter_by(email = form_email).first():
 					session['forgotCODE'] = ''.join(random.choice(string.ascii_letters) for i in range(10)) # Random str for code
 					session['forgotEmail'] = email_user.email
-					metro_send_mail(email_user, session['forgotCODE']) # send mail
+					try:
+						metro_send_mail(email_user, session['forgotCODE']) # send mail
+						print(session['forgotCODE'])
+					except:
+						print("Email System Error")
+
 				else:
 					err_code = "Invalid Email!"
 
 			elif 'enteredCODE' not in session or session['enteredCODE'] != session['forgotCODE']:
-				form_code = request.form["entercode"] # form password
+				form_code = request.form["entercode"] # form code
 				if form_code:
 					if len(form_code) == 6:
 						session['enteredCODE'] = form_code
