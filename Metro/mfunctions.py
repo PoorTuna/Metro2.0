@@ -10,7 +10,7 @@ def metro_send_mail(user, code):
 	'''
 	EmailAdd = "metroofficialreply@gmail.com" #senders Gmail id over here
 	Pass = "metropassword343" #senders Gmail's Password over here 
-	metro_message = f"Hello {user.username}, Your password reset code is : {code}"
+	metro_message = f"Hello {user.username}, Your password reset code is : {code} . This Code will expire in the next 3 days."
 
 	msg = EmailMessage()
 	msg['Subject'] = 'Metro Password Recovery' # Subject of Email

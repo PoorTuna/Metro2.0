@@ -15,7 +15,7 @@
 			<p style ="color:white;font-size:10px">Suddenly remember your password?<a style = "color:#FFC30F" href="/login"> Sign In</a></p>
 			<p style ="color:white;font-size:10px">{{err}}</p>
 		</form>
-	{% elif session['forgotCODE'] %}
+	{% elif 'enteredCODE' not in session or session['enteredCODE'] != session['forgotCODE'] %}
 		<!-- After the user has requested a recovery: -->
 		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'form.css')}}">
 	<form  class = "box" method = "post" action = "" style= "text-align:center">
@@ -28,9 +28,7 @@
 		<p style ="color:white;font-size:10px">Suddenly remember your password?<a style = "color:#FFC30F" href="/login"> Sign In</a></p>
 		<p style ="color:white;font-size:10px">{{err}}</p>
 	</form>
-	{% elif session['enteredCODE'] %}
-
-		{% if session['enteredCODE'] == session['forgotCODE'] %}
+	{% elif session['enteredCODE'] == session['forgotCODE'] %}
 		<!-- After the user has entered the correct code: -->
 		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'form.css')}}">
 		<form  class = "box" method = "post" action = "" style= "text-align:center">
@@ -45,8 +43,6 @@
 			<p style ="color:white;font-size:10px">Suddenly remember your password?<a style = "color:#FFC30F" href="/login"> Sign In</a></p>
 			<p style ="color:white;font-size:10px">{{err}}</p>
 		</form>
-		{% endif %}
-
 	{% endif %}
 
 {% endblock %}

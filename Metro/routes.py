@@ -223,11 +223,9 @@ def handle_forgot():
 			pass
 
 		err_code = ""
-		session.pop('forgotCODE', None)
-		session.pop('enteredCODE', None)
 		if request.method == 'POST':
 			
-			if 'forgotCODE' not in session:
+			if 'forgotCODE' not in session and "email" in request.form:
 				# The email request section
 				form_email = request.form["email"] # form email
 				if email_user := metro_user.query.filter_by(email = form_email).first():
@@ -243,12 +241,19 @@ def handle_forgot():
 					err_code = "Invalid Email!"
 
 			elif 'enteredCODE' not in session or session['enteredCODE'] != session['forgotCODE']:
+				# The code entering section
+				print("xd")
 				form_code = request.form["entercode"] # form code
 				if form_code:
-					if len(form_code) == 6:
+					if len(form_code) == 10:
 						session['enteredCODE'] = form_code
+						if session['enteredCODE'] == session['forgotCODE']:
+							err_code = "Success! Redirecting..."
+						else:
+							err_code = "Invalid Code!"
 					else:
-							err_code = "Invalid Code Format!"
+						session['enteredCODE'] = False
+						err_code = "Invalid Code Format!"
 			
 			elif session['enteredCODE'] == session['forgotCODE']:
 				# The password changing section
@@ -270,8 +275,6 @@ def handle_forgot():
 
 
 	return redirect(url_for("index"))
-	# USE SESSIONS INSTEAD!!!! STORE RANDOM CODE IN SESSIONS [SERVER SIDE]
-	# LIMIT THE SESSION TO 5 MIN
 
 @app.route("/<name>")
 @app.errorhandler(404)
