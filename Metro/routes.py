@@ -25,6 +25,8 @@ import os
 # Import shutil for copying images
 from shutil import copyfile
 
+#This file contains custom routes handling for the Metro2.0 project
+
 @login_manager.unauthorized_handler
 def unauthorized():
     # do stuff
@@ -218,6 +220,9 @@ def handle_forgot():
 		try:
 			if session['user']:
 				flask_login.current_user = metro_user.query.get(int(session['user']))
+				session.pop('forgotEmail', None)
+				session.pop('enteredCODE', None)
+				session.pop('forgotCODE', None)
 				return redirect(url_for("index")) #User in session
 		except:
 			pass
@@ -260,19 +265,24 @@ def handle_forgot():
 				form_password = request.form["password"] # form password
 				form_confirm_password = request.form["confirmpassword"] # form password confirmation
 				if form_password and form_confirm_password:
-					if form_password == form_confirm_password and len(form_password) >= 8:
-						if 'forgotEmail' in session:
-							if email_user := metro_user.query.filter_by(email = session['forgotEmail']).first():
-								hashed_password = bcrypt.hashpw(form_password.encode(), bcrypt.gensalt())
-								email_user.password = hashed_password
-								db.session.commit()
-								# Session cleanup just in case:
-								session.pop('forgotEmail', None)
-								session.pop('enteredCODE', None)
-								session.pop('forgotCODE', None)
+					if form_password == form_confirm_password:
+						if len(form_password) >= 8:
+							if 'forgotEmail' in session:
+								if email_user := metro_user.query.filter_by(email = session['forgotEmail']).first():
+									hashed_password = bcrypt.hashpw(form_password.encode(), bcrypt.gensalt())
+									email_user.password = hashed_password
+									db.session.commit()
+									# Session cleanup just in case:
+									session.pop('forgotEmail', None)
+									session.pop('enteredCODE', None)
+									session.pop('forgotCODE', None)
+									return redirect(url_for("login"))
+						else:
+							err_code = "Passwords are too short!"
+					else:
+						err_code = "Passwords do not match!"
 
 		return render_template("forgot.html", err = err_code)
-
 
 	return redirect(url_for("index"))
 

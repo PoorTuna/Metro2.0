@@ -1,6 +1,8 @@
 import smtplib 
 from email.message import EmailMessage
 
+#This file contains custom built functions for the Metro2.0 project
+
 def metro_send_mail(user, code):
 	'''
 	Parameters : Recipient Object, ForgotCode Code.
@@ -10,7 +12,7 @@ def metro_send_mail(user, code):
 	'''
 	EmailAdd = "metroofficialreply@gmail.com" #senders Gmail id over here
 	Pass = "metropassword343" #senders Gmail's Password over here 
-	metro_message = f"Hello {user.username}, Your password reset code is : {code} . This Code will expire in the next 3 days."
+	metro_message = f"Hello {user.username}, Your password reset code is : {code} . This Code will expire in the next 3 days. If you did not issue this request please contact the support team."
 
 	msg = EmailMessage()
 	msg['Subject'] = 'Metro Password Recovery' # Subject of Email

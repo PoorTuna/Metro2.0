@@ -1,6 +1,7 @@
 # Flask-Login incorporation import + Flask-SQLALCHEMY database reference
 from flask_login import UserMixin
 from . import db, login_manager
+#This file contains models and login structure for the Metro2.0 project
 
 # User class & integration with login manager and data base
 metro_association_table = db.Table('user_chats',

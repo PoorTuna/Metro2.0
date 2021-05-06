@@ -13,6 +13,8 @@ import os
 #Import time
 from datetime import datetime,timedelta
 
+#This file contains socket handling and communications for the Metro2.0 project
+
 # Socket IO connect handler
 @socketio.on('connect')
 def handle_connect():
