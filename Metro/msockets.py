@@ -336,4 +336,8 @@ def delete_chat_handle(cid):
 					db.session.commit()
 				else:
 					emit("private_message", "Only the owner can deconstruct this station!")
-		
+
+
+@socketio.on('send_voice')
+def handle_voice(voice):
+	emit("recv_voice", voice,  broadcast = True)

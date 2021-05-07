@@ -21,9 +21,6 @@
 		</audio>
 		<script src="{{url_for('static',filename = 'assets/js/playaudio.js')}}"></script>
 		
-		<!-- Voice Chat Functionality -->
-		<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/voicechat.js')}}"></script>
-
 		<a href="/login">
 			<div class="body-text">
 				<span id="L">M</span>
@@ -61,6 +58,9 @@
 	<script src="{{url_for('static',filename = 'assets/js/index-sockets.js')}}"></script>
 	<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/index-modals.js')}}"></script>
 
+	<!-- Voice Chat Functionality -->
+	<!-- <script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/voicechat.js')}}"></script> -->
+
 	<!-- CSS styling -->
 	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index.css')}}">
 
@@ -91,6 +91,7 @@
 				<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#amchat_modal">Add Members</a>
 				<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#ddsettings_modal">Settings</a>
 				<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#ddinfo_modal">Info</a>
+				<div class="dropdown-divider"></div>
 				<a class="dropdown-item" href="javascript:void(0)" style ="color:#FFC30F"  data-toggle="modal" data-target="#confirm_delete_modal">Deconstruct</a>
 			</div>
 		</div>

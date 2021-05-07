@@ -246,3 +246,18 @@ transform: translate(50%, 0);
 .infront{
 	z-index: 10;
 }
+
+
+/* NavBar */
+.top-right-user{
+	position: relative;
+	height: 0%;
+	right: 0%;
+	font-size: 200%;
+	transform: translate(0, 0%);
+
+}
+
+.topnav-right {
+  float: right;
+}
