@@ -98,6 +98,8 @@ def handle_message(msg):
 									if tokick != curr_chat.chat_owner_backref:
 										if tokick in curr_chat.chat_backref:
 											curr_chat.chat_backref.remove(tokick) # Remove user from the chat ref
+											curr_chat.chat_admin_backref.remove(tokick) # Remove user from the admin chat ref
+
 											db.session.commit()
 											leave_room(session['chatID'], tokick._session_id)
 											kick_msg = f"{tokick.username}, has been expelled from the station by {flask_login.current_user.username}! Farewell."
@@ -192,7 +194,7 @@ def handle_message(msg):
 					if tip_recipient := metro_user.query.filter_by(username=refined_msg[1]).first():
 						if tip_recipient != flask_login.current_user:
 							if tip_recipient._session_id:
-								if flask_login.current_user._balance >= int(tip_amount):
+								if flask_login.current_user._balance >= int(tip_amount) + 50: # base safety amount
 									flask_login.current_user._balance -= int(tip_amount)
 									tip_recipient._balance += int(tip_amount)
 									db.session.commit()

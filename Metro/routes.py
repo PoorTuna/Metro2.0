@@ -38,8 +38,11 @@ def index():
 		if 'user' in session:
 			if session_user := metro_user.query.get(int(session['user'])):
 				login_user(session_user)
+				session['bullets'] = session_user._balance
 		 
 	if flask_login.current_user.is_authenticated:
+		if 'bullets' not in session:
+			session['bullets'] = flask_login.current_user._balance
 
 		# Checks on whether the user posted a request
 		if request.method == "POST":
@@ -152,12 +155,13 @@ def login():
 					if bcrypt.checkpw(form_password.encode(), logged_user.password):
 							login_user(logged_user)
 							session['user'] = flask_login.current_user.id
+							session['bullets'] = flask_login.current_user._balance
 
 				if logged_user := metro_user.query.filter_by(email = form_username).first(): 
 					if bcrypt.checkpw(form_password.encode(), logged_user.password):
 							login_user(logged_user)
 							session['user'] = flask_login.current_user.id
-					
+							session['bullets'] = flask_login.current_user._balance
 
 				if flask_login.current_user.is_authenticated:
 					return redirect(url_for("index")) #Login successful
@@ -285,6 +289,40 @@ def handle_forgot():
 		return render_template("forgot.html", err = err_code)
 
 	return redirect(url_for("index"))
+
+@app.route("/profile")
+@login_required
+def profile():
+	data = []
+	chat_list = []
+	admin_list = []
+	owner_list = []
+	curr_user = flask_login.current_user
+	# Insert Name :
+	data.append(["Nickname:", curr_user.username]) 
+	# Insert Email :
+	data.append(["Email:", curr_user.email])
+	# Insert Balance :
+	data.append(["Balance:", curr_user._balance])
+	# Insert Chat List :
+	for chat in curr_user.chat_list:
+		chat_list.append(chat.title)
+	data.append(["Stations:", chat_list])
+	# Insert Admin Chat List :
+	for chat in curr_user.chat_admin_list:
+		admin_list.append(chat.title)
+	data.append(["Stations you Manage:", admin_list])
+	# Insert Owner Chat List :
+	for chat in curr_user.chat_owner_list:
+		owner_list.append(chat.title)
+	data.append(["Stations you Own:", owner_list])
+
+	return render_template("user/profile.html", data = data)
+
+@app.route("/settings")
+@login_required
+def settings():
+	return render_template("user/settings.html")
 
 @app.route("/<name>")
 @app.errorhandler(404)

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{%block title%}MetroCompanion{%endblock%}
+
+{%block content%}
+
+	<ul class="list-group" style="background-color:#1a1a1a">
+		{% for item in data %}
+			<li class="list-group-item d-flex justify-content-between" style="background-color:#1a1a1a;color:white">
+				{% if item[1] is iterable and (item[1] is not string and item[1] is not mapping and item[1] is not number) %}
+				
+				<strong>{{item[0]}}</strong>
+				<p id = "{{item[0]}}" >| </p>
+				{% for chat in item[1] %}
+					<script>
+						document.getElementById("{{item[0]}}").innerText += " {{chat}} | ";
+					</script>
+				{% endfor %}
+
+				{% else %}
+				<strong>{{item[0]}}</strong>
+				<p>{{item[1]}}</p>
+				{% endif %}
+
+			</li>
+
+		{% endfor %}
+	</ul>
+{%endblock%}

@@ -151,17 +151,17 @@
 }
 
 .bottom_button{
-	width: 10%;
-	height: 10%;
+	/* width: 10%;
+	height: 10%; */
   background: none;
   border: 2px solid #FFC30F;
-  padding: 20px 40px;
+  padding: 1.5em 3em;
 	line-height: 0;
   outline: none;
   color: white;
   border-radius: 20px;
   cursor: pointer;
-
+	text-align: center;
 }
 .bottom_button:hover{
   background: #FFC30F;
@@ -253,7 +253,6 @@ transform: translate(50%, 0);
 	position: relative;
 	height: 0%;
 	right: 0%;
-	font-size: 200%;
 	transform: translate(0, 0%);
 
 }
