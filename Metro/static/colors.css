@@ -18,10 +18,9 @@ Cool-White : #f1f1f1
 	--metro_primary: #FFC30F;
 	--metro_secondary: #1a1a1a;
 	--metro_tertiary: #555555;
-	--metro_accents: #0a0a0a;
+	--metro_accents: #101010;
 	--metro_emissive: #818181;
 	--metro_energy: #f1f1f1;
-	
 }
 
 /* {% elif session['colorPalette'] == "retro" %} */

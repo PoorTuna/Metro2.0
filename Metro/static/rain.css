@@ -7,7 +7,7 @@ body {
 }
 
 .drop {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--metro_tertiary);
 	width:1px;
 	height:89px;
 	position: absolute;

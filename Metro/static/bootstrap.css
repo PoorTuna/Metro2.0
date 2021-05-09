@@ -68,7 +68,7 @@ body {
   font-weight: 400;
   line-height: 1.5;
   color: var(--metro_energy);
-  background-color: #101010;
+  background-color: var(--metro_accents);
 }
 
 [tabindex="-1"]:focus:not(:focus-visible) {
@@ -2555,40 +2555,40 @@ fieldset:disabled a.btn {
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #1a1a1a;
-  border-color: #1a1a1a;
+  color: var(--metro_energy);
+  background-color: var(--metro_secondary);
+  border-color: var(--metro_secondary);
 }
 
 .btn-primary:hover {
-  color: #fff;
-  background-color: #070707;
-  border-color: #010101;
+  color: var(--metro_energy);
+  background-color: var(--metro_accents);
+  border-color: var(--metro_secondary);
 }
 
 .btn-primary:focus, .btn-primary.focus {
-  color: #fff;
-  background-color: #070707;
-  border-color: #010101;
-  box-shadow: 0 0 0 0.2rem rgba(60, 60, 60, 0.5);
+  color: var(--metro_energy);
+  background-color: var(--metro_secondary);
+  border-color: var(--metro_secondary);
+  box-shadow: 0 0 0 0.2rem var(--metro_tertiary);
 }
 
 .btn-primary.disabled, .btn-primary:disabled {
-  color: #fff;
-  background-color: #1a1a1a;
-  border-color: #1a1a1a;
+  color: var(--metro_energy);
+  background-color: var(--metro_secondary);
+  border-color: var(--metro_secondary);
 }
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
 .show > .btn-primary.dropdown-toggle {
-  color: #fff;
-  background-color: #010101;
-  border-color: black;
+  color: var(--metro_energy);
+  background-color: var(--metro_accents);
+  border-color: var(--metro_accents);
 }
 
 .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
 .show > .btn-primary.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.2rem rgba(60, 60, 60, 0.5);
+  box-shadow: 0 0 0 0.2rem var(--metro_tertiary);
 }
 
 .btn-secondary {
@@ -6491,7 +6491,7 @@ a.close.disabled {
 }
 
 .bg-primary {
-  background-color: #1a1a1a !important;
+  background-color: var(--metro_secondary) !important;
 
 }
 
@@ -6499,7 +6499,7 @@ a.close.disabled {
 a.bg-primary:hover, a.bg-primary:focus,
 button.bg-primary:hover,
 button.bg-primary:focus {
-  background-color: #010101 !important;
+  background-color:var(--metro_accents) !important;
 }
 
 .bg-secondary {
@@ -10058,7 +10058,7 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .bg-primary {
-  background-color: #1a1a1a !important;
+  background-color: var(--metro_secondary) !important;
 }
 
 .bg-light {

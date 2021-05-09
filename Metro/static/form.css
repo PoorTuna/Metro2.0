@@ -55,7 +55,7 @@
   border: 2px solid var(--metro_primary);
   padding: 14px 40px;
   outline: none;
-  color: white;
+  color: var(--metro_energy);
   border-radius: 24px;
   transition: 0.25s;
   cursor: pointer;

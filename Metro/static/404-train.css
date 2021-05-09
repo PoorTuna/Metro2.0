@@ -39,7 +39,7 @@
 }
 
 .train-hider-color{
-  background-color: #101010;
+  background-color: var(--metro_accents);
 }
 
 .train-hider-right{
@@ -68,10 +68,10 @@
 	z-index: 1;
 }
 .fade-left{
-	background-image: linear-gradient(to left, #101010,transparent);
+	background-image: linear-gradient(to left, var(--metro_accents),transparent);
 }
 .fade-right{
-	background-image: linear-gradient(to right, #101010,transparent);
+	background-image: linear-gradient(to right, var(--metro_accents),transparent);
 }
 
 .left-fade{
