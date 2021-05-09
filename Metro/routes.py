@@ -39,11 +39,14 @@ def index():
 			if session_user := metro_user.query.get(int(session['user'])):
 				login_user(session_user)
 				session['bullets'] = session_user._balance
+				session['colorPalette'] = session_user.theme
 		 
 	if flask_login.current_user.is_authenticated:
 		if 'bullets' not in session:
 			session['bullets'] = flask_login.current_user._balance
-
+		if 'colorPalette' not in session:
+			session['colorPalette'] = flask_login.current_user.theme
+		
 		# Checks on whether the user posted a request
 		if request.method == "POST":
 			# Adding members form vars:
@@ -156,12 +159,14 @@ def login():
 							login_user(logged_user)
 							session['user'] = flask_login.current_user.id
 							session['bullets'] = flask_login.current_user._balance
+							session['colorPalette'] = flask_login.current_user.theme
 
 				if logged_user := metro_user.query.filter_by(email = form_username).first(): 
 					if bcrypt.checkpw(form_password.encode(), logged_user.password):
 							login_user(logged_user)
 							session['user'] = flask_login.current_user.id
 							session['bullets'] = flask_login.current_user._balance
+							session['colorPalette'] = flask_login.current_user.theme
 
 				if flask_login.current_user.is_authenticated:
 					return redirect(url_for("index")) #Login successful

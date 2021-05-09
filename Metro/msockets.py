@@ -63,15 +63,19 @@ def handle_message(msg):
 		
 		# TTS Messages:
 		elif refined_msg[0] == "/tts":
-			message = msg[len(refined_msg[0])+ 1:]
-			curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M')
-			message = f"{curr_time} | {flask_login.current_user.username} : {message}"
-			if session['chatID'] != "general":
-				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
-					with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
-						metro_filehandler.write(message + '\r\n')
+			if len(refined_msg) >= 2:
+				message = msg[len(refined_msg[0])+ 1:]
+				curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M')
+				message = f"{curr_time} | {flask_login.current_user.username} : {message}"
+				if session['chatID'] != "general":
+					if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
+						with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
+							metro_filehandler.write(message + '\r\n')
 
-			emit("announce_message", message, room=session['chatID'])
+				emit("announce_message", message, room=session['chatID'])
+			else:
+				emit('private_message', "Invalid /tts format! Try: /tts [message]")
+		
 
 		# Clean Chat:
 		elif refined_msg[0] == "/clear" and session['chatID'] != "general":

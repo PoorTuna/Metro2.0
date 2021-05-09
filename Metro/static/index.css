@@ -51,7 +51,7 @@
 /* mainbox features */
 .mainbox{
 	position: absolute;
-	border: 1px solid var(--metro_accents);
+	border: 1px solid var(--metro_secondary);
 	width: 75%;
 	height: 75%;
   padding: 5px;
@@ -254,6 +254,7 @@ transform: translate(50%, 0);
 	height: 0%;
 	right: 0%;
 	transform: translate(0, 0%);
+	border: 0;
 
 }
 

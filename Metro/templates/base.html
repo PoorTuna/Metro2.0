@@ -4,7 +4,12 @@
 		<title>{%block title%}{%endblock%}</title>
 		<meta charset="utf-8">
 		<link rel="icon" href="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'colors.css')}}">
+		{% if not session['colorPalette'] %}
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'colors/original.css')}}">
+		{% else %}
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'colors/' + session['colorPalette'] + '.css')}}">
+		{% endif %}
+
 		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'bootstrap.css')}}">
 		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'fonts.css')}}">
 		<!-- Font Awesome Icons -->
@@ -37,7 +42,7 @@
 
 				<ul class="navbar-nav">
 					<li class="nav-item dropdown">
-						<button class="top-right-user fas fa-user-circle fa-2x btn dropdown-toggle nav-link" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						<button class="top-right-user fas fa-user-circle fa-2x btn dropdown-toggle nav-link" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="border-width:0">
 						</button>
 
 						<div class="dropdown-menu dropdown-menu-right">

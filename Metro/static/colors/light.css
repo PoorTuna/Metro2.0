@@ -1,0 +1,9 @@
+/* Light Color Palette: */
+:root{
+	--metro_primary: #FFC30F;
+	--metro_secondary: #f0f0f0;
+	--metro_tertiary: #fff;
+	--metro_accents: #fff;
+	--metro_emissive: #818181;
+	--metro_energy: #1a1a1a;
+}
