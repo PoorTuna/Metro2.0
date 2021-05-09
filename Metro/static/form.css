@@ -6,7 +6,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
-  background: #1a1a1a;
+  background: var(--metro_secondary);
 	border-radius: 25px;
 	margin: auto;
 }
@@ -34,17 +34,17 @@
   display: block;
   margin: 20px auto;
   text-align: center;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--metro_energy);
   padding: 14px 10px;
   width: 70%;
   outline: none;
-  color: white;
+  color: var(--metro_energy);
   border-radius: 24px;
   transition: 0.25s;
 }
 .box input[type = "text"]:focus,.box input[type = "password"]:focus,.box input[type = "email"]:focus{
   width: 75%;
-  border-color: #FFC30F;
+  border-color: var(--metro_primary);
 }
 .box input[type = "submit"]{
   border:0;
@@ -52,7 +52,7 @@
   display: block;
   margin: 20px auto;
   text-align: center;
-  border: 2px solid #FFC30F;
+  border: 2px solid var(--metro_primary);
   padding: 14px 40px;
   outline: none;
   color: white;
@@ -61,5 +61,5 @@
   cursor: pointer;
 }
 .box input[type = "submit"]:hover{
-  background: #FFC30F;
+  background: var(--metro_primary);
 }

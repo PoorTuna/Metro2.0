@@ -5,17 +5,18 @@
 	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'fonts.css')}}">
 		
 		<form  class = "box" method = "post" action = "" style= "text-align:center">
-			<h1 style="color:#FFC30F;font-size:45px;font-family:metro}">Metro Login</h1>
+			<h1 style="color:var(--metro_primary);font-size:45px;font-family:metro">Metro Login</h1>
 			</br>
-			<label for="user" style ="color:white;font-size:20px">Username</label>
+			<label for="user" style ="color:var(--metro_energy);font-size:20px">Username</label>
 			<input type = "text" id = "user" name = "username" required>
-			<label for="pass" style ="color:white;font-size:20px">Password</label>
+			<label for="pass" style ="color:var(--metro_energy);font-size:20px">Password</label>
 			<input type = "password" id = "pass" name = "password" required>
-			<p style ="color:white;font-size:10px">never share your password with anyone!</p>
+			<p style ="color:var(--metro_energy);font-size:10px">never share your password with anyone!</p>
 			<input type = "submit" value = "Sign In">
-			<p style ="color:white;font-size:10px">Don't have a user? <a style = "color:#FFC30F" href="/register">Sign Up</a></p>
-			<p style ="color:white;font-size:10px">Forgot your password? <a style = "color:#FFC30F" href="/forgot">Recover</a></p>
-			<p style ="color:white;font-size:10px">{{err}}</p>
+			<p style ="color:var(--metro_energy);font-size:10px">Don't have a user? <a style = "color:var(--metro_primary)" href="/register">Sign Up</a></p>
+			<p style ="color:var(--metro_energy);font-size:10px">Forgot your password? <a style = "color:var(--metro_primary)" href="/forgot">Recover</a></p>
+			<p style ="color:var(--metro_energy);font-size:10px">{{err}}</p>
 		</form>
 	
 {%endblock%}
+

@@ -4,7 +4,7 @@
 .exclamation-text-404{
 	display: none;
 	font-size: 3vw;
-	color: var(--white);
+	color: var(--metro_energy);
 	position: absolute;
 	letter-spacing: 0.2em;
 	top: 35%;
@@ -14,7 +14,7 @@
 
 .body-text-404{
 	font-size: 3vw;
-	color: var(--white);
+	color: var(--metro_energy);
 	position: absolute;
 	letter-spacing: 0.2em;
 	top: 60%;
@@ -24,7 +24,7 @@
 
 .body-text{
 	font-size: 3vw;
-	color: var(--white);
+	color: var(--metro_energy);
 	position: absolute;
 	letter-spacing: 0.2em;
 	top: 50%;
@@ -48,9 +48,9 @@ div > span {
 #I::after, #O::after {
 	content: '';
 	width: 150%;
-	-webkit-box-shadow: -35px 0px 60px 8px rgba(255,255,255,1);
-	-moz-box-shadow: -35px 0px 60px 8px rgba(255,255,255,1);
-	box-shadow: -35px 0px 60px 8px rgba(255,255,255,1);
+	-webkit-box-shadow: -35px 0px 60px 8px var(--metro_energy);
+	-moz-box-shadow: -35px 0px 60px 8px var(--metro_energy);
+	box-shadow: -35px 0px 60px 8px var(--metro_energy);
 }
 #L, #G {
 	animation: flickerLG 2s linear reverse infinite;
@@ -61,7 +61,7 @@ div > span {
 	content:' ';
 	width: 100px;
 	height: 100px;
-	background: var(--white);
+	background: var(--metro_energy);
 	position: absolute;
 	top: -50%;
 	left: 100%;

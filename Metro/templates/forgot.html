@@ -6,42 +6,42 @@
 	<!-- After the user has entered an email: -->
 	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'form.css')}}">
 		<form  class = "box" method = "post" action = "" style= "text-align:center">
-			<h1 style="color:#FFC30F;font-size:45px;font-family:Metro}">Metro Recovery</h1>
+			<h1 style="color:var(--metro_primary);font-size:45px;font-family:Metro}">Metro Recovery</h1>
 			</br>
-			<label for="mail" style ="color:white;font-size:20px">Email</label>
+			<label for="mail" style ="color:var(--metro_energy);font-size:20px">Email</label>
 			<input type = "email" id = "mail" name = "email" required>
-			<label for="email" style ="color:white;font-size:10px">never share your password with anyone!</label>
+			<label for="email" style ="color:var(--metro_energy);font-size:10px">never share your password with anyone!</label>
 			<input type = "submit" value="Recover">
-			<p style ="color:white;font-size:10px">Suddenly remember your password?<a style = "color:#FFC30F" href="/login"> Sign In</a></p>
-			<p style ="color:white;font-size:10px">{{err}}</p>
+			<p style ="color:var(--metro_energy);font-size:10px">Suddenly remember your password?<a style = "color:var(--metro_primary)" href="/login"> Sign In</a></p>
+			<p style ="color:var(--metro_energy);font-size:10px">{{err}}</p>
 		</form>
 	{% elif 'enteredCODE' not in session or session['enteredCODE'] != session['forgotCODE'] %}
 		<!-- After the user has requested a recovery: -->
 		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'form.css')}}">
 	<form  class = "box" method = "post" action = "" style= "text-align:center">
-		<h1 style="color:#FFC30F;font-size:45px;font-family:Metro}">Metro Recovery</h1>
+		<h1 style="color:var(--metro_primary);font-size:45px;font-family:Metro}">Metro Recovery</h1>
 		</br>
-		<label for="entercode" style ="color:white;font-size:20px">Enter the Code</label>
+		<label for="entercode" style ="color:var(--metro_energy);font-size:20px">Enter the Code</label>
 		<input type = "text" id = "code" name = "entercode" required minlength="10" maxlength="10">
-		<label for="entercode" style ="color:white;font-size:10px">never share your password with anyone!</label>
+		<label for="entercode" style ="color:var(--metro_energy);font-size:10px">never share your password with anyone!</label>
 		<input type = "submit" value="Submit">
-		<p style ="color:white;font-size:10px">Suddenly remember your password?<a style = "color:#FFC30F" href="/login"> Sign In</a></p>
-		<p style ="color:white;font-size:10px">{{err}}</p>
+		<p style ="color:var(--metro_energy);font-size:10px">Suddenly remember your password?<a style = "color:var(--metro_primary)" href="/login"> Sign In</a></p>
+		<p style ="color:var(--metro_energy);font-size:10px">{{err}}</p>
 	</form>
 	{% elif session['enteredCODE'] == session['forgotCODE'] %}
 		<!-- After the user has entered the correct code: -->
 		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'form.css')}}">
 		<form  class = "box" method = "post" action = "" style= "text-align:center">
-			<h1 style="color:#FFC30F;font-size:45px;font-family:Metro}">Metro Password Change</h1>
+			<h1 style="color:var(--metro_primary);font-size:45px;font-family:Metro}">Metro Password Change</h1>
 			</br>
-			<label for="pass" style ="color:white;font-size:20px">Password</label>
+			<label for="pass" style ="color:var(--metro_energy);font-size:20px">Password</label>
 			<input type = "password" id = "pass" name = "password" required minlength="8">
-			<label for="confpass" style ="color:white;font-size:20px">Confirm Password</label>
+			<label for="confpass" style ="color:var(--metro_energy);font-size:20px">Confirm Password</label>
 			<input type = "password" id = "confpass" name = "confirmpassword" required minlength="8">
-			<label for="pass" style ="color:white;font-size:10px">never share your password with anyone!</label>
+			<label for="pass" style ="color:var(--metro_energy);font-size:10px">never share your password with anyone!</label>
 			<input type = "submit" value="Recover">
-			<p style ="color:white;font-size:10px">Suddenly remember your password?<a style = "color:#FFC30F" href="/login"> Sign In</a></p>
-			<p style ="color:white;font-size:10px">{{err}}</p>
+			<p style ="color:var(--metro_energy);font-size:10px">Suddenly remember your password?<a style = "color:var(--metro_primary)" href="/login"> Sign In</a></p>
+			<p style ="color:var(--metro_energy);font-size:10px">{{err}}</p>
 		</form>
 	{% endif %}
 

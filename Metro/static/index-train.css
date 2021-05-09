@@ -2,7 +2,7 @@
 	position: absolute;
   height: 5px;
   width: 50%;
-  background-color: #555;
+  background-color: var(--metro_tertiary);
   border-radius: 24px;
 }
 

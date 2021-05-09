@@ -1,0 +1,39 @@
+/* Color palettes for the Metro Project*/
+
+/* 
+Original :
+
+Primary / Yellow : #FFC30F
+Secondary / Dark-Gray : #1a1a1a
+Gray : #555555
+Lighter-Gray : #0a0a0a
+Lightest-Gray : #818181
+Cool-White : #f1f1f1
+
+*/
+
+/* {% if session['colorPalette'] == "original" %} */
+/* Original Color Palette: */
+:root{
+	--metro_primary: #FFC30F;
+	--metro_secondary: #1a1a1a;
+	--metro_tertiary: #555555;
+	--metro_accents: #0a0a0a;
+	--metro_emissive: #818181;
+	--metro_energy: #f1f1f1;
+	
+}
+
+/* {% elif session['colorPalette'] == "retro" %} */
+/* Retro Color Palette: */
+
+/* {% elif session['colorPalette'] == "light" %} */
+/* Light Color Palette: */
+
+/* {% elif session['colorPalette'] == "meme" %} */
+/* Meme Color Palette: */
+
+/* {% elif session['colorPalette'] == "funny" %} */
+/* Funny Color Palette: */
+
+/* {% endif %} */

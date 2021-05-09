@@ -3,9 +3,9 @@
 
 {%block content%}
 
-	<ul class="list-group" style="background-color:#1a1a1a">
+	<ul class="list-group" style="background-color:var(--metro_secondary)">
 		{% for item in data %}
-			<li class="list-group-item d-flex justify-content-between" style="background-color:#1a1a1a;color:white">
+			<li class="list-group-item d-flex justify-content-between" style="background-color:var(--metro_secondary);color:var(--metro_energy)">
 				{% if item[1] is iterable and (item[1] is not string and item[1] is not mapping and item[1] is not number) %}
 				
 				<strong>{{item[0]}}</strong>

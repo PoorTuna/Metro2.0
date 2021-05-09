@@ -4,6 +4,7 @@
 		<title>{%block title%}{%endblock%}</title>
 		<meta charset="utf-8">
 		<link rel="icon" href="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'colors.css')}}">
 		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'bootstrap.css')}}">
 		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'fonts.css')}}">
 		<!-- Font Awesome Icons -->
@@ -44,7 +45,7 @@
 							<a class="dropdown-item" href="/settings">Settings</a>
 							<span class="dropdown-item">Bullets :  {{session['bullets']}}</span>
 							<div class="dropdown-divider"></div>
-							<a class="dropdown-item" href="/logout" style ="color:#FFC30F">Logout</a>
+							<a class="dropdown-item" href="/logout" style ="color:var(--metro_primary)">Logout</a>
 						</div>
 					</li>
 				</ul>

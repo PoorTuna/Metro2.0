@@ -69,13 +69,13 @@
 		<a href="javascript:void(0)" class="closebtn fas fa-times" onclick="closeNav()"></a>
 
 		<a href="javascript:void(0)" class="addchat fas fa-plus" data-toggle="modal" data-target="#cchat_modal"></a>
-		<hr style="height:1px;background-color:#FFC30F">
+		<hr style="height:1px;background-color:var(--metro_primary)">
 		
 		<a href="javascript:void(0)" onclick="join_chat('general');set_title('general');change_title_src('{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}')"><img style = "width:64px;height:64px" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">general</a>
-		<hr style="height:1px;background-color:#FFC30F">
+		<hr style="height:1px;background-color:var(--metro_primary)">
 		{% for chat in chats %}
 			<a class="sidenav-title-a" href="javascript:void(0)" onclick="join_chat('{{chat.string_id}}');set_title('{{chat.title}}');change_title_src('{{chat.file_dir}}/logo.png')"><img class ="sidenav-img-pos" style = "width:64px;height:64px;border-radius:50%" src="{{chat.file_dir}}/logo.png">{{chat.title}}</a>
-			<hr style="height:1px;background-color:#FFC30F">
+			<hr style="height:1px;background-color:var(--metro_primary)">
 		{% endfor %}
 	</div>
 
@@ -92,11 +92,11 @@
 				<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#ddsettings_modal">Settings</a>
 				<a class="dropdown-item" href="javascript:void(0)" data-toggle="modal" data-target="#ddinfo_modal">Info</a>
 				<div class="dropdown-divider"></div>
-				<a class="dropdown-item" href="javascript:void(0)" style ="color:#FFC30F"  data-toggle="modal" data-target="#confirm_delete_modal">Deconstruct</a>
+				<a class="dropdown-item" href="javascript:void(0)" style ="color:var(--metro_primary)"  data-toggle="modal" data-target="#confirm_delete_modal">Deconstruct</a>
 			</div>
 		</div>
 		
-		<span class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color: #818181;font-size:25px;text-decoration:none" onclick="javascript:void(0)">
+		<span class="top-footer-title" href="javascript:void(0)" id="footertitle" style="color:#818181;font-size:25px;text-decoration:none" onclick="javascript:void(0)">
 		<img class = "top-footer-img" id="title_img_id" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}"> 
 		<span id="footer_title_text">general</span>
 		</span>
@@ -104,12 +104,12 @@
 
 	<!-- Bottom Footer -->
 	<footer class="bottom_footer infront bg-primary">
-		<input class="bottom_input" type="text" id="myMessage"  style="color:#FFC30F;background-color:#505050">
+		<input class="bottom_input" type="text" id="myMessage"  style="color:var(--metro_primary);background-color:#505050">
 		<button class="bottom_button right_button" id="sendbutton" onclick="send_msg()">Send</button>
 	</footer>
 
 	<!-- MAIN CHAT BOX -->
-	<div class="mainbox center" style="color:white" id="mainbox_chat" onscroll="disable_auto_scroll()">
+	<div class="mainbox center" style="color:var(--metro_energy)" id="mainbox_chat" onscroll="disable_auto_scroll()">
 		<ul>
 			<li id="chat" style="padding-top:8%"></li>
 		</ul>
@@ -123,11 +123,11 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
-						<h4 style="color:#FFC30F" class="fas fa-subway modal-title modal-icon-left"></h4>
-						<h4 style="color:#FFC30F" class="modal-title modal-title-left">New Station</h4>
+						<h4 style="color:var(--metro_primary)" class="fas fa-subway modal-title modal-icon-left"></h4>
+						<h4 style="color:var(--metro_primary)" class="modal-title modal-title-left">New Station</h4>
 					</div>
 						<div class="modal-body">
-							<label for="cchat_modal_title fas" style="color:#FFC30F;font-weight: 900">Title</label>
+							<label for="cchat_modal_title fas" style="color:var(--metro_primary);font-weight: 900">Title</label>
 							<input type="text" class ="form-control" id="cchat_modal_title" name="cchat_modal_title_name" placeholder="Your Station's name | Max 25" maxlength="25" minlength="1" required>
 			
 						</div>
@@ -149,11 +149,11 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
-						<h4 style="color:#FFC30F" class="fas fa-subway modal-title modal-icon-left"></h4>
-						<h4 style="color:#FFC30F" class="modal-title modal-title-left">Recruit new members</h4>
+						<h4 style="color:var(--metro_primary)" class="fas fa-subway modal-title modal-icon-left"></h4>
+						<h4 style="color:var(--metro_primary)" class="modal-title modal-title-left">Recruit new members</h4>
 					</div>
 						<div class="modal-body">
-							<label for="amchat_modal_member_name" style="color:#FFC30F;font-weight: 900">Member's Nickname</label>
+							<label for="amchat_modal_member_name" style="color:var(--metro_primary);font-weight: 900">Member's Nickname</label>
 							<input type="text" class ="form-control" id="amchat_modal_member_name_id" name="amchat_modal_member_name" placeholder="Member's Name" maxlength="12" required>
 						</div>
 						<div class="modal-footer">
@@ -176,14 +176,14 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
-						<h4 style="color:#FFC30F" class="fas fa-subway modal-title modal-icon-left"></h4>
-						<h4 style="color:#FFC30F" class="modal-title modal-title-left">Station Workshop</h4>
+						<h4 style="color:var(--metro_primary)" class="fas fa-subway modal-title modal-icon-left"></h4>
+						<h4 style="color:var(--metro_primary)" class="modal-title modal-title-left">Station Workshop</h4>
 					</div>
 						<div class="modal-body">
-							<label for="ddsettings_modal_title fas" style="color:#FFC30F;font-weight: 900">New Designated Name</label>
+							<label for="ddsettings_modal_title fas" style="color:var(--metro_primary);font-weight: 900">New Designated Name</label>
 							<input type="text" class ="form-control" id="ddsettings_modal_member_name_id" name="ddsettings_modal_title" placeholder="Title" maxlength="25" minlength="1">
-							<label style="color:#FFC30F;font-weight: 900">New Logo</label><br>
-							<input type="file" name="ddsettings_modal_logo" id="ddsettings_modal_logo_id" style="color:#FFC30F">
+							<label style="color:var(--metro_primary);font-weight: 900">New Logo</label><br>
+							<input type="file" name="ddsettings_modal_logo" id="ddsettings_modal_logo_id" style="color:var(--metro_primary)">
 							
 						</div>
 						<div class="modal-footer">
@@ -201,14 +201,14 @@
 				<div class="modal-dialog">
 			
 				<!-- Modal DROPDOWN INFO content-->
-				<div class="modal-content" style="color:#1a1a1a">
+				<div class="modal-content" style="color:var(--metro_secondary)">
 					<div class="modal-header">
 						<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
-						<h4 style="color:#FFC30F" class="fas fa-subway modal-title modal-icon-left"></h4>
-						<h4 style="color:#FFC30F" class="modal-title modal-title-left">Station Billboard</h4>
+						<h4 style="color:var(--metro_primary)" class="fas fa-subway modal-title modal-icon-left"></h4>
+						<h4 style="color:var(--metro_primary)" class="modal-title modal-title-left">Station Billboard</h4>
 					</div>
 						<div class="modal-body">
-							<label for="members_list_name fas" style="color:#FFC30F;font-weight: 900">Station's Members:</label><br>
+							<label for="members_list_name fas" style="color:var(--metro_primary);font-weight: 900">Station's Members:</label><br>
 							<span id="members_list" name="members_list_name" style="padding-top:8%"></span>
 						</div>
 						<div class="modal-footer">
@@ -229,11 +229,11 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
-					<h4 style="color:#FFC30F" class="fas fa-subway modal-title modal-icon-left"></h4>
-					<h4 style="color:#FFC30F" class="modal-title modal-title-left">Deconstruct Station</h4>
+					<h4 style="color:var(--metro_primary)" class="fas fa-subway modal-title modal-icon-left"></h4>
+					<h4 style="color:var(--metro_primary)" class="modal-title modal-title-left">Deconstruct Station</h4>
 				</div>
 					<div class="modal-body">
-						<label for="confirm_delete_modal_title fas" style="color:#1a1a1a">Are you sure you want to deconstruct this station? This action can't be undone!</label>
+						<label for="confirm_delete_modal_title fas" style="color:var(--metro_primary)">Are you sure you want to deconstruct this station? This action can't be undone!</label>
 		
 					</div>
 					<div class="modal-footer">

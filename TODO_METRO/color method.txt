@@ -1,0 +1,19 @@
+use sessions to declare which color palettes the user has through the db.
+Use jinja conditions to decide which color palette to present to the user
+
+{% if session['colorPalette'] == "original" % }
+/* OriginalMetro Palette*/
+
+{% elif session['colorPalette'] == "retro" % }
+/* Retro Metro Palette */
+use the prison website palette
+http://ipcscorp.com/
+---------------------
+
+and so on...
+
+
+
+var(--yellow) <- for example to use in inline html.
+
+import to each css file the colors.css and use it to define the colors there. replace each color with the variables.

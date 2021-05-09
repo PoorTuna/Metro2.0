@@ -51,7 +51,7 @@
 /* mainbox features */
 .mainbox{
 	position: absolute;
-	border: 1px solid black;
+	border: 1px solid var(--metro_accents);
 	width: 75%;
 	height: 75%;
   padding: 5px;
@@ -87,7 +87,7 @@
   z-index: 12; /* Stay on top */
   top: 12.5%;
   left: 12.5%;
-  background-color: #1a1a1a; /* Black*/
+  background-color: var(--metro_secondary); /* Black*/
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 60px; /* Place content 60px from the top */
   transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
@@ -98,7 +98,7 @@
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
-  color: #818181;
+  color: var(--metro_emissive);
   display: block;
   transition: 0.3s;
 	white-space: nowrap;
@@ -107,7 +107,7 @@
 
 /* When you mouse over the navigation links, change their color */
 .sidenav a:hover {
-  color: #f1f1f1;
+  color: var(--metro_energy);
 }
 
 /* Position and style the close button (top right corner) */
@@ -154,17 +154,17 @@
 	/* width: 10%;
 	height: 10%; */
   background: none;
-  border: 2px solid #FFC30F;
+  border: 2px solid var(--metro_primary);
   padding: 1.5em 3em;
 	line-height: 0;
   outline: none;
-  color: white;
+  color: var(--metro_energy);
   border-radius: 20px;
   cursor: pointer;
 	text-align: center;
 }
 .bottom_button:hover{
-  background: #FFC30F;
+  background: var(--metro_primary);
 }
 
 /* top footer */
@@ -204,14 +204,14 @@
   padding: 8px 8px 8px 32px;
   text-decoration: none;
   font-size: 25px;
-  color: #818181;
+  color: var(--metro_emissive);
   display: block;
   transition: 0.3s;
 }
 
 /* When you mouse over the navigation links, change their color */
 .top_footer span:hover {
-  color: #f1f1f1;
+  color: var(--metro_energy);
 }
 
 
@@ -237,7 +237,7 @@ transform: translate(50%, 0);
 /* Handle */
 ::-webkit-scrollbar-thumb{
     border-radius: 10px;
-    background: #0a0a0a;
+    background: var(--metro_accents);
 		opacity: 0.1;
 	 	z-index: 11;
 }
