@@ -1,0 +1,9 @@
+/* Steam Color Palette: */
+:root{
+	--metro_primary: #c7d5e0;
+	--metro_secondary: #2a475e;
+	--metro_tertiary: #99aab5;
+	--metro_accents: #1b2838;
+	--metro_emissive: #f0f0f0;
+	--metro_energy: #fafafa;
+}

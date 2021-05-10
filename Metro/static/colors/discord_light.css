@@ -1,0 +1,9 @@
+/* Discord Light Color Palette: */
+:root{
+	--metro_primary: #f0f0f0;
+	--metro_secondary: #7289da;
+	--metro_tertiary: #99aab5;
+	--metro_accents: #ffffff;
+	--metro_emissive: #36393e;
+	--metro_energy: #23272a;
+}

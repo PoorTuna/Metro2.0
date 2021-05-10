@@ -40,7 +40,7 @@ def index():
 				login_user(session_user)
 				session['bullets'] = session_user._balance
 				session['colorPalette'] = session_user.theme
-		 
+
 	if flask_login.current_user.is_authenticated:
 		if 'bullets' not in session:
 			session['bullets'] = flask_login.current_user._balance
@@ -221,10 +221,12 @@ def logout():
 	flask_login.current_user._session_id = None
 	logout_user()
 	session.pop('user', None)
+	session.pop('bullets', None)
+	session.pop('colorPalette', None)
 	return redirect(url_for("index"))
 
 @app.route("/forgot", methods=['GET', 'POST'])
-def handle_forgot():
+def forgot():
 	if not flask_login.current_user.is_authenticated:
 		try:
 			if session['user']:
@@ -328,6 +330,13 @@ def profile():
 @login_required
 def settings():
 	return render_template("user/settings.html")
+
+
+@app.route("/store")
+@login_required
+def store():
+	return render_template("store.html")
+
 
 @app.route("/<name>")
 @app.errorhandler(404)

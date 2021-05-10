@@ -2509,7 +2509,7 @@ textarea.form-control {
 .btn {
   display: inline-block;
   font-weight: 600;
-  color: #55595c;
+  color: var(--metro_tertiary);
   text-align: center;
   vertical-align: middle;
   -webkit-user-select: none;
@@ -2532,13 +2532,12 @@ textarea.form-control {
 }
 
 .btn:hover {
-  color: #55595c;
+  color: var(--metro_tertiary);
   text-decoration: none;
 }
 
 .btn:focus, .btn.focus {
   outline: 0;
-  box-shadow: 0 0 0 0.2rem rgba(26, 26, 26, 0.25);
 }
 
 .btn.disabled, .btn:disabled {

@@ -255,7 +255,10 @@ transform: translate(50%, 0);
 	right: 0%;
 	transform: translate(0, 0%);
 	border: 0;
-
+	
+}
+.top-right-user:focus{
+	outline: 0;
 }
 
 .topnav-right {

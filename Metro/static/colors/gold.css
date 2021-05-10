@@ -1,0 +1,9 @@
+/* Gold Color Palette: */
+:root{
+	--metro_primary: #FFC30F;
+	--metro_secondary: #ffcf40;
+	--metro_tertiary: #ffdc73;
+	--metro_accents: #bf9b30;
+	--metro_emissive: #705000;
+	--metro_energy: #f0f0f0;
+}

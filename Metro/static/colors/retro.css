@@ -1,9 +1,9 @@
 /* Retro Color Palette: */
 :root{
-	--metro_primary: #FFC30F;
-	--metro_secondary: #1a1a1a;
-	--metro_tertiary: #555555;
-	--metro_accents: #101010;
-	--metro_emissive: #818181;
-	--metro_energy: #f1f1f1;
+	--metro_primary: #C98C3A;
+	--metro_secondary: #292520;
+	--metro_tertiary: #494540;
+	--metro_accents: #191510;
+	--metro_emissive: #090500;
+	--metro_energy: #FAF0DE;
 }

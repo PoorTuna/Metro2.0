@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{%block title%}MetroVendor{%endblock%}
+
+{%block content%}
+<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'store.css')}}">
+<h2 style="text-align:center">Product Card</h2>
+
+<div class="metro-card">
+  <img class="left-img" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}" alt="Denim Jeans" style="width:100%">
+  <h1>Funny</h1>
+  <p class="metro-price">$19.99</p>
+  <p>Some text about the jeans..</p>
+  <p><button>Add to Cart</button></p>
+</div>
+
+{%endblock%}
