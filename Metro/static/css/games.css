@@ -76,6 +76,7 @@
 	transform: translate(50%,50%);
 }
 
+
 .bottom_button{
 	/* width: 10%;
 	height: 10%; */
@@ -90,6 +91,23 @@
 	text-align: center;
 }
 .bottom_button:hover{
+  background: var(--metro_primary);
+}
+
+.top_button{
+	/* width: 10%;
+	height: 10%; */
+  background: none;
+  border: 2px solid var(--metro_primary);
+  padding: 1.5em 3em;
+	line-height: 0;
+  outline: none;
+  color: var(--metro_energy);
+  border-radius: 20px;
+  cursor: pointer;
+	text-align: center;
+}
+.top_button:hover{
   background: var(--metro_primary);
 }
 
