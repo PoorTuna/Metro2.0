@@ -4,7 +4,7 @@
 
 	{% if not session['forgotCODE'] %}
 	<!-- After the user has entered an email: -->
-	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'form.css')}}">
+	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/form.css')}}">
 		<form  class = "box" method = "post" action = "" style= "text-align:center">
 			<h1 style="color:var(--metro_primary);font-size:45px;font-family:Metro}">Metro Recovery</h1>
 			</br>
@@ -17,7 +17,7 @@
 		</form>
 	{% elif 'enteredCODE' not in session or session['enteredCODE'] != session['forgotCODE'] %}
 		<!-- After the user has requested a recovery: -->
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'form.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/form.css')}}">
 	<form  class = "box" method = "post" action = "" style= "text-align:center">
 		<h1 style="color:var(--metro_primary);font-size:45px;font-family:Metro}">Metro Recovery</h1>
 		</br>
@@ -30,7 +30,7 @@
 	</form>
 	{% elif session['enteredCODE'] == session['forgotCODE'] %}
 		<!-- After the user has entered the correct code: -->
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'form.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/form.css')}}">
 		<form  class = "box" method = "post" action = "" style= "text-align:center">
 			<h1 style="color:var(--metro_primary);font-size:45px;font-family:Metro}">Metro Password Change</h1>
 			</br>

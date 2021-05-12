@@ -1,6 +1,69 @@
 {% extends "base.html" %}
 {%block title%}MetroTweaks{%endblock%}
-
 {%block content%}
-	IL
+	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'settings.css')}}">
+	<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/settings.js')}}"></script>
+
+	<form method = "post" action = "/settings">
+		<ul class="list-group" style="background-color:var(--metro_secondary)">
+			<!-- Username -->
+			<li class="list-group-item d-flex justify-content-between" style="background-color:var(--metro_secondary);color:var(--metro_energy)">
+				<strong>Username</strong>
+				<p>{{name}}</p>
+			</li>
+			<!-- Email -->
+			<li class="list-group-item d-flex justify-content-between" style="background-color:var(--metro_secondary);color:var(--metro_energy)">
+				<strong>Email</strong>
+				<p>{{email}}</p>
+			</li>
+			<!-- Password -->
+			<li class="list-group-item d-flex justify-content-between" style="background-color:var(--metro_secondary);color:var(--metro_energy)">
+				<strong>Password</strong>
+				<span class="btn btn-dark" data-toggle="modal" data-target="#change_password_modal" onclick='false'>Change</span>
+			</li>
+			<!-- Color Palette -->
+			<li class="list-group-item d-flex justify-content-between" style="background-color:var(--metro_secondary);color:var(--metro_energy)">
+				<strong>Palette</strong>
+				<div class="form-check">
+				{% for item in palettes %}
+					<span class="palette_space">
+						<input class="form-check-input" type="radio" name="palette_option" id="{{item}}" value="{{item}}">
+						<label class="form-check-label" for="{{item}}">{{item}}</label>
+					</span>
+				{% endfor %}
+				</div>
+			</li>
+		</ul>
+		<input type = "submit" value = "Submit" class="btn btn-dark">
+
+		<!-- Modal - Change Password -->
+		<div class="modal fade center-modal" id="change_password_modal" role="dialog">
+			<div class="modal-dialog">
+		
+			<!-- Modal Change Password content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
+					<h4 style="color:var(--metro_primary)" class="fas fa-subway modal-title modal-icon-left"></h4>
+					<h4 style="color:var(--metro_primary)" class="modal-title modal-title-left">Change Password</h4>
+				</div>
+					<div class="modal-body">
+						<label style="color:var(--metro_primary)">Password</label>
+						<input type="password" class ="form-control" id="pass" name="password" minlength="8">
+						<label style="color:var(--metro_primary)">Confirm Password</label>
+						<input type="password" class ="form-control" id="rep_pass" name="repeat_password" minlength="8">
+
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-primary" onclick="close_change_password_modal()" id="change_password_deletebtn" data-dismiss="modal">Change</button>
+
+					</div>
+				</div>	
+			</div>
+		</div>
+
+	</form>
+
+
+
 {%endblock%}

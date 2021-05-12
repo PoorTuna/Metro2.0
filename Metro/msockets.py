@@ -315,7 +315,7 @@ def recv_private_chatname(cid):
 					with open(f"Metro/{curr_chat.file_dir}/chat.data", "x") as metro_filehandler:
 						first_msg = "This is the beginning of your conversation!"
 						metro_filehandler.write(first_msg + '\r\n')
-						emit("message", first_msg, room=				flask_login.current_user._session_id)
+						emit("message", first_msg, room=flask_login.current_user._session_id)
 				# Return members list:
 				for member in curr_chat.chat_backref:
 					# Member state : Online / Offline based on their session id
@@ -343,7 +343,22 @@ def delete_chat_handle(cid):
 				else:
 					emit("private_message", "Only the owner can deconstruct this station!")
 
-
+# Scrapped for now
 @socketio.on('send_voice')
 def handle_voice(voice):
 	emit("recv_voice", voice,  broadcast = True)
+
+# Store route:
+@socketio.on('buy_palette')
+def handle_voice(palette):
+	if palette not in flask_login.current_user.theme_list:
+		if flask_login.current_user._balance >= 25:
+			flask_login.current_user._balance -= 25
+			session['bullets'] = flask_login.current_user._balance
+			flask_login.current_user.theme_list += palette + "|"
+			db.session.commit()
+			emit("buy_palette", "Successful Purchase!")
+		else:
+			emit("buy_palette", "Insufficient Funds!")
+	else:
+		emit("buy_palette", "You already own this palette!")

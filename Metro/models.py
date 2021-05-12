@@ -24,7 +24,7 @@ class metro_user(UserMixin, db.Model):
 	chat_owner_list = db.relationship('metro_chat', backref  = "chat_owner_backref")
 	_session_id = db.Column(db.String(60), unique = True)
 	theme = db.Column(db.String(30), nullable=False, default = "original")
-	theme_list = db.Column(db.String(100), nullable=False, default = "original")
+	theme_list = db.Column(db.String(100), nullable=False, default = "original|")
 
 class metro_chat(db.Model):
 	id = db.Column(db.Integer, primary_key = True)

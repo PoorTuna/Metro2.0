@@ -3,18 +3,22 @@
 	<head>
 		<title>{%block title%}{%endblock%}</title>
 		<meta charset="utf-8">
+		<!-- JQuery -->
+		<script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
 		<link rel="icon" href="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">
 		{% if not session['colorPalette'] %}
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'colors/original.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/colors/original.css')}}">
 		{% else %}
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'colors/' + session['colorPalette'] + '.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/colors/' + session['colorPalette'] + '.css')}}">
 		{% endif %}
 
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'bootstrap.css')}}">
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'fonts.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/bootstrap.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/fonts.css')}}">
 		<!-- Font Awesome Icons -->
 		<script src="https://kit.fontawesome.com/114aaee4b8.js" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" crossorigin="anonymous"></script>
+		
+		<script src ="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	</head>
 
 	<body>
@@ -27,6 +31,13 @@
 
 			<div class="collapse navbar-collapse" id="navbarColor01">
 				<ul class="navbar-nav mr-auto">
+					{% if session['user'] %}
+					<li class="nav-item">
+						<a class="nav-link" href="/store">Vendor
+						</a>
+					</li>
+					{% endif %}
+					
 					<li class="nav-item">
 						<a class="nav-link" href="/features">Features
 						</a>
@@ -60,10 +71,5 @@
 
 		{%block content%}{%endblock%}
 	
-<script
-  src="https://code.jquery.com/jquery-1.12.4.js"
-  integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU="
-  crossorigin="anonymous"></script>
-<script src ="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 	</body>
 </html>

@@ -28,8 +28,9 @@
 	}
 }
 
-.box input[type = "text"],.box input[type = "password"],.box input[type = "email"]{
-  border:0;
+.box input[type = "text"],
+.box input[type = "password"],
+.box input[type = "email"]{
   background: none;
   display: block;
   margin: 20px auto;
@@ -42,12 +43,15 @@
   border-radius: 24px;
   transition: 0.25s;
 }
-.box input[type = "text"]:focus,.box input[type = "password"]:focus,.box input[type = "email"]:focus{
+
+.box input[type = "text"]:focus,
+.box input[type = "password"]:focus,
+.box input[type = "email"]:focus{
   width: 75%;
   border-color: var(--metro_primary);
 }
+
 .box input[type = "submit"]{
-  border:0;
   background: none;
   display: block;
   margin: 20px auto;
@@ -60,6 +64,7 @@
   transition: 0.25s;
   cursor: pointer;
 }
+
 .box input[type = "submit"]:hover{
   background: var(--metro_primary);
 }

@@ -2,15 +2,199 @@
 {%block title%}MetroVendor{%endblock%}
 
 {%block content%}
-<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'store.css')}}">
-<h2 style="text-align:center">Product Card</h2>
+<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/store.css')}}">
+<h2 style="text-align:center">Metro Vendor</h2>
 
-<div class="metro-card">
-  <img class="left-img" src="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}" alt="Denim Jeans" style="width:100%">
-  <h1>Funny</h1>
-  <p class="metro-price">$19.99</p>
-  <p>Some text about the jeans..</p>
-  <p><button>Add to Cart</button></p>
+<!-- SOCKETIO CLIENT LIBRARY -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<script src="{{url_for('static',filename = 'js/index-sockets.js')}}"></script>
+<script src="{{url_for('static',filename = 'js/store.js')}}"></script>
+
+<div class="metro-store-container">
+	<!-- Classy -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/classy.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>Classy</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with a classy design</p>
+		{% if "classy" not in palette_list %}
+		<button onclick="buy_palette('classy')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- Discord Dark -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/discord_dark.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>DisDark</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with a dark easter egg</p>
+		{% if "discord_dark" not in palette_list %}
+		<button onclick="buy_palette('discord_dark')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- Discord Light -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/discord_light.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>DisLight</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with a light easter egg</p>
+		{% if "discord_light" not in palette_list %}
+		<button onclick="buy_palette('discord_light')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- Candy -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/candy.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>candy</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with a feminine touch</p>
+		{% if "candy" not in palette_list %}
+		<button onclick="buy_palette('candy')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- Gold -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/gold.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>Gold</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette made from a rich matter</p>
+		{% if "gold" not in palette_list %}
+		<button onclick="buy_palette('gold')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- Light -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/light.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>Light</h1>
+		<p class="metro-price">25B</p>
+		<p>Have you ever been flashbanged? No?</p>
+		{% if "light" not in palette_list %}
+		<button onclick="buy_palette('light')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- Meme -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/meme.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>Meme</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with... why just why</p>
+		{% if "meme" not in palette_list %}
+		<button onclick="buy_palette('meme')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- Minecraft -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/minecraft.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>Minecraft</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with a blocky memory</p>
+		{% if "minecraft" not in palette_list %}
+		<button onclick="buy_palette('minecraft')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- Reddit -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/reddit.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>Reddit</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with a familiar name</p>
+		{% if "reddit" not in palette_list %}
+		<button onclick="buy_palette('reddit')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- Retro -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/retro.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>Retro</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with a retro feel</p>
+		{% if "retro" not in palette_list %}
+		<button onclick="buy_palette('retro')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- Steam-->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/steam.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>Steam</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with a grand show</p>
+		{% if "steam" not in palette_list %}
+		<button onclick="buy_palette('steam')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- TF2 Blu -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/tf2_blu.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>TF2 Blu</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with a mercenary touch</p>
+		{% if "tf2_blu" not in palette_list %}
+		<button onclick="buy_palette('tf2_blu')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- TF2 Red-->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/tf2_red.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>TF2 Red</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with a mercenary touch</p>
+		{% if "tf2_red" not in palette_list %}
+		<button onclick="buy_palette('tf2_red')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
+	<!-- Tropical -->
+	<div class="metro-card">
+		<img class="left-img" src="{{url_for('static',filename = 'assets/images/colors/tropical.png')}}" alt="Denim Jeans" style="width:100%">
+		<h1>Tropical</h1>
+		<p class="metro-price">25B</p>
+		<p>The Metro Palette with a tropical vibe</p>
+		{% if "tropical" not in palette_list %}
+		<button onclick="buy_palette('tropical')">Purchase</button>
+		{% else %}
+		<button disabled>Owned</button>
+		{% endif %}
+	</div>
+
 </div>
 
 {%endblock%}

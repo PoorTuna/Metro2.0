@@ -1,18 +1,50 @@
+.metro-store-container{
+	display: flex;
+	flex-wrap: wrap;
+
+
+}
+
+.metro-store-container > * {
+	flex: 0 0 30%;
+}
+
 .metro-card {
+
+	width: 30%;
+
+	white-space: nowrap;
+
+	display: inline-block;
+
 	border: 1px #fff solid;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  max-width: 300px;
-  margin: auto;
+  /* margin: auto; */
   text-align: center;
   font-family: arial;
+	
+	padding: 1em;
+	margin: 1em;
+
+	
+
 }
+
+.metro-card h1{
+	overflow-x: hidden;
+	font-size: 4vw;
+}
+.metro-card p{
+	overflow-x: hidden;
+}
+
 
 .metro-price {
   color: grey;
   font-size: 22px;
 }
 
-.metro-card button {
+.metro-card > button {
   border: none;
   outline: 0;
   padding: 12px;
@@ -22,6 +54,7 @@
   cursor: pointer;
   width: 100%;
   font-size: 18px;
+	bottom: 0;
 }
 
 .metro-card button:hover {

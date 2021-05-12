@@ -222,26 +222,6 @@ left: 300%;
 transform: translate(50%, 0);
 }
 
- /* CUSTOM SCROLLBAR */
-::-webkit-scrollbar {
-    width: 12px;
-}
- 
-/* Track */
-::-webkit-scrollbar-track {
-	 background-color: transparent;
-	 z-index: 11;
-}
-
- 
-/* Handle */
-::-webkit-scrollbar-thumb{
-    border-radius: 10px;
-    background: var(--metro_accents);
-		opacity: 0.1;
-	 	z-index: 11;
-}
-/* END CUSTOM SCROLLBAR */
 
 .infront{
 	z-index: 10;

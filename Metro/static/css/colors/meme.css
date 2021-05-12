@@ -4,6 +4,6 @@
 	--metro_secondary: #1405b6;
 	--metro_tertiary: #c90000;
 	--metro_accents: #059000;
-	--metro_emissive: #059000;
+	--metro_emissive: hsl(118, 100%, 23%);
 	--metro_energy: #f1f1f1;
 }

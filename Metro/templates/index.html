@@ -8,18 +8,18 @@
 	
 	{% if not session['user'] %}
 		
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'rain.css')}}">
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'light-text.css')}}">
-		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index-train.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/rain.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/light-text.css')}}">
+		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/index-train.css')}}">
 
 		<section class="rain"></section>
 		<!-- Rain in JS -->
-		<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/rain.js')}}"></script>
+		<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'js/rain.js')}}"></script>
 		<!-- Train Moving Sounds -->
 		<audio autoplay loop autoplay="autoplay" id="metro_ambience">
 			<source src="{{url_for('static',filename = 'assets/audio/metro_ambience.mp3')}}" type="audio/mpeg">
 		</audio>
-		<script src="{{url_for('static',filename = 'assets/js/playaudio.js')}}"></script>
+		<script src="{{url_for('static',filename = 'js/playaudio.js')}}"></script>
 		
 		<a href="/login">
 			<div class="body-text">
@@ -54,15 +54,15 @@
 		
 	{% else %}
 
-	<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/index-utility.js')}}"></script>
-	<script src="{{url_for('static',filename = 'assets/js/index-sockets.js')}}"></script>
-	<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/index-modals.js')}}"></script>
+	<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'js/index-utility.js')}}"></script>
+	<script src="{{url_for('static',filename = 'js/index-sockets.js')}}"></script>
+	<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'js/index-modals.js')}}"></script>
 
 	<!-- Voice Chat Functionality -->
-	<!-- <script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/voicechat.js')}}"></script> -->
+	<!-- <script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'js/voicechat.js')}}"></script> -->
 
 	<!-- CSS styling -->
-	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'index.css')}}">
+	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/index.css')}}">
 
 	<!-- SideNav -->
 	<div id="mySidenav" class="sidenav">

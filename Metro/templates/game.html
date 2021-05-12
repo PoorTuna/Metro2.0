@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{%block title%}MetroGames{%endblock%}
+
+{%block content%}
+
+<!-- Looking for a game : -->
+{% if not session['chose_game'] %}
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th scope="col">Icon</th>
+      <th scope="col">Name</th>
+      <th scope="col">Cost</th>
+      <th scope="col">Prize</th>
+			<th scope="col">Max Players</th>
+    </tr>
+  </thead>
+  <tbody>
+		<!-- Pong : -->
+    <tr class="table-dark" onclick="choose_game()">
+      <th scope="row">GAME IMG</th>
+      <td>Pong</td>
+      <td>5B</td>
+      <td>10B</td>
+			<td>2</td>
+    </tr>
+		<!-- Snake : -->
+		<tr class="table-dark" onclick="choose_game()">
+      <th scope="row">GAME IMG</th>
+      <td>Snake</td>
+      <td>5B</td>
+      <td>10B</td>
+			<td>1</td>
+    </tr>
+
+		<!-- Arm Wrestling : -->
+		<tr class="table-dark" onclick="choose_game()">
+      <th scope="row">GAME IMG</th>
+      <td>Arm Wrestling</td>
+      <td>5B</td>
+      <td>10B</td>
+			<td>2</td>
+    </tr>
+
+		<!-- Breakout : -->
+		<tr class="table-dark" onclick="choose_game()">
+      <th scope="row">GAME IMG</th>
+      <td>Breakout</td>
+      <td>5B</td>
+      <td>10B</td>
+			<td>1</td>
+    </tr>
+
+		<!-- Achtung : -->
+		<tr class="table-dark" onclick="choose_game()">
+      <th scope="row">GAME IMG</th>
+      <td>Achtung</td>
+      <td>5B</td>
+      <td>10B</td>
+			<td>4</td>
+    </tr>
+  </tbody>
+
+</table>
+
+<!-- Chose a Game + In lobby : -->
+{% elif not session['game_started'] %}
+
+<!-- Game Started : -->
+{% else %}
+
+{% endif %}
+{% endblock %}

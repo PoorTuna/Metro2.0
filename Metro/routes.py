@@ -326,16 +326,44 @@ def profile():
 
 	return render_template("user/profile.html", data = data)
 
-@app.route("/settings")
+@app.route("/settings", methods=['GET', 'POST'])
 @login_required
 def settings():
-	return render_template("user/settings.html")
+	logged_user = flask_login.current_user
+	if request.method == "POST":
+		# Color Palette Section
+		if 'palette_option' in request.form:
+			if request.form['palette_option']:
+				palettes_option = request.form['palette_option']
+				if palettes_option in logged_user.theme_list:
+					logged_user.theme = palettes_option
+					session['colorPalette'] = logged_user.theme
+			
+		# Password Changing Section
+		if 'password' in request.form and 'repeat_password' in request.form:
+			if request.form['password'] == request.form['repeat_password']:
+				if len(request.form['password']) >= 8:
+					if bcrypt.checkpw(request.form['password'].encode(), logged_user.password):
+						hashed_password = bcrypt.hashpw(request.form['password'], bcrypt.gensalt())
+						logged_user.password = hashed_password
+		
+		db.session.commit() # global for all changes
+		return redirect(url_for("index"))
 
+
+	color_palettes = logged_user.theme_list.split('|')
+	color_palettes.remove("")
+	return render_template("user/settings.html", palettes = color_palettes, email = logged_user.email, name = logged_user.username)
 
 @app.route("/store")
 @login_required
 def store():
-	return render_template("store.html")
+	return render_template("store.html", palette_list = flask_login.current_user.theme_list.split('|'))
+
+@app.route("/game")
+@login_required
+def game():
+	return render_template("game.html")
 
 
 @app.route("/<name>")
