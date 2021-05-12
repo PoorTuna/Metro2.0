@@ -94,12 +94,12 @@
   background: var(--metro_primary);
 }
 
-.top_button{
+.top-button{
 	/* width: 10%;
 	height: 10%; */
   background: none;
   border: 2px solid var(--metro_primary);
-  padding: 1.5em 3em;
+  padding: 1.5% 3%;
 	line-height: 0;
   outline: none;
   color: var(--metro_energy);
@@ -107,7 +107,7 @@
   cursor: pointer;
 	text-align: center;
 }
-.top_button:hover{
+.top-button:hover{
   background: var(--metro_primary);
 }
 

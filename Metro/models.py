@@ -30,9 +30,20 @@ class metro_chat(db.Model):
 	id = db.Column(db.Integer, primary_key = True)
 	string_id = db.Column(db.String(20), unique = True, nullable=True)
 	file_dir = db.Column(db.String(12), unique = True, nullable=True)
-	title = db.Column(db.String(25), unique = False, nullable=False)
+	title = db.Column(db.String(25), nullable=False)
 	time_created = db.Column(db.String(12), nullable=False)
 	owner_id = db.Column(db.Integer,db.ForeignKey('metro_user.id')) # not really usefull by itself
+
+class metro_game(db.Model):
+	id = db.Column(db.Integer, primary_key = True)
+	string_id = db.Column(db.String(20), unique = True, nullable=True)
+	game_name = db.Column(db.String(25), nullable=False)
+	turnbased = db.Column(db.Boolean, nullable=False, default=False)
+	started = db.Column(db.Boolean, nullable=False, default=False)
+	game_type = db.Column(db.String(25), nullable=False)
+	user_list = db.relationship('metro_user', backref  = "games_list")
+	owner_id = db.Column(db.Integer,db.ForeignKey('metro_user.id')) # not really usefull by itself
+
 
 
 @login_manager.user_loader
