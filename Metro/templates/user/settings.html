@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {%block title%}MetroTweaks{%endblock%}
 {%block content%}
-	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'settings.css')}}">
-	<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/settings.js')}}"></script>
+	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/settings.css')}}">
+	<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'js/settings.js')}}"></script>
 
 	<form method = "post" action = "/settings">
 		<ul class="list-group" style="background-color:var(--metro_secondary)">
