@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {%block content%}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/display-triangle.js')}}"></script>
+<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'js/display-triangle.js')}}"></script>
 
-<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'rain.css')}}">
-<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'light-text.css')}}">
-<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = '404-train.css')}}">
+<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/rain.css')}}">
+<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/light-text.css')}}">
+<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/404-train.css')}}">
 
 <section class="rain"></section>
 <!-- Rain in JS -->
-<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'assets/js/rain.js')}}"></script>
+<script type="text/javascript" charset="utf-8" src="{{url_for('static',filename = 'js/rain.js')}}"></script>
 <!-- Error Triangle -->
 <div class="exclamation-text-404" id="error_triangle">
 <span id="O" class="fas fa-exclamation-triangle"></span>
@@ -38,5 +38,5 @@
 	<source src="{{url_for('static',filename = 'assets/audio/metro_ambience.mp3')}}" type="audio/mpeg">
 </audio>
 
-<script src="{{url_for('static',filename = 'assets/js/playaudio.js')}}"></script>
+<script src="{{url_for('static',filename = 'js/playaudio.js')}}"></script>
 {%endblock%}

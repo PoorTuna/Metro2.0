@@ -3,71 +3,132 @@
 
 {%block content%}
 
-<!-- Looking for a game : -->
-{% if not session['chose_game'] %}
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th scope="col">Icon</th>
-      <th scope="col">Name</th>
-      <th scope="col">Cost</th>
-      <th scope="col">Prize</th>
-			<th scope="col">Max Players</th>
-    </tr>
-  </thead>
-  <tbody>
-		<!-- Pong : -->
-    <tr class="table-dark" onclick="choose_game()">
-      <th scope="row">GAME IMG</th>
-      <td>Pong</td>
-      <td>5B</td>
-      <td>10B</td>
-			<td>2</td>
-    </tr>
-		<!-- Snake : -->
-		<tr class="table-dark" onclick="choose_game()">
-      <th scope="row">GAME IMG</th>
-      <td>Snake</td>
-      <td>5B</td>
-      <td>10B</td>
-			<td>1</td>
-    </tr>
+<!-- Looking for a game :  not session['chose_game'] -->
+{% if False %}
+<!-- SOCKETIO CLIENT LIBRARY -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 
-		<!-- Arm Wrestling : -->
-		<tr class="table-dark" onclick="choose_game()">
-      <th scope="row">GAME IMG</th>
-      <td>Arm Wrestling</td>
-      <td>5B</td>
-      <td>10B</td>
-			<td>2</td>
-    </tr>
+<script src="{{url_for('static',filename = 'js/game-sockets.js')}}"></script>
 
-		<!-- Breakout : -->
-		<tr class="table-dark" onclick="choose_game()">
-      <th scope="row">GAME IMG</th>
-      <td>Breakout</td>
-      <td>5B</td>
-      <td>10B</td>
-			<td>1</td>
-    </tr>
+<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/games.css')}}">
+<div class="metro-game-container">
+	<!-- Chat Box -->
+	<div class="gamebox">
+		<table class="table table-hover">
+			<thead>
+				<tr style="background-color:var(--metro_accents)">
+					<th scope="col">Icon</th>
+					<th scope="col">Name</th>
+					<th scope="col">Cost</th>
+					<th scope="col">Prize</th>
+					<th scope="col">Max Players</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- Pong : -->
+				<tr class="table-dark" onclick="choose_game()">
+					<th scope="row">GAME IMG</th>
+					<td>Pong</td>
+					<td>5B</td>
+					<td>10B</td>
+					<td>2</td>
+				</tr>
+				<!-- Snake : -->
+				<tr class="table-dark" onclick="choose_game()">
+					<th scope="row">GAME IMG</th>
+					<td>Snake</td>
+					<td>Free</td>
+					<td>5B</td>
+					<td>1</td>
+				</tr>
 
-		<!-- Achtung : -->
-		<tr class="table-dark" onclick="choose_game()">
-      <th scope="row">GAME IMG</th>
-      <td>Achtung</td>
-      <td>5B</td>
-      <td>10B</td>
-			<td>4</td>
-    </tr>
-  </tbody>
+				<!-- Arm Wrestling : -->
+				<tr class="table-dark" onclick="choose_game()">
+					<th scope="row">GAME IMG</th>
+					<td>Arm Wrestling</td>
+					<td>5B</td>
+					<td>10B</td>
+					<td>2</td>
+				</tr>
 
-</table>
+				<!-- Breakout : -->
+				<tr class="table-dark" onclick="choose_game()">
+					<th scope="row">GAME IMG</th>
+					<td>Breakout</td>
+					<td>5B</td>
+					<td>10B</td>
+					<td>1</td>
+				</tr>
 
-<!-- Chose a Game + In lobby : -->
-{% elif not session['game_started'] %}
+				<!-- Achtung : -->
+				<tr class="table-dark" onclick="choose_game()">
+					<th scope="row">GAME IMG</th>
+					<td>Achtung</td>
+					<td>5B</td>
+					<td>20B</td>
+					<td>4</td>
+				</tr>
+
+				<!-- TicTacToe : -->
+				<tr class="table-dark" onclick="choose_game()">
+					<th scope="row">GAME IMG</th>
+					<td>Tic Tac Toe</td>
+					<td>5B</td>
+					<td>10B</td>
+					<td>2</td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+	<!-- Chat Box -->
+	<div class="chatbox" style="color:var(--metro_energy)">
+		<table class="table table-hover">
+				<tr>
+					<th scope="col" style="background-color:var(--metro_accents)">Metro Game Station</th>
+				</tr>
+				<tr>
+				<td id="chat" style="background-color:var(--metro_secondary);color:var(--metro_energy);padding-bottom: 1%;">Welcome to the game station!</td>
+				</tr>
+				<footer class="bottom_footer" style="background-color:var(--metro_accents)">
+					<input class="bottom_input" type="text" id="myMessage"  style="color:var(--metro_primary);background-color:var(--metro_tertiary)">
+					<button class="bottom_button right_button" id="sendbutton" onclick="send_msg()">Send</button>
+				</footer>
+		</table>
+
+	</div>
+
+</div>
+<!-- Chose a Game + In lobby :elif not session['game_started'] -->
+{% elif True %}
+<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/games.css')}}">
+	<div class="metro-game-container">
+	<!-- Chat Box -->
+	<div class="chatbox-game" style="color:var(--metro_energy);background-color:var(--metro_secondary)">
+		<table class="table table-hover" style="background-color:var(--metro_secondary)">
+				<tr>
+					<th scope="col" style="background-color:var(--metro_accents)">Metro Game Station</th>
+				</tr>
+				<tr>
+				<td id="chat" style="background-color:var(--metro_secondary);color:var(--metro_energy);padding-bottom: 1%;">Welcome to the lobby station!</td>
+				<footer class="bottom_footer" style="background-color:var(--metro_accents)">
+					<input class="bottom_input" type="text" id="myMessage"  style="color:var(--metro_primary);background-color:var(--metro_tertiary)">
+					<button class="bottom_button right_button" id="sendbutton" onclick="send_msg()">Send</button>
+				</footer>
+		</table>
+	</div>
+
+	<!-- Player List Box -->
+	<div class="playerbox">
+		xd
+	</div>
+
+</div>
+
 
 <!-- Game Started : -->
 {% else %}
-
+	lmao
 {% endif %}
 {% endblock %}
