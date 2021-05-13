@@ -24,7 +24,7 @@
 }
 
 .chatbox{
-	background-color: var(--metro_secondary);
+	background-color: var(--metro_accents);
 	position: absolute;
 	border: 1px solid var(--metro_tertiary);
 	display: inline-block;
@@ -112,7 +112,7 @@
 }
 
 /* Lobby Section */
-.chatbox-game{
+.chatbox-lobby{
 	border: 1px solid var(--metro_tertiary);
 	display: inline-block;
 	width: 70%;
@@ -121,10 +121,66 @@
 
 
 .playerbox{
-	background-color: var(--metro_secondary);
+	background-color: var(--metro_accents);
 	position: absolute;
 	border: 1px solid var(--metro_tertiary);
 	display: inline-block;
 	width: 30%;
 	height: 90%;
+}
+
+/* Game Section */
+.gamebox-game{
+	border: 1px solid var(--metro_tertiary);
+	display: inline-block;
+	width: 70%;
+	height: 90%;
+}
+
+
+.right-box-container{
+	position: relative;
+	border: 1px solid var(--metro_tertiary);
+	display: inline-block;
+	width: 29%;
+	height: 90%;
+	
+}
+.playerbox-game{
+	background-color: var(--metro_accents);
+	border-bottom: 1px solid var(--metro_tertiary);
+	display: inline-block;
+	width: 100%;
+	height: 50%;
+}
+
+.chatbox-game{
+	top: 50%;
+	background-color: var(--metro_accents);
+	display: inline-block;
+	width: 100%;
+	height: 50%;
+}
+
+.chatbox-game .bottom_footer_game{
+	top: 94%;
+	width:	100%;
+	height: 6%;
+}
+
+.bottom-button-game{
+	/* width: 10%;
+	height: 10%; */
+  background: none;
+  border: 2px solid var(--metro_primary);
+  padding: 1.5% 3%;
+	line-height: 0;
+  outline: none;
+  color: var(--metro_energy);
+  border-radius: 20px;
+  cursor: pointer;
+	text-align: center;
+}
+.bottom-button-game:hover{
+  background: var(--metro_primary);
 }

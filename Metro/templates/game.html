@@ -101,11 +101,11 @@
 
 </div>
 <!-- Chose a Game + In lobby :elif not session['game_started'] -->
-{% elif True %}
+{% elif False %}
 <link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/games.css')}}">
 	<div class="metro-game-container">
 	<!-- Chat Box -->
-	<div class="chatbox-game" style="color:var(--metro_energy);background-color:var(--metro_secondary)">
+	<div class="chatbox-lobby" style="color:var(--metro_energy);background-color:var(--metro_secondary)">
 		<table class="table table-hover" style="background-color:var(--metro_secondary)">
 				<tr>
 					<th scope="col" style="background-color:var(--metro_accents);text-align:center">Metro Lobby Station</th>
@@ -124,9 +124,10 @@
 	<div class="playerbox">
 		<table class="table table-hover">
 				<tr  style="background-color:var(--metro_accents)">
-					<th scope="col" style="background-color:var(--metro_accents)">Metro Lobby Station
+					<th scope="col" style="background-color:var(--metro_accents)">
 						<button class="top-button" style="margin-right:3%;margin-left:10%;display:inline-block">Start</button>
-						<button class="top-button" style="display:inline-block">Exit</button>
+						Metro Lobby Station
+						<button class="top-button" style="display:inline-block;margin-right:10%;margin-left:3%">Exit</button>
 					</th>
 
 				</tr>
@@ -143,6 +144,56 @@
 
 <!-- Game Started : -->
 {% else %}
-	lmao
+	<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/games.css')}}">
+<div class="metro-game-container">
+	<!-- Game Box -->
+	<div class="gamebox-game" style="color:var(--metro_energy);background-color:var(--metro_accents)">
+		<table class="table table-hover" style="background-color:var(--metro_accents)">
+				<tr>
+					<th scope="col" style="background-color:var(--metro_secondary);text-align:center">GAME NAME</th>
+				</tr>
+				<tr>
+				<td id="chat" style="background-color:var(--metro_accents);color:var(--metro_energy);padding-bottom: 1%;">Canvas code goes here or something idk</td>
+				</tr>
+		</table>
+	</div>
+
+	<!-- Player List Box + Chat Box -->
+	<div class="right-box-container">
+		<div class="playerbox-game">
+			<table class="table table-hover">
+					<tr  style="background-color:var(--metro_secondary)">
+						<th scope="col" style="background-color:var(--metro_secondary)">
+							<button class="top-button" style="margin-right:3%;margin-left:10%;display:inline-block">Start</button>
+							Metro Game Station
+							<button class="top-button" style="display:inline-block;margin-right:10%;margin-left:3%">Exit</button>
+						</th>
+
+					</tr>
+					<tr>
+						<td id="players" style="background-color:var(--metro_accents);color:var(--metro_energy);padding-bottom: 1%;">Current Players:
+						</td>
+					</tr>
+			</table>
+		</div>
+		<div class="chatbox-game">
+			<table class="table table-hover">
+					<tr  style="background-color:var(--metro_secondary)">
+						<th scope="col" style="background-color:var(--metro_secondary)">Metro Game Station</th>
+					</tr>
+				<tr>
+				<td id="chat" style="background-color:var(--metro_accents);color:var(--metro_energy);padding-bottom: 1%;">Welcome to the game station!</td>
+				</tr>
+				<footer class="bottom_footer_game infront" style="background-color:var(--metro_secondary)">
+					<input class="bottom_input" type="text" id="myMessage"  style="color:var(--metro_primary);background-color:var(--metro_tertiary)">
+					<button class="bottom-button-game right_button" id="sendbutton" onclick="send_msg()">Send</button>
+				</footer>
+			</table>
+
+		</div>
+	</div>
+	
+
+</div>
 {% endif %}
 {% endblock %}

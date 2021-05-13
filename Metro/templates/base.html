@@ -5,6 +5,12 @@
 		<meta charset="utf-8">
 		<!-- JQuery -->
 		<script src="https://code.jquery.com/jquery-1.12.4.js" integrity="sha256-Qw82+bXyGq6MydymqBxNPYTaUXXq7c8v3CwiYwLLNXU=" crossorigin="anonymous"></script>
+		<script>
+			if (!window.jQuery) {
+					document.write('<script src="https://code.jquery.com/jquery-1.12.4.js"><\/script>');
+			}
+		</script>
+		
 		<link rel="icon" href="{{url_for('static',filename = 'assets/images/logo/logoinverted.png')}}">
 		{% if not session['colorPalette'] %}
 		<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/colors/original.css')}}">
