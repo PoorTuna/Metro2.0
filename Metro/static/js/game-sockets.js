@@ -51,7 +51,6 @@
 			}
 
 			$("#members_list").append(member_state + '<b><span style="color:#1a1a1a">'+ member[0] +'</span></b><br>');
-
 		});
 
 		//Connect html input and js socketio to send messages 
@@ -81,7 +80,6 @@
 			//console.log("sent message");
 			socket.emit("game_message", $('#myMessage').val());
 			$('#myMessage').val("");
-
 			}
 		}
 
@@ -96,3 +94,20 @@
 		$('#cchat_createbtn').on('click', function() {
 			$("#cchat_createbtn").attr("disabled", true);
 		});
+
+		function choose_game(name){
+			socket.emit("game_choose", name);
+			$("#choose_game_table").hide();
+			$("#choose_game_table").innerText = "Creating a Station...";
+			location.reload();
+		}
+
+		function start_game(name){
+			socket.emit("game_start", name);
+			location.reload(); /* Reload for everyone in the room */
+		}
+
+		function exit_game(name){
+			socket.emit("game_exit", name);
+			location.reload(); /* Reload for everyone in the room */
+		}

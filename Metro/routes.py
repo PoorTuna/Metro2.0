@@ -223,6 +223,9 @@ def logout():
 	session.pop('user', None)
 	session.pop('bullets', None)
 	session.pop('colorPalette', None)
+	session.pop('currgame', None) # Choose game
+	session.pop('startedgame', None) # Start game
+	
 	return redirect(url_for("index"))
 
 @app.route("/forgot", methods=['GET', 'POST'])
@@ -365,8 +368,13 @@ def store():
 def game():
 	return render_template("game.html")
 
-
 @app.route("/<name>")
 @app.errorhandler(404)
 def something(name):
 	return render_template("error/404.html", url = name)
+
+
+@app.route("/test")
+@login_required
+def test_game():
+	return render_template("actualgame.html")

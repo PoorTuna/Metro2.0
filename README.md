@@ -5,7 +5,7 @@ This project includes a broader explanation in the html pages.
 How to use this project:
 Host:
   1)Download files
-  2)Open desired port and share ip with the port (public ip)
+  2)Open a port and share ip with the port (public ip)
   3)Run the server via python shell or an environment // might change to exe in the future
   4)That's it! You are ready to use and manage the website!
 

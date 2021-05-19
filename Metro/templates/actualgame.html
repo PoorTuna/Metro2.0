@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{%block title%}MetroFeatures{%endblock%}
+
+{%block content%}
+
+<link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/games.css')}}">
+	<!-- Game Box -->
+	<div class="gamebox-game" style="color:var(--metro_energy);background-color:var(--metro_accents);margin:0">
+		<table class="table table-hover" style="background-color:var(--metro_accents);margin:0">
+				<tr>
+					<th scope="col" style="background-color:var(--metro_secondary);text-align:center;height:10%">GAME NAME</th>
+				</tr>
+		</table>
+		<canvas id="mycan" style="border:1px;border-style:solid;border-color:var(--metro_energy);background-color: var(--metro_accents);width: 100%;height: 90%; margin:0;"></canvas>
+	</div>
+
+
+
+<script src="{{url_for('static',filename = 'js/games/snake.js')}}"></script>
+{%endblock%}
+
+
+

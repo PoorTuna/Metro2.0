@@ -30,10 +30,10 @@
 	display: inline-block;
 	width: 40%;
 	height: 90%;
+	overflow-y: scroll;
 }
 
-
-.bottom_footer{
+.chatbox .bottom_footer{
 	position: absolute;
 	top: 90%;
 	width: 100%;
@@ -160,6 +160,7 @@
 	display: inline-block;
 	width: 100%;
 	height: 50%;
+	overflow-y: scroll;
 }
 
 .chatbox-game .bottom_footer_game{
@@ -184,3 +185,5 @@
 .bottom-button-game:hover{
   background: var(--metro_primary);
 }
+
+

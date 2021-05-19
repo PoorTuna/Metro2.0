@@ -12,6 +12,8 @@ import flask_login
 import os
 #Import time
 from datetime import datetime,timedelta
+import string
+import random
 
 #This file contains socket handling and communications for the Metro2.0 project
 
@@ -386,16 +388,16 @@ def handle_disconnect(msg):
 
 @socketio.on('join_private_game')
 def recv_private_gamename(cid):
-	if cid != "general":
+	if cid != "general_game":
 		if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
 			if flask_login.current_user in curr_chat.chat_backref:
 				leave_room(session['chatID'])
 				session['chatID'] = cid
 				join_room(session['chatID'])
 
-	elif cid == "general":
+	elif cid == "general_game":
 		leave_room(session['chatID'])
-		session['chatID'] = "general"
+		session['chatID'] = "general_game"
 		join_room(session['chatID'])
 		emit("message", "This station is anonymous. No logs saved.", room=				flask_login.current_user._session_id)
 
@@ -487,3 +489,32 @@ def handle_game_message(msg):
 					curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M')
 					formated_msg = f"{curr_time} | {flask_login.current_user.username} : {msg}"
 					emit("game_message", formated_msg, room=session['chatID'])
+
+
+@socketio.on("game_choose")
+def handle_game_choose(game):
+	session['currgame'] = game
+	letters = string.ascii_letters
+	curr_chat.string_id = ''.join(random.choice(letters) for i in range(10))
+	curr_game = metro_game()
+	db.session.add(curr_chat)
+	db.session.commit()
+	curr_game.string_id += str(curr_chat.id)
+	db.session.commit()
+	
+
+
+@socketio.on("game_start")
+def handle_game_started(msg):
+	session['startedgame'] = True
+
+@socketio.on("game_exit")
+def handle_game_started(msg):
+	session.pop('currgame', None) # Choose game
+	session.pop('startedgame', None) # Start game
+	#Pop him out of game player list. Delete his game user object?
+	
+
+@socketio.on("game_update")
+def handle_game_update(cmd):
+	pass
