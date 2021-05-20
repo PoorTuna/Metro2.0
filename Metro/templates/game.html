@@ -145,17 +145,31 @@
 
 <!-- Game Started : -->
 {% else %}
-<div class="metro-game-container">
 	<!-- Game Box -->
 	<div class="gamebox-game" style="color:var(--metro_energy);background-color:var(--metro_accents)">
-		<table class="table table-hover" style="background-color:var(--metro_accents)">
+		<table class="table table-hover" style="background-color:var(--metro_accents);margin:0">
 				<tr>
-					<th scope="col" style="background-color:var(--metro_secondary);text-align:center">GAME NAME</th>
-				</tr>
-				<tr>
-				<td id="game_box" style="background-color:var(--metro_accents);color:var(--metro_energy);padding-bottom: 1%;">Canvas code goes here or something idk</td>
+					<th scope="col" style="background-color:var(--metro_secondary);text-align:center;height:10%">GAME NAME</th>
 				</tr>
 		</table>
+
+		<canvas id="mycan" style="border:1px;border-style:solid;border-color:var(--metro_energy);background-color: var(--metro_accents);width: 100%;height: 90%; margin:0;"></canvas>
+		
+		<span style="color:var(--metro_energy);display:none" id="funny">Lmao</span>
+		<span style="color:var(--metro_tertiary);display:none" id="funny2">Lmao</span>
+		<div>
+				
+			{% if session['currgame'] == "pong" %}
+			<p style="color:var(--metro_energy);float:left;margin-left:1%" id="score1">Player 1 Score : </p>
+			<p style="color:var(--metro_energy);text-align:right;overflow:hidden;text-align:right;margin-right:1%" id="score2">Player 2 Score : </p>
+			{% elif session['currgame'] == "snake" %}
+			<p style="color:var(--metro_energy);float:left;margin-left:1%" id="score1">Player Score </p>
+			{% else %}
+			<p>funny</p>
+
+			{% endif %}
+
+		</div>
 	</div>
 
 	<!-- Player List Box + Chat Box -->
@@ -191,8 +205,8 @@
 
 		</div>
 	</div>
-	
 
-</div>
+<script src="{{url_for('static',filename = 'js/games/' +session['currgame']+ '.js')}}"></script>
+
 {% endif %}
 {% endblock %}

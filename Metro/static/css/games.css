@@ -131,6 +131,8 @@
 
 /* Game Section */
 .gamebox-game{
+	margin-top: 0;
+	top: 0;
 	border: 1px solid var(--metro_tertiary);
 	display: inline-block;
 	width: 70%;
@@ -139,7 +141,7 @@
 
 
 .right-box-container{
-	position: relative;
+	position: absolute;
 	border: 1px solid var(--metro_tertiary);
 	display: inline-block;
 	width: 29%;

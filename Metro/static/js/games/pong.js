@@ -5,6 +5,7 @@ canvas.height = $('#mycan').height();
 var ctx = canvas.getContext("2d");
 const curr_player = "1"; // GET A MESSAGE THAT DEFINES THIS THROUGH THE SOCKETS and change controls depending on the player
 
+
 // Pong Variables
 const scale = 20;
 const rows = Math.trunc(canvas.width / scale); // realised it's the other way around
@@ -40,10 +41,12 @@ function Player(x,y){
 		// W or UpArrow 
 		if((kp==87)||(kp==38)){
 			this.y += scale * -1;
+			socket.emit("game_update", curr_player);
 		}
 		// S or DownArrow 
 		if((kp==83)||(kp==40)){
 			this.y += scale * 1;
+			socket.emit("game_update", curr_player);
 		}
 
 	}
@@ -151,10 +154,12 @@ function check_win(){
 function pongLost(){
 	//Eating function
 	alert("You Lost! your score was:" + player.score);
+		socket.emit("game_lost", false);
 }
 function pongWin(){
 	//Eating function
 	alert("You Won! your score was:" + player.score);
+	socket.emit("game_win", 15);
 }
 
 window.setInterval(function(){
@@ -168,17 +173,19 @@ window.setInterval(function(){
 	player2.update();
 	player2.draw();
 
+	//Collision
 	ball.collision(player);
 	ball.collision(player2);
 	check_win();
 },0);
 
 window.setInterval(function(){
+	//Clean ball
 	ctx.clearRect(scale * 2,0,rows * scale - 2 * scale,canvas.height);
-
+	//Ball
 	ball.draw();
 	ball.update();
-},150);
+},75);
 
 
 
