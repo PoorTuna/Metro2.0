@@ -8,6 +8,8 @@ var ctx = canvas.getContext("2d");
 const scale = 20;
 const rows = canvas.width / scale;
 const columns = canvas.height / scale;
+const snakeColor = window.getComputedStyle(document.getElementById("funny")).getPropertyValue('color');
+const fruitColor = window.getComputedStyle(document.getElementById("funny2")).getPropertyValue('color');
 
 var snake; 
 // Snake Object
@@ -20,7 +22,7 @@ function Snake(){
 	this.tail = [];
 
 	this.draw = function(){
-		ctx.fillStyle = "red";
+		ctx.fillStyle = snakeColor;
 		// draw each part of the snake's tail
 		for( let i = 0; i < this.tail.length; i++){
 			ctx.fillRect(this.tail[i].x,this.tail[i].y, scale, scale);
@@ -30,19 +32,10 @@ function Snake(){
 	}
 	this.update = function(){
 		for( let i = 0; i < this.tail.length - 1 ; i++){
-			for( let j = 0; j < this.tail.length - 1 ; j++){
-				if (j != i){
-					if(this.tail[i].x == this.tail[j].x && this.tail[i].y == this.tail[j].y){
-						snakeLost();
-					}
-				}
-			}
-			if(this.tail[i].x == this.x && this.tail[i].y == this.y){
-				snakeLost();
-			}
 
 			this.tail[i] = this.tail[i + 1];
 		}
+
 		this.tail[this.total-1] = {x: this.x, y: this.y};
 
 		this.x += this.xSpeed;
@@ -104,7 +97,7 @@ function Fruit(){
 	this.y = 0;
 
 	this.draw = function(){
-		ctx.fillStyle = "yellow";
+		ctx.fillStyle = fruitColor;
 		ctx.fillRect(this.x,this.y, scale, scale)
 
 	}
@@ -140,24 +133,11 @@ function check_win(){
 function snakeLost(){
 	//Eating function
 	alert("You Lost! your score was:" + snake.total);
-	snake.x = 0;
-	snake.y = 0;
-	snake.xSpeed = scale;
-	snake.ySpeed = 0 ;
-	snake.total = 0;
-	snake.tail = [];
-	fruit.pickLocation();
 }
 function snakeWin(){
 	//Eating function
 	alert("You Won! your score was:" + snake.total);
-	snake.x = 0;
-	snake.y = 0;
-	snake.xSpeed = scale;
-	snake.ySpeed = 0 ;
-	snake.total = 0;
-	snake.tail = [];
-	fruit.pickLocation();
+	//socket stuff goes here and in snakelost
 }
 
 window.setInterval(function(){
@@ -167,7 +147,7 @@ window.setInterval(function(){
 	snake.draw();
 	check_eat();
 	check_win();
-},300);
+},150);
 
 window.addEventListener("keydown", function(event){
 	snake.changeDirection(event.keyCode);

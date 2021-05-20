@@ -253,6 +253,7 @@ def forgot():
 					try:
 						metro_send_mail(email_user, session['forgotCODE']) # send mail
 						print(session['forgotCODE'])
+						session['forgotCODE'] = bcrypt.hashpw(session['forgotCODE'], bcrypt.gensalt())
 					except:
 						print("Email System Error")
 
