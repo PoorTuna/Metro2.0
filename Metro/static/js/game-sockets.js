@@ -1,5 +1,7 @@
 		const socket = io('https://' + document.domain + ':' + location.port ,{ secure: true });
 		var tts = new SpeechSynthesisUtterance();
+		var game_id;
+		var game_name;
 		// Notify user when connected in logs
 		socket.on('connect', function() {
 			//console.log("connected to the chat");
@@ -51,6 +53,17 @@
 			}
 
 			$("#members_list").append(member_state + '<b><span style="color:#1a1a1a">'+ member[0] +'</span></b><br>');
+		});
+
+		// Gets the member list:
+		socket.on('join_request', function(request) {
+			request = request.split("|");
+			game_id = request[2];
+			game_name = request[1];
+			document.getElementById("join_username").innerText = request[0];
+			document.getElementById("join_game_name").innerText = request[1];
+			document.getElementById("join_game_modal").style.display = "block";
+
 		});
 
 		//Connect html input and js socketio to send messages 
@@ -107,7 +120,25 @@
 			location.reload(); /* Reload for everyone in the room */
 		}
 
+		function check_start(name){
+			socket.emit("allow_start", name);
+		}
+		
+
 		function exit_game(name){
 			socket.emit("game_exit", name);
 			location.reload(); /* Reload for everyone in the room */
 		}
+
+		function check_count(){
+			socket.emit("allow_start", "something");
+		}
+
+		function modal_join_game(){
+
+			socket.emit("join_private_game", game_id + "|" + game_name);
+		}
+
+		socket.on("allow_start", function(msg){
+			start_game('start');
+		});

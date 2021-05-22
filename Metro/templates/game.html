@@ -98,10 +98,33 @@
 					<button class="bottom_button right_button" id="sendbutton" onclick="send_msg()">Send</button>
 				</footer>
 		</table>
-
 	</div>
-
 </div>
+
+		<!-- Modal - Join a Game -->
+		<div class="modal fade center-modal" id="join_game_modal" role="dialog">
+			<div class="modal-dialog">
+		
+			<!-- Modal Join a Game content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close closebtn fas fa-times" data-dismiss="modal"></button>
+					<h4 style="color:var(--metro_primary)" class="fas fa-subway modal-title modal-icon-left"></h4>
+					<h4 style="color:var(--metro_primary)" class="modal-title modal-title-left">Invitation</h4>
+				</div>
+					<div class="modal-body">
+						<label style="color:var(--metro_primary)">You have been invited by <span style="color:var(--metro_tertiary)" id ="join_username"> insert name here</span> to a game of <span style="color:var(--metro_tertiary)" id ="join_game_name"> insert game name here</span> would you like to join it?</label>
+
+					</div>
+					<div class="modal-footer">
+						<button class = "btn btn-primary" onclick="modal_join_game()">Accept</button>
+						<button class ="close closebtn btn btn-primary" data-dismiss="modal">Decline</button>
+						
+					</div>
+				</div>	
+			</div>
+		</div>
+
 <!-- Chose a Game + In lobby :elif not session['game_started'] -->
 {% elif not session['startedgame'] %}
 	<div class="metro-game-container">
@@ -126,7 +149,7 @@
 		<table class="table table-hover">
 				<tr  style="background-color:var(--metro_accents)">
 					<th scope="col" style="background-color:var(--metro_accents)">
-						<button class="top-button" style="margin-right:3%;margin-left:10%;display:inline-block" onclick="start_game('start')">Start</button>
+						<button class="top-button" style="margin-right:3%;margin-left:10%;display:inline-block" onclick="check_start('start')">Start</button>
 						Metro Lobby Station
 						<button class="top-button" style="display:inline-block;margin-right:10%;margin-left:3%" onclick="exit_game('exit')">Exit</button>
 					</th>
@@ -160,10 +183,10 @@
 		<div>
 				
 			{% if session['currgame'] == "pong" %}
-			<p style="color:var(--metro_energy);float:left;margin-left:1%" id="score1">Player 1 Score : </p>
-			<p style="color:var(--metro_energy);text-align:right;overflow:hidden;text-align:right;margin-right:1%" id="score2">Player 2 Score : </p>
+			<p style="color:var(--metro_energy);float:left;margin-left:1%" id="score1">Player 1 Score : <span id="p1score">0</span></p>
+			<p style="color:var(--metro_energy);text-align:right;overflow:hidden;text-align:right;margin-right:1%" id="score2">Player 2 Score : <span id="p2score">0</span></p>
 			{% elif session['currgame'] == "snake" %}
-			<p style="color:var(--metro_energy);float:left;margin-left:1%" id="score1">Player Score </p>
+			<p style="color:var(--metro_energy);float:left;margin-left:1%" id="score1">Player Score : <span id="pscore">0</span> </p>
 			{% else %}
 			<p>funny</p>
 

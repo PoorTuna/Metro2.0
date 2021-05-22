@@ -26,9 +26,10 @@ def handle_connect():
 		print(f"{flask_login.current_user} : {flask_login.current_user.username} has connected with session id {request.sid}")
 	flask_login.current_user._session_id = request.sid
 	db.session.commit()
-	session['chatID'] = "general"
-	join_room(session['chatID'])
-	
+	if 'chatID' not in session:
+		session['chatID'] = "general"
+		join_room(session['chatID'])
+		
 # Socket IO disconnect handler
 @socketio.on('disconnect')
 def handle_disconnect():

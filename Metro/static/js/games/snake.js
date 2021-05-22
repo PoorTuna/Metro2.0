@@ -10,6 +10,7 @@ const rows = canvas.width / scale;
 const columns = canvas.height / scale;
 const snakeColor = window.getComputedStyle(document.getElementById("funny")).getPropertyValue('color');
 const fruitColor = window.getComputedStyle(document.getElementById("funny2")).getPropertyValue('color');
+var snake_score = document.getElementById("pscore");
 
 var snake; 
 // Snake Object
@@ -121,6 +122,7 @@ function check_eat(){
 	if(snake.eat(fruit)){
 		fruit.pickLocation();
 		snake.total += 1;
+		snake_score.innerText = snake.total;
 	}
 }
 function check_win(){
@@ -131,12 +133,18 @@ function check_win(){
 }
 
 function snakeLost(){
-	//Eating function
+	exit_game('exit');
 	alert("You Lost! your score was:" + snake.total);
+	location.reload();
+	snake.total = 0;
 }
 function snakeWin(){
-	//Eating function
+	socket.emit("game_win", "snake");
+	exit_game('exit');
 	alert("You Won! your score was:" + snake.total);
+	location.reload();
+	snake.total = 0;
+
 	//socket stuff goes here and in snakelost
 }
 
