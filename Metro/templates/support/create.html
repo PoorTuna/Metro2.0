@@ -3,7 +3,6 @@
 
 {%block content%}
 <link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/support.css')}}">
-
 <form method = "POST" action = "/support/create">
 	<div class="post-center" style="background-color:var(--metro_secondary);color:var(--metro_energy)">
 		<div class= "container">
@@ -17,8 +16,7 @@
 			<label for="body">Body</label>
 			<textarea type="text" class="form-control" id="body" placeholder="Enter text" name ="body" minlength="3"></textarea>
 		</div>
-		<button type="submit" class="btn btn-primary" style="background-color:var(--metro_accents)" name ="submit">Submit</button><p>{{err}}</p>
+		<input id = "sbmtbtn" type="submit" class="btn btn-primary" value = "Submit" style="background-color:var(--metro_accents)" name ="submit"><p>{{err}}</p>
 	</div>
 </form>
-
 {%endblock%}

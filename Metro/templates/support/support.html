@@ -2,12 +2,16 @@
 {%block title%}MetroSupport{%endblock%}
 
 {%block content%}
+<div class= "container">
+	<h1 style="color:var(--metro_primary);text-align:center;font-family:metro">Metro Posts<a class="far fa-plus-square" href = "/support/create" style="color:var(--metro_energy);text-decoration:none"></a></h1>
+</div>
+
 	{% for post in posts%}
 	<hr>
 	<div class= "container" style="color:var(--metro_energy)">
 		<ul class="list-group" style="background-color:var(--metro_secondary)">
-			<li class="list-group-item"style="background-color:var(--metro_accents);color:var(--metro_primary)">
-				<h3>{{post.title}}</h3>
+			<li class="list-group-item"style="background-color:var(--metro_tertiary);color:var(--metro_primary);font-family:metro">
+				<h3 >{{post.title}}</h3>
 			</li>
 
 			<li class="list-group-item" style="background-color:var(--metro_secondary)">

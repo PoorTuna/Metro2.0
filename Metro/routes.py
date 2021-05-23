@@ -235,8 +235,8 @@ def support_create():
 					error = "Incorrect parameter size!"
 			else:
 				error = "Incorrect parameter size!"
-	else:
-		error = "Missing one or more parameters!"
+		else:
+			error = "Missing one or more parameters!"
 			
 	return render_template("support/create.html", err = error)
 
@@ -244,9 +244,9 @@ def support_create():
 def support_post(id):
 	if curr_post := metro_post.query.filter_by(string_id = id).first():
 		if os.path.exists(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/post.data"):
-			with open(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/post.data", "a+") as metro_filehandler:
-				body = metro_filehandler.readlines()
-				print(body)
+			with open(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/post.data", "a+") as metro_fd:
+				metro_fd.seek(0)
+				body = metro_fd.readlines()
 		else:
 			body = "post is unavailable!"
 	else:

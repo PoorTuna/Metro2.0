@@ -14,7 +14,9 @@
 			</li>
 			<li class="list-group-item" style="background-color:var(--metro_secondary);color:var(--metro_energy)">
 					<p>
-						{{body}}
+						{% for line in body %}
+						{{line}}</br>
+						{% endfor%}
 					</p>
 			</li>
 			<li class = "list-group-item" style="background-color:var(--metro_secondary)">
