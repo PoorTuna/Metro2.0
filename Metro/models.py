@@ -48,6 +48,13 @@ class metro_game(db.Model):
 	curr_players = db.Column(db.Integer,default = 1)
 	max_players = db.Column(db.Integer,default = 1)
 
+class metro_post(db.Model):
+	id = db.Column(db.Integer, primary_key = True)
+	string_id = db.Column(db.String(20), unique = True, nullable=True)
+	title = db.Column(db.String(25), nullable=False)
+	time_created = db.Column(db.String(12), nullable=False)
+	author = db.Column(db.String(12), nullable=False)
+	owner_id = db.Column(db.Integer, nullable=True)
 
 @login_manager.user_loader
 def load_user(user_id):

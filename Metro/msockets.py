@@ -205,6 +205,7 @@ def handle_message(msg):
 							if tip_recipient._session_id:
 								if flask_login.current_user._balance >= int(tip_amount) + 50: # base safety amount
 									flask_login.current_user._balance -= int(tip_amount)
+									session['bullets'] = flask_login.current_user._balance
 									tip_recipient._balance += int(tip_amount)
 									db.session.commit()
 									emit('private_message', f"You tipped {tip_amount} bullets to {tip_recipient.username}!")

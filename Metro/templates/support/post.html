@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{%block title%}MetroPost{%endblock%}
+
+{%block content%}
+
+	<div class= "container" style="color:var(--metro_energy)">
+		<ul class="list-group" style="background-color:var(--metro_secondary)">
+			<li class="list-group-item"style="background-color:var(--metro_accents);color:var(--metro_primary)">
+				<h3>{{post.title}}</h3>
+			</li>
+
+			<li class="list-group-item" style="background-color:var(--metro_tertiary)">
+				<small>Created on {{post.time_created}} by {{post.author}}</small>
+			</li>
+			<li class="list-group-item" style="background-color:var(--metro_secondary);color:var(--metro_energy)">
+					<p>
+						{{body}}
+					</p>
+			</li>
+			<li class = "list-group-item" style="background-color:var(--metro_secondary)">
+				<a href = "/support" style="color:var(--metro_primary);background-color:var(--metro_accents)">GoBack</a> 
+			</li>
+			</ul>
+		</div>
+
+{% if post %}
+{% endif %}
+
+{%endblock%}

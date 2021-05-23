@@ -2,6 +2,9 @@
 		var tts = new SpeechSynthesisUtterance();
 		var game_id;
 		var game_name;
+		var join_modal = document.getElementById("join_game_modal_id");
+
+		
 		// Notify user when connected in logs
 		socket.on('connect', function() {
 			//console.log("connected to the chat");
@@ -51,18 +54,19 @@
 			else{
 				member_state = "<span class='fas fa-train' style = 'color:red'></span>";
 			}
+			$("#members_list").append(member_state + '<b><span style="color:#1a1a1a">'+ member[0]+'</span></b><br>');
 
-			$("#members_list").append(member_state + '<b><span style="color:#1a1a1a">'+ member[0] +'</span></b><br>');
 		});
 
 		// Gets the member list:
 		socket.on('join_request', function(request) {
 			request = request.split("|");
+
 			game_id = request[2];
 			game_name = request[1];
 			document.getElementById("join_username").innerText = request[0];
 			document.getElementById("join_game_name").innerText = request[1];
-			document.getElementById("join_game_modal").style.display = "block";
+			$("#chat").append('<li style="color:var(--metro_primary)">'+ "[W]" + "[ " + request[0] + "]"+ " has invited you to a game of " + request[1] + '<a href="javascript:void(0)" data-toggle="modal" data-target="#join_game_modal_id" style="color:var(--metro_energy)">' +  "Click here </a>" +'</li>');
 
 		});
 
@@ -135,8 +139,8 @@
 		}
 
 		function modal_join_game(){
-
 			socket.emit("join_private_game", game_id + "|" + game_name);
+			location.reload();
 		}
 
 		socket.on("allow_start", function(msg){

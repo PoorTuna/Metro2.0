@@ -1,0 +1,11 @@
+.post-center{
+position: absolute;
+top: 50%;
+left: 50%;
+width: 50%;
+height: 50%;
+margin: auto;
+border-radius: 5%;
+padding: 40px;
+transform: translate(-50%,-50%);
+}

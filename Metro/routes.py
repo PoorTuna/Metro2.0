@@ -1,7 +1,7 @@
 # Flask imports
 from flask import redirect, url_for, render_template, request,session
 # Database models imports
-from .models import db, metro_user, metro_chat, login_manager
+from .models import db, metro_user, metro_chat, login_manager, metro_post
 # Password hashing import
 import bcrypt
 # Flask-Login imports
@@ -206,10 +206,55 @@ def register():
 def features():
 	return render_template("features.html")
 
-@app.route("/support")
-@login_required
+@app.route("/support/")
 def support():
-	return render_template("support.html")
+	posts = metro_post.query.all()
+	return render_template("support/support.html", posts = posts)
+
+@app.route("/support/create", methods=['GET', 'POST'])
+@login_required
+def support_create():
+	error = ""
+	if request.method == "POST":
+		if 'title' in request.form and 'body' in request.form:
+			if len(request.form['title']) >= 3:
+				if len(request.form['body']) >= 3:
+					rand_str = ''.join(random.choice(string.ascii_letters) for i in range(10))
+					curr_time = (datetime.now() + timedelta(hours=3)).strftime("%m/%d/%Y, %H:%M")
+					curr_post = metro_post(title = request.form['title'], author=flask_login.current_user.username, time_created = curr_time)
+					curr_post.owner_id = flask_login.current_user.id
+					db.session.add(curr_post)
+					db.session.commit()
+					curr_post.string_id = rand_str + str(curr_post.id)
+					db.session.commit()
+					os.makedirs(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/")
+					with open(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/post.data", "a+") as metro_filehandler:
+						metro_filehandler.write(request.form['body'])
+					redirect(url_for("support_post", id = curr_post.string_id))
+				else:
+					error = "Incorrect parameter size!"
+			else:
+				error = "Incorrect parameter size!"
+	else:
+		error = "Missing one or more parameters!"
+			
+	return render_template("support/create.html", err = error)
+
+@app.route("/support/post/<id>")
+def support_post(id):
+	if curr_post := metro_post.query.filter_by(string_id = id).first():
+		if os.path.exists(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/post.data"):
+			with open(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/post.data", "a+") as metro_filehandler:
+				body = metro_filehandler.readlines()
+				print(body)
+		else:
+			body = "post is unavailable!"
+	else:
+		curr_post = ""
+		body = "post not found!"
+
+	return render_template("support/post.html", post = curr_post, body = body)
+
 
 @app.route("/about")
 def about():
@@ -368,6 +413,16 @@ def store():
 @login_required
 def game():
 	return render_template("game.html")
+
+
+@app.route("/gimmemoneyplzmatethanks")
+@login_required
+def money():
+	flask_login.current_user._balance += 100
+	db.session.commit()
+	session['bullets'] = flask_login.current_user._balance
+	return redirect(url_for("index"))
+
 
 @app.route("/<name>")
 @app.errorhandler(404)

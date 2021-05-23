@@ -30,7 +30,8 @@
 
 .box input[type = "text"],
 .box input[type = "password"],
-.box input[type = "email"]{
+.box input[type = "email"],
+.box textarea{
   background: none;
   display: block;
   margin: 20px auto;
@@ -46,7 +47,8 @@
 
 .box input[type = "text"]:focus,
 .box input[type = "password"]:focus,
-.box input[type = "email"]:focus{
+.box input[type = "email"]:focus
+.box textarea{
   width: 75%;
   border-color: var(--metro_primary);
 }
