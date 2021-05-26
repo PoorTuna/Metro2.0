@@ -29,6 +29,8 @@ def handle_connect():
 	if 'chatID' not in session:
 		session['chatID'] = "general"
 		join_room(session['chatID'])
+	else:
+		join_room(session['chatID'])
 		
 # Socket IO disconnect handler
 @socketio.on('disconnect')
