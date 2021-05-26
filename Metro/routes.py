@@ -220,7 +220,7 @@ def support_create():
 			if len(request.form['title']) >= 3:
 				if len(request.form['body']) >= 3:
 					rand_str = ''.join(random.choice(string.ascii_letters) for i in range(10))
-					curr_time = (datetime.now() + timedelta(hours=3)).strftime("%m/%d/%Y, %H:%M")
+					curr_time = (datetime.now() + timedelta(hours=3)).strftime("%d/%m/%Y, %H:%M")
 					curr_post = metro_post(title = request.form['title'], author=flask_login.current_user.username, time_created = curr_time)
 					curr_post.owner_id = flask_login.current_user.id
 					db.session.add(curr_post)
@@ -230,7 +230,7 @@ def support_create():
 					os.makedirs(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/")
 					with open(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/post.data", "a+") as metro_filehandler:
 						metro_filehandler.write(request.form['body'])
-					redirect(url_for("support_post", id = curr_post.string_id))
+					return redirect(url_for("support_post", id = curr_post.string_id))
 				else:
 					error = "Incorrect parameter size!"
 			else:

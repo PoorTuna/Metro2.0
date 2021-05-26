@@ -19,13 +19,13 @@
 		socket.on("game_message", function(msg) {
 			//console.log("recieved message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
-			$("#chat").append('<li style="color:var(--metro-energy)">'+msg+'</li>');
+			$("#chat").append('<li style="color:var(--metro_energy)">'+msg+'</li>');
 		});
 		// Private Message recieving function
 		socket.on("private_message", function(msg) {
 			//console.log("recieved private message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
-			$("#chat").append('<li style="color:#FFC30F">'+ "[W] " + msg +'</li>');
+			$("#chat").append('<li style="color:var(--metro_primary)">'+ "[W] " + msg +'</li>');
 		});
 
 		//TTS Message recieving function

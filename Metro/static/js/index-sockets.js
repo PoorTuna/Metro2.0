@@ -18,7 +18,7 @@
 		socket.on("private_message", function(msg) {
 			//console.log("recieved private message");
 			msg = msg.replace(/&/g, "&amp;").replace(/>/g, "&gt;").replace(/</g, "&lt;").replace(/"/g,"&quot;");
-			$("#chat").append('<li style="color:#FFC30F">'+ "[W] " + msg +'</li>');
+			$("#chat").append('<li style="color:var(--metro_primary)">'+ "[W] " + msg +'</li>');
 		});
 
 		//TTS Message recieving function
@@ -62,7 +62,7 @@
 				member_state = "<span class='fas fa-train' style = 'color:red'></span>";
 			}
 
-			$("#members_list").append(member_state + '<b><span style="color:#1a1a1a">'+ member[0] +'</span></b><br>');
+			$("#members_list").append(member_state + '<b><span style="color:var(--metro_secondary)">'+ member[0] +'</span></b><br>');
 
 		});
 		// Gets the date created and the author:

@@ -278,3 +278,4 @@ def handle_allow_start(msg):
 					emit('allow_start', "true", room=session['chatID'])
 			else:
 				emit('private_message', f"Only the host can start the game!")
+				
