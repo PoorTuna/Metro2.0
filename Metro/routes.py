@@ -6,7 +6,7 @@ from .models import db, metro_user, metro_chat, login_manager, metro_post
 import bcrypt
 # Flask-Login imports
 import flask_login
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 # Import app in a way to prevent circular imports
 from flask import current_app as app
 # Chat ids random string imports
@@ -34,16 +34,16 @@ def unauthorized():
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-	if not flask_login.current_user.is_authenticated:
+	if not current_user.is_authenticated:
 		if 'user' in session:
 			if session_user := metro_user.query.get(int(session['user'])):
 				login_user(session_user)
 				session['bullets'] = session_user._balance
 				session['colorPalette'] = session_user.theme
 
-	if flask_login.current_user.is_authenticated:
+	if current_user.is_authenticated:
 		if 'bullets' not in session:
-			session['bullets'] = flask_login.current_user._balance
+			session['bullets'] = current_user._balance
 		if 'colorPalette' not in session:
 			session['colorPalette'] = flask_login.current_user.theme
 		
@@ -75,11 +75,11 @@ def index():
 					curr_chat = metro_chat(string_id = None, title=chat_title, time_created = curr_time)
 					# Random string id generation
 					letters = string.ascii_letters
-					curr_chat.string_id = ''.join(random.choice(letters) for i in range(10))
+					curr_chat.string_id = ''.join(random.choice(letters) for i in range(10)) # create random string for id as protection.
 					db.session.add(curr_chat)
 					db.session.commit()
 					# Must be seperated to after the chat recieves id when commited firstly.
-					curr_chat.string_id += str(curr_chat.id)
+					curr_chat.string_id += str(curr_chat.id) # can only get the id after the first commit
 					curr_chat.file_dir = f"static/assets/chats/{curr_chat.string_id}{curr_chat.title}/"
 					curr_chat.chat_backref.append(flask_login.current_user) # Add user to the backref
 					curr_chat.chat_owner_backref = flask_login.current_user # make the user the owner
@@ -139,7 +139,7 @@ def index():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-	if not flask_login.current_user.is_authenticated:
+	if not flask_login.current_user.is_authenticated: # Prevent user from using login if already logged in
 		try:
 			if session['user']:
 				flask_login.current_user = metro_user.query.get(int(session['user']))
@@ -147,24 +147,24 @@ def login():
 		except:
 			pass
 		if request.method == 'POST':
-			flask_login.logout_user() # ??? from future oren 
+			flask_login.logout_user() # overlooked protection 
 			form_username = request.form["username"]
 			form_password = request.form["password"]
 
 			if form_username and form_password: #if the fields weren't empty go ahead and query the database
 
 				# Check if input matches a user in the database:
-				if logged_user := metro_user.query.filter_by(username = form_username).first():
-					if bcrypt.checkpw(form_password.encode(), logged_user.password):
-							login_user(logged_user)
-							session['user'] = flask_login.current_user.id
+				if logged_user := metro_user.query.filter_by(username = form_username).first(): # Check if the user tried to log using his username
+					if bcrypt.checkpw(form_password.encode(), logged_user.password): # Check if the passwords match + decrypt the password with the password as the key
+							login_user(logged_user) # log him with the flask_login module
+							session['user'] = flask_login.current_user.id # set session parameters:
 							session['bullets'] = flask_login.current_user._balance
 							session['colorPalette'] = flask_login.current_user.theme
 
-				if logged_user := metro_user.query.filter_by(email = form_username).first(): 
+				if logged_user := metro_user.query.filter_by(email = form_username).first(): # Check if the user tried to log using his email
 					if bcrypt.checkpw(form_password.encode(), logged_user.password):
 							login_user(logged_user)
-							session['user'] = flask_login.current_user.id
+							session['user'] = flask_login.current_user.id # set session parameters:
 							session['bullets'] = flask_login.current_user._balance
 							session['colorPalette'] = flask_login.current_user.theme
 
@@ -179,20 +179,19 @@ def login():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-	# DONT FORGET TO VALIDATE USER AND PASSWORD LENGTH BEFORE -> MAX 12 CHAR FOR USER UNLIMITED PASS?
-	if not flask_login.current_user.is_authenticated:
+	if not flask_login.current_user.is_authenticated: # Prevent user from using register if already logged in
 		if request.method == "POST":
-			regex = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$'
-			form_username = request.form["username"]
-			form_password = request.form["password"]
-			form_email = request.form["email"]
-			if len(form_password) >= 8 and len(form_username) <= 12 and re.search(regex, form_email):
-				if metro_user.query.filter_by(username = form_username).first():
+			regex = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$' # String to check if email is valid
+			form_username = request.form["username"] # Get username from request
+			form_password = request.form["password"] # Get password from request
+			form_email = request.form["email"] # Get email from request
+			if len(form_password) >= 8 and len(form_username) <= 12 and re.search(regex, form_email): # input validation conditions
+				if metro_user.query.filter_by(username = form_username).first(): # find if theres a user with that name
 					return render_template("register.html", err = "Username already exists.")
-				elif metro_user.query.filter_by(email = form_email).first():
+				elif metro_user.query.filter_by(email = form_email).first(): # find if theres a user with that email
 					return render_template("register.html", err = "Email already exists.")
 				
-				hashed_password = bcrypt.hashpw(form_password.encode(), bcrypt.gensalt())
+				hashed_password = bcrypt.hashpw(form_password.encode(), bcrypt.gensalt()) # encrypt user password
 				db.session.add(metro_user(username = form_username, password = hashed_password, email = form_email))
 				db.session.commit()
 				return redirect(url_for("login"))
@@ -208,7 +207,7 @@ def features():
 
 @app.route("/support/")
 def support():
-	posts = metro_post.query.all()
+	posts = metro_post.query.all() # query the database for each post
 	return render_template("support/support.html", posts = posts)
 
 @app.route("/support/create", methods=['GET', 'POST'])
@@ -216,18 +215,18 @@ def support():
 def support_create():
 	error = ""
 	if request.method == "POST":
-		if 'title' in request.form and 'body' in request.form:
+		if 'title' in request.form and 'body' in request.form: # check if the data exists
 			if len(request.form['title']) >= 3:
 				if len(request.form['body']) >= 3:
-					rand_str = ''.join(random.choice(string.ascii_letters) for i in range(10))
+					rand_str = ''.join(random.choice(string.ascii_letters) for i in range(10)) # random path for protection
 					curr_time = (datetime.now() + timedelta(hours=3)).strftime("%d/%m/%Y, %H:%M")
 					curr_post = metro_post(title = request.form['title'], author=flask_login.current_user.username, time_created = curr_time)
 					curr_post.owner_id = flask_login.current_user.id
 					db.session.add(curr_post)
 					db.session.commit()
-					curr_post.string_id = rand_str + str(curr_post.id)
+					curr_post.string_id = rand_str + str(curr_post.id) # change the string id //gets the id after added to the database
 					db.session.commit()
-					os.makedirs(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/")
+					os.makedirs(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/") # create the folder for the files
 					with open(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/post.data", "a+") as metro_filehandler:
 						metro_filehandler.write(request.form['body'])
 					return redirect(url_for("support_post", id = curr_post.string_id))
@@ -242,10 +241,10 @@ def support_create():
 
 @app.route("/support/post/<id>")
 def support_post(id):
-	if curr_post := metro_post.query.filter_by(string_id = id).first():
-		if os.path.exists(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/post.data"):
+	if curr_post := metro_post.query.filter_by(string_id = id).first(): # get the post object from the db
+		if os.path.exists(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/post.data"): # prevent crashing if folder doesn't exist
 			with open(f"Metro/static/assets/posts/{curr_post.string_id}{curr_post.title}/post.data", "a+") as metro_fd:
-				metro_fd.seek(0)
+				metro_fd.seek(0) # a+ goes to the end of the file, revert to position 0.
 				body = metro_fd.readlines()
 		else:
 			body = "post is unavailable!"
@@ -275,7 +274,7 @@ def logout():
 
 @app.route("/forgot", methods=['GET', 'POST'])
 def forgot():
-	if not flask_login.current_user.is_authenticated:
+	if not flask_login.current_user.is_authenticated: # prevent logged user from accessing this page
 		try:
 			if session['user']:
 				flask_login.current_user = metro_user.query.get(int(session['user']))
@@ -289,28 +288,27 @@ def forgot():
 		err_code = ""
 		if request.method == 'POST':
 			
-			if 'forgotCODE' not in session and "email" in request.form:
+			if 'forgotCODE' not in session and "email" in request.form: # before the user has entered the email / first phase
+
 				# The email request section
 				form_email = request.form["email"] # form email
-				if email_user := metro_user.query.filter_by(email = form_email).first():
+				if email_user := metro_user.query.filter_by(email = form_email).first(): # check if the user exists by the email
 					session['forgotCODE'] = ''.join(random.choice(string.ascii_letters) for i in range(10)) # Random str for code
 					session['forgotEmail'] = email_user.email
 					try:
 						metro_send_mail(email_user, session['forgotCODE']) # send mail
-						print(session['forgotCODE'])
-						session['forgotCODE'] = bcrypt.hashpw(session['forgotCODE'], bcrypt.gensalt())
+						#session['forgotCODE'] = bcrypt.hashpw(session['forgotCODE'], bcrypt.gensalt())
 					except:
 						print("Email System Error")
 
 				else:
 					err_code = "Invalid Email!"
 
-			elif 'enteredCODE' not in session or session['enteredCODE'] != session['forgotCODE']:
+			elif 'enteredCODE' not in session or session['enteredCODE'] != session['forgotCODE']: # after the user has entered the email / second phase / enter the code section
 				# The code entering section
-				print("xd")
 				form_code = request.form["entercode"] # form code
 				if form_code:
-					if len(form_code) == 10:
+					if len(form_code) == 10: # check if the length matches the supposed length
 						session['enteredCODE'] = form_code
 						if session['enteredCODE'] == session['forgotCODE']:
 							err_code = "Success! Redirecting..."
@@ -320,17 +318,18 @@ def forgot():
 						session['enteredCODE'] = False
 						err_code = "Invalid Code Format!"
 			
-			elif session['enteredCODE'] == session['forgotCODE']:
+			elif session['enteredCODE'] == session['forgotCODE']: # the last phase, the user has entered the correct code -> send him to the password changing section
+
 				# The password changing section
 				form_password = request.form["password"] # form password
 				form_confirm_password = request.form["confirmpassword"] # form password confirmation
-				if form_password and form_confirm_password:
+				if form_password and form_confirm_password: # check if theres data
 					if form_password == form_confirm_password:
 						if len(form_password) >= 8:
-							if 'forgotEmail' in session:
+							if 'forgotEmail' in session: # protection
 								if email_user := metro_user.query.filter_by(email = session['forgotEmail']).first():
-									hashed_password = bcrypt.hashpw(form_password.encode(), bcrypt.gensalt())
-									email_user.password = hashed_password
+									hashed_password = bcrypt.hashpw(form_password.encode(), bcrypt.gensalt()) # encrypt new password
+									email_user.password = hashed_password # change password
 									db.session.commit()
 									# Session cleanup just in case:
 									session.pop('forgotEmail', None)

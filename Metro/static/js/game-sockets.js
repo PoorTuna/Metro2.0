@@ -116,12 +116,12 @@
 			socket.emit("game_choose", name);
 			$("#choose_game_table").hide();
 			$("#choose_game_table").innerText = "Creating a Station...";
-			location.reload();
+			location.reload(true);
 		}
 
 		function start_game(name){
 			socket.emit("game_start", name);
-			location.reload(); /* Reload for everyone in the room */
+			location.reload(true); /* Reload for everyone in the room */
 		}
 
 		function check_start(name){
@@ -131,7 +131,7 @@
 
 		function exit_game(name){
 			socket.emit("game_exit", name);
-			location.reload(); /* Reload for everyone in the room */
+			location.reload(true); /* Reload for everyone in the room */
 		}
 
 		function check_count(){
@@ -140,7 +140,7 @@
 
 		function modal_join_game(){
 			socket.emit("join_private_game", game_id + "|" + game_name);
-			location.reload();
+			location.reload(true);
 		}
 
 		socket.on("allow_start", function(msg){

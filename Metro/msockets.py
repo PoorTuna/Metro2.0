@@ -52,8 +52,8 @@ def handle_message(msg):
 		# Whisper Messages:
 		if refined_msg[0] == "/w":
 			if len(refined_msg) >= 3:
-				message = msg[len(refined_msg[0]) + len(refined_msg[1]) + 2:]
-				recipient = metro_user.query.filter_by(username = refined_msg[1]).first()
+				message = msg[len(refined_msg[0]) + len(refined_msg[1]) + 2:] # Get the entire message
+				recipient = metro_user.query.filter_by(username = refined_msg[1]).first() # Get the recipient in the database
 				if recipient:
 					if recipient != flask_login.current_user:
 						if recipient._session_id:
@@ -68,13 +68,13 @@ def handle_message(msg):
 			else:
 				emit('private_message', "Invalid /w format! Try: /w [user] [message]")
 		
-		# TTS Messages:
+		# TTS Messages / text to speech:
 		elif refined_msg[0] == "/tts":
 			if len(refined_msg) >= 2:
-				message = msg[len(refined_msg[0])+ 1:]
-				curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M')
-				message = f"{curr_time} | {flask_login.current_user.username} : {message}"
-				if session['chatID'] != "general":
+				message = msg[len(refined_msg[0])+ 1:] # Get the entire message
+				curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M') # add time format
+				message = f"{curr_time} | {flask_login.current_user.username} : {message}" # Sort it
+				if session['chatID'] != "general": # Log the message
 					if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
 						with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
 							metro_filehandler.write(message + '\r\n')
@@ -86,10 +86,10 @@ def handle_message(msg):
 
 		# Clean Chat:
 		elif refined_msg[0] == "/clear" and session['chatID'] != "general":
-			if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
-				if flask_login.current_user in curr_chat.chat_backref:
-					if flask_login.current_user == curr_chat.chat_owner_backref:
-						with open(f"Metro/{curr_chat.file_dir}/chat.data", "w") as metro_filehandler:
+			if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first(): # check if chat exists
+				if flask_login.current_user in curr_chat.chat_backref: # check if the user is a part of the chat
+					if flask_login.current_user == curr_chat.chat_owner_backref: # check if the user is the owner of the chat
+						with open(f"Metro/{curr_chat.file_dir}/chat.data", "w") as metro_filehandler: # edit the log file
 							metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
 							emit("clean_message", "The chat has been cleaned!", room=session['chatID'])
 					else:
@@ -100,7 +100,7 @@ def handle_message(msg):
 		# Kick member:
 		elif refined_msg[0] == "/kick" and session['chatID'] != "general":
 			if len(refined_msg) >= 2:
-				tokick_name = msg[len(refined_msg[0])+ 1:]
+				tokick_name = msg[len(refined_msg[0])+ 1:] # get the person's name
 				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
 					if flask_login.current_user in curr_chat.chat_backref:
 						if flask_login.current_user in curr_chat.chat_admin_backref:
@@ -286,16 +286,17 @@ def handle_message(msg):
 							if os.path.exists(f"Metro/{curr_chat.file_dir}/chat.data"):
 								with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
 									metro_filehandler.write(formated_msg + '\r\n')
-									emit("message", formated_msg, room=flask_login.current_user._session_id)
+									emit("message", formated_msg, room=session['chatID'])
 							else:
 								with open(f"Metro/{curr_chat.file_dir}/chat.data", "x") as metro_filehandler:
 									metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
 									metro_filehandler.write(formated_msg + '\r\n')
-									emit("message", formated_msg, room=flask_login.current_user._session_id)
+									emit("message", formated_msg, room=session['chatID'])
 
 # Socket IO change chat handler
 @socketio.on('join_private')
 def recv_private_chatname(cid):
+	print(type(cid),cid, session)
 	if cid != "general":
 		if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
 			if flask_login.current_user in curr_chat.chat_backref:
@@ -337,12 +338,12 @@ def recv_private_chatname(cid):
 
 @socketio.on('delete_private')
 def delete_chat_handle(cid):
-	if cid != "general":
-		if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
-			if flask_login.current_user in curr_chat.chat_backref:
-				if flask_login.current_user == curr_chat.chat_owner_backref:
+	if cid != "general": # if the chat is not the general chat
+		if curr_chat := metro_chat.query.filter_by(string_id = cid).first(): # check if the chat exists
+			if flask_login.current_user in curr_chat.chat_backref: # check if th user is a part of the chat
+				if flask_login.current_user == curr_chat.chat_owner_backref: # check if the user is the owner of the chat
 					if os.path.exists(f"Metro/{curr_chat.file_dir}"):
-						for metro_file in os.listdir(f"Metro/{curr_chat.file_dir}"):
+						for metro_file in os.listdir(f"Metro/{curr_chat.file_dir}"): # remove the files in the directory of the chat (icon,data)
 							os.remove(f"Metro/{curr_chat.file_dir}/{metro_file}")
 			
 						os.rmdir(f"Metro/{curr_chat.file_dir}")

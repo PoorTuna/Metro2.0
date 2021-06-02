@@ -146,7 +146,7 @@ def handle_game_message(msg):
 				emit('private_message', "Invalid /tip format! Try: /tip [user] [amount]")
 
 		# Help Command:		
-		elif len(refined_msg) == 1 and (refined_msg[0] == "/help" or refined_msg[0] == "/?"):
+		if refined_msg[0] == "/help" or refined_msg[0] == "/?":
 			permissions = "User: /help ; /? ; /tip ; /bal ; /balance ; /w ; /tts ; /inv ; /invite"
 			emit("private_message", permissions)
 			
