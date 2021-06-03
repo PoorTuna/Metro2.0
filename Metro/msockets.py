@@ -10,7 +10,6 @@ from .routes import session
 from .mgsockets import *
 # Flask-Login imports
 import flask_login
-from flask_login import current_user
 #Import OS
 import os
 #Import time
@@ -23,9 +22,9 @@ import random
 # Socket IO connect handler
 @socketio.on('connect')
 def handle_connect():
-	if current_user.is_authenticated:
-		print(f"{current_user} : {current_user.username} has connected with session id {request.sid}")
-	current_user._session_id = request.sid
+	if flask_login.current_user.is_authenticated:
+		print(f"{flask_login.current_user} : {flask_login.current_user.username} has connected with session id {request.sid}")
+	flask_login.current_user._session_id = request.sid
 	db.session.commit()
 	if 'chatID' not in session:
 		session['chatID'] = "general"
@@ -36,9 +35,9 @@ def handle_connect():
 # Socket IO disconnect handler
 @socketio.on('disconnect')
 def handle_disconnect():
-	if current_user.is_authenticated:
-		print(f"{current_user} : {current_user.username} has disconnected.")
-		current_user._session_id = None
+	if flask_login.current_user.is_authenticated:
+		print(f"{flask_login.current_user} : {flask_login.current_user.username} has disconnected.")
+		flask_login.current_user._session_id = None
 		db.session.commit()
 	# Change back to general chat after user disconnects
 	leave_room(session['chatID'])
@@ -56,10 +55,10 @@ def handle_message(msg):
 				message = msg[len(refined_msg[0]) + len(refined_msg[1]) + 2:] # Get the entire message
 				recipient = metro_user.query.filter_by(username = refined_msg[1]).first() # Get the recipient in the database
 				if recipient:
-					if recipient != current_user:
+					if recipient != flask_login.current_user:
 						if recipient._session_id:
-							emit("private_message", f"{current_user.username} : {message}", room=recipient._session_id)
-							emit("private_message", f"To {recipient.username} : {message}", room=current_user._session_id)
+							emit("private_message", f"{flask_login.current_user.username} : {message}", room=recipient._session_id)
+							emit("private_message", f"To {recipient.username} : {message}", room=flask_login.current_user._session_id)
 						else:
 							emit('private_message', f"User : {recipient.username} is not online!")
 					else:
@@ -74,7 +73,7 @@ def handle_message(msg):
 			if len(refined_msg) >= 2:
 				message = msg[len(refined_msg[0])+ 1:] # Get the entire message
 				curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M') # add time format
-				message = f"{curr_time} | {current_user.username} : {message}" # Sort it
+				message = f"{curr_time} | {flask_login.current_user.username} : {message}" # Sort it
 				if session['chatID'] != "general": # Log the message
 					if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
 						with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
@@ -88,8 +87,8 @@ def handle_message(msg):
 		# Clean Chat:
 		elif refined_msg[0] == "/clear" and session['chatID'] != "general":
 			if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first(): # check if chat exists
-				if current_user in curr_chat.chat_backref: # check if the user is a part of the chat
-					if current_user == curr_chat.chat_owner_backref: # check if the user is the owner of the chat
+				if flask_login.current_user in curr_chat.chat_backref: # check if the user is a part of the chat
+					if flask_login.current_user == curr_chat.chat_owner_backref: # check if the user is the owner of the chat
 						with open(f"Metro/{curr_chat.file_dir}/chat.data", "w") as metro_filehandler: # edit the log file
 							metro_filehandler.write("This is the beginning of your conversation!" + '\r\n')
 							emit("clean_message", "The chat has been cleaned!", room=session['chatID'])
@@ -103,10 +102,10 @@ def handle_message(msg):
 			if len(refined_msg) >= 2:
 				tokick_name = msg[len(refined_msg[0])+ 1:] # get the person's name
 				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
-					if current_user in curr_chat.chat_backref:
-						if current_user in curr_chat.chat_admin_backref:
+					if flask_login.current_user in curr_chat.chat_backref:
+						if flask_login.current_user in curr_chat.chat_admin_backref:
 							if tokick := metro_user.query.filter_by(username = tokick_name ).first():
-								if tokick != current_user:
+								if tokick != flask_login.current_user:
 									if tokick != curr_chat.chat_owner_backref:
 										if tokick in curr_chat.chat_backref:
 											curr_chat.chat_backref.remove(tokick) # Remove user from the chat ref
@@ -114,7 +113,7 @@ def handle_message(msg):
 
 											db.session.commit()
 											leave_room(session['chatID'], tokick._session_id)
-											kick_msg = f"{tokick.username}, has been expelled from the station by {current_user.username}! Farewell."
+											kick_msg = f"{tokick.username}, has been expelled from the station by {flask_login.current_user.username}! Farewell."
 											emit("message", kick_msg, room=session['chatID'])
 											with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
 												metro_filehandler.write(kick_msg + '\r\n')
@@ -139,8 +138,8 @@ def handle_message(msg):
 			if len(refined_msg) >= 2:
 				toop_name = msg[len(refined_msg[0])+ 1:]
 				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
-					if current_user in curr_chat.chat_backref: # check if the current user in chat
-						if current_user in curr_chat.chat_admin_backref: # check if current user is an admin
+					if flask_login.current_user in curr_chat.chat_backref: # check if the current user in chat
+						if flask_login.current_user in curr_chat.chat_admin_backref: # check if current user is an admin
 							if toop := metro_user.query.filter_by(username = toop_name ).first(): # check if the member exists
 								if toop in curr_chat.chat_backref: # check if the member is in the chat
 									if toop not in curr_chat.chat_admin_backref:
@@ -152,7 +151,7 @@ def handle_message(msg):
 											db.session.commit()
 											emit('private_message', f"{toop.username} has been added to the administration!")
 											if toop._session_id:
-												emit('private_message', f"you have been added to the administration by {current_user.username}!", room =toop._session_id)
+												emit('private_message', f"you have been added to the administration by {flask_login.current_user.username}!", room =toop._session_id)
 											
 									else:
 										emit('private_message', f"{toop.username} is already OP!")
@@ -170,8 +169,8 @@ def handle_message(msg):
 			if len(refined_msg) >= 2:
 				todeop_name = msg[len(refined_msg[0])+ 1:]
 				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
-					if current_user in curr_chat.chat_backref: # check if the current user in chat
-						if current_user in curr_chat.chat_admin_backref: # check if current user is an admin
+					if flask_login.current_user in curr_chat.chat_backref: # check if the current user in chat
+						if flask_login.current_user in curr_chat.chat_admin_backref: # check if current user is an admin
 							if todeop := metro_user.query.filter_by(username = todeop_name ).first(): # check if the member exists
 								if todeop in curr_chat.chat_backref: # check if the member is in the chat
 									if todeop in curr_chat.chat_admin_backref:
@@ -181,7 +180,7 @@ def handle_message(msg):
 											#DEOP HERE
 											curr_chat.chat_admin_backref.remove(todeop)
 											db.session.commit()
-											emit('private_message', f"{todeop.username} has been expelled from the administration by {current_user.username}!")
+											emit('private_message', f"{todeop.username} has been expelled from the administration by {flask_login.current_user.username}!")
 									else:
 										emit('private_message', f"{todeop.username} is not OP!")
 
@@ -196,7 +195,7 @@ def handle_message(msg):
 		
 		# Balance Command:
 		elif refined_msg[0] == "/bal" or refined_msg[0] == "/balance":
-			emit("private_message", f"You have {current_user._balance} bullets")
+			emit("private_message", f"You have {flask_login.current_user._balance} bullets")
 
 		# Tip user in room Command:
 		elif refined_msg[0] == "/tip":
@@ -204,16 +203,16 @@ def handle_message(msg):
 				tip_amount = msg[len(refined_msg[0]) + len(refined_msg[1]) + 2:]
 				if tip_amount.isnumeric(): # check if the amount contains numbers only
 					if tip_recipient := metro_user.query.filter_by(username=refined_msg[1]).first():
-						if tip_recipient != current_user:
+						if tip_recipient != flask_login.current_user:
 							if tip_recipient._session_id:
-								if current_user._balance >= int(tip_amount) + 50: # base safety amount
-									current_user._balance -= int(tip_amount)
-									session['bullets'] = current_user._balance
+								if flask_login.current_user._balance >= int(tip_amount) + 50: # base safety amount
+									flask_login.current_user._balance -= int(tip_amount)
+									session['bullets'] = flask_login.current_user._balance
 									tip_recipient._balance += int(tip_amount)
 									db.session.commit()
 									emit('private_message', f"You tipped {tip_amount} bullets to {tip_recipient.username}!")
 
-									emit('private_message', f"{current_user.username} tipped {tip_amount} bullets to you!", room=tip_recipient._session_id)
+									emit('private_message', f"{flask_login.current_user.username} tipped {tip_amount} bullets to you!", room=tip_recipient._session_id)
 
 								else:
 									emit('private_message', "Insufficient bullets!")
@@ -232,7 +231,7 @@ def handle_message(msg):
 		# Show online admins Command:		
 		elif len(refined_msg) == 1 and refined_msg[0] == "/admins" and session['chatID'] != "general":
 			if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first(): # check if the chat exists.
-				if current_user in curr_chat.chat_backref: # check if user is in the chat list
+				if flask_login.current_user in curr_chat.chat_backref: # check if user is in the chat list
 					admins = "Online Admins : "
 					for admin in curr_chat.chat_admin_backref:
 						if admin._session_id:
@@ -243,7 +242,7 @@ def handle_message(msg):
 		# Show online members Command:	
 		elif len(refined_msg) == 1 and refined_msg[0] == "/members" and session['chatID'] != "general":
 			if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first(): # check if the chat exists.
-				if current_user in curr_chat.chat_backref: # check if user is in the chat list
+				if flask_login.current_user in curr_chat.chat_backref: # check if user is in the chat list
 					members = "Online Members : "
 					for member in curr_chat.chat_backref:
 						if member._session_id:
@@ -255,11 +254,11 @@ def handle_message(msg):
 		elif len(refined_msg) == 1 and (refined_msg[0] == "/help" or refined_msg[0] == "/?"):
 			if session['chatID'] != "general":
 				if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
-					if current_user in curr_chat.chat_backref:
+					if flask_login.current_user in curr_chat.chat_backref:
 						permissions = "User: /help ; /? ; /members ; /admins ; /tip ; /bal ; /balance ; /w ; /tts"
-						if current_user in curr_chat.chat_admin_backref:
+						if flask_login.current_user in curr_chat.chat_admin_backref:
 							permissions += " | Administrator: /op ; /deop ; /kick"
-							if current_user == curr_chat.chat_owner_backref:
+							if flask_login.current_user == curr_chat.chat_owner_backref:
 								permissions += " | Owner: /clear"
 
 						emit("private_message", permissions)
@@ -275,15 +274,15 @@ def handle_message(msg):
 
 	# Regular Messages:
 	elif msg:
-		if current_user.is_authenticated:
+		if flask_login.current_user.is_authenticated:
 			if "chatID" in session:
 				if session['chatID'] == "general":
-						emit("message", f"{current_user.username} : {msg}", room=session['chatID'])
+						emit("message", f"{flask_login.current_user.username} : {msg}", room=session['chatID'])
 				else:
 					if curr_chat := metro_chat.query.filter_by(string_id = session['chatID']).first():
-						if current_user in curr_chat.chat_backref:
+						if flask_login.current_user in curr_chat.chat_backref:
 							curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M')
-							formated_msg = f"{curr_time} | {current_user.username} : {msg}"
+							formated_msg = f"{curr_time} | {flask_login.current_user.username} : {msg}"
 							if os.path.exists(f"Metro/{curr_chat.file_dir}/chat.data"):
 								with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
 									metro_filehandler.write(formated_msg + '\r\n')
@@ -297,9 +296,10 @@ def handle_message(msg):
 # Socket IO change chat handler
 @socketio.on('join_private')
 def recv_private_chatname(cid):
+	print(type(cid),cid, session)
 	if cid != "general":
 		if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
-			if current_user in curr_chat.chat_backref:
+			if flask_login.current_user in curr_chat.chat_backref:
 				leave_room(session['chatID'])
 				session['chatID'] = cid
 				join_room(session['chatID'])
@@ -308,23 +308,23 @@ def recv_private_chatname(cid):
 		leave_room(session['chatID'])
 		session['chatID'] = "general"
 		join_room(session['chatID'])
-		emit("message", "This station is anonymous. No logs saved.", room=				current_user._session_id)
+		emit("message", "This station is anonymous. No logs saved.", room=				flask_login.current_user._session_id)
 
 	if session['chatID'] and session['chatID'] != "general":
 		if curr_chat := metro_chat.query.filter_by(string_id=session['chatID']).first():
-			if current_user in curr_chat.chat_backref:
+			if flask_login.current_user in curr_chat.chat_backref:
 				#Get the chat data to the user.
 				if os.path.exists(f"Metro/{curr_chat.file_dir}/chat.data"):
 					with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as metro_filehandler:
 						metro_filehandler.seek(0)
 						chat_data = metro_filehandler.readlines()
 						for line in chat_data:
-							emit("message", line, room=current_user._session_id)
+							emit("message", line, room=flask_login.current_user._session_id)
 				else:
 					with open(f"Metro/{curr_chat.file_dir}/chat.data", "x") as metro_filehandler:
 						first_msg = "This is the beginning of your conversation!"
 						metro_filehandler.write(first_msg + '\r\n')
-						emit("message", first_msg, room=current_user._session_id)
+						emit("message", first_msg, room=flask_login.current_user._session_id)
 				# Return members list:
 				for member in curr_chat.chat_backref:
 					# Member state : Online / Offline based on their session id
@@ -333,15 +333,15 @@ def recv_private_chatname(cid):
 					else:
 						member_state = "Offline"
 
-					emit('join_private_info', member.username + "%seperatorXD" + member_state, room=current_user._session_id)
-				emit('join_private_info_date_author', f'created by {curr_chat.chat_backref[0].username} on the {curr_chat.time_created}', room=current_user._session_id)
+					emit('join_private_info', member.username + "%seperatorXD" + member_state, room=flask_login.current_user._session_id)
+				emit('join_private_info_date_author', f'created by {curr_chat.chat_backref[0].username} on the {curr_chat.time_created}', room=flask_login.current_user._session_id)
 
 @socketio.on('delete_private')
 def delete_chat_handle(cid):
 	if cid != "general": # if the chat is not the general chat
 		if curr_chat := metro_chat.query.filter_by(string_id = cid).first(): # check if the chat exists
-			if current_user in curr_chat.chat_backref: # check if th user is a part of the chat
-				if current_user == curr_chat.chat_owner_backref: # check if the user is the owner of the chat
+			if flask_login.current_user in curr_chat.chat_backref: # check if th user is a part of the chat
+				if flask_login.current_user == curr_chat.chat_owner_backref: # check if the user is the owner of the chat
 					if os.path.exists(f"Metro/{curr_chat.file_dir}"):
 						for metro_file in os.listdir(f"Metro/{curr_chat.file_dir}"): # remove the files in the directory of the chat (icon,data)
 							os.remove(f"Metro/{curr_chat.file_dir}/{metro_file}")
@@ -360,11 +360,11 @@ def handle_voice(voice):
 # Store route:
 @socketio.on('buy_palette')
 def handle_voice(palette):
-	if palette not in current_user.theme_list:
-		if current_user._balance >= 25:
-			current_user._balance -= 25
-			session['bullets'] = current_user._balance
-			current_user.theme_list += palette + "|"
+	if palette not in flask_login.current_user.theme_list:
+		if flask_login.current_user._balance >= 25:
+			flask_login.current_user._balance -= 25
+			session['bullets'] = flask_login.current_user._balance
+			flask_login.current_user.theme_list += palette + "|"
 			db.session.commit()
 			emit("buy_palette", "Successful Purchase!")
 		else:

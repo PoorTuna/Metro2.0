@@ -8,7 +8,6 @@ from .models import db, metro_user, metro_chat, metro_game
 from .routes import session
 # Flask-Login imports
 import flask_login
-from flask_login import current_user
 #Import OS
 import os
 #Import time
@@ -17,16 +16,16 @@ import string
 import random
 
 
-# Note that in repl the games will be laggy because the servers are either in europe or US!
+# Note that in repl the games will be laggy because the servers are in either europe or us!
 
 
 # GAME SECTION SOCKETS
 # Socket IO connect handler
 @socketio.on('connect_game')
 def handle_connect(msg):
-	if current_user.is_authenticated:
-		print(f"{current_user} : {current_user.username} has connected to the game chat with session id {request.sid}")
-	current_user._session_id = request.sid
+	if flask_login.current_user.is_authenticated:
+		print(f"{flask_login.current_user} : {flask_login.current_user.username} has connected to the game chat with session id {request.sid}")
+	flask_login.current_user._session_id = request.sid
 	db.session.commit()
 	if 'chatID' not in session:
 		session['chatID'] = "general_game"
@@ -46,9 +45,9 @@ def handle_connect(msg):
 # Socket IO disconnect handler
 @socketio.on('disconnect_game')
 def handle_disconnect(msg):
-	if current_user.is_authenticated:
-		print(f"{current_user} : {current_user.username} has disconnected from the game chat.")
-		current_user._session_id = None
+	if flask_login.current_user.is_authenticated:
+		print(f"{flask_login.current_user} : {flask_login.current_user.username} has disconnected from the game chat.")
+		flask_login.current_user._session_id = None
 		db.session.commit()
 	# Change back to general chat after user disconnects
 	leave_room(session['chatID'])
@@ -66,10 +65,10 @@ def handle_game_message(msg):
 				message = msg[len(refined_msg[0]) + len(refined_msg[1]) + 2:]
 				recipient = metro_user.query.filter_by(username = refined_msg[1]).first()
 				if recipient:
-					if recipient != current_user:
+					if recipient != flask_login.current_user:
 						if recipient._session_id:
-							emit("private_message", f"{current_user.username} : {message}", room=recipient._session_id)
-							emit("private_message", f"To {recipient.username} : {message}", room=current_user._session_id)
+							emit("private_message", f"{flask_login.current_user.username} : {message}", room=recipient._session_id)
+							emit("private_message", f"To {recipient.username} : {message}", room=flask_login.current_user._session_id)
 						else:
 							emit('private_message', f"User : {recipient.username} is not online!")
 					else:
@@ -84,7 +83,7 @@ def handle_game_message(msg):
 			if len(refined_msg) >= 2:
 				message = msg[len(refined_msg[0])+ 1:]
 				curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M')
-				message = f"{curr_time} | {current_user.username} : {message}"
+				message = f"{curr_time} | {flask_login.current_user.username} : {message}"
 				emit("announce_message", message, room=session['chatID'])
 			else:
 				emit('private_message', "Invalid /tts format! Try: /tts [message]")
@@ -93,12 +92,12 @@ def handle_game_message(msg):
 		elif 'currgame' in session and 'startedgame' not in session:
 			if refined_msg[0] == "/inv" or refined_msg[0] == "/invite":
 				if curr_game := metro_game.query.filter_by(string_id = session['chatID']).first():
-					if current_user.id == curr_game.owner_id:
+					if flask_login.current_user.id == curr_game.owner_id:
 						if len(refined_msg) >= 2:
 							name = msg[len(refined_msg[0])+ 1:]
 							if toinv := metro_user.query.filter_by(username = name).first():
 								if toinv._session_id:
-									join_request = f"{current_user.username} | {session['currgame']} | {session['chatID']}"
+									join_request = f"{flask_login.current_user.username} | {session['currgame']} | {session['chatID']}"
 									emit("join_request", join_request, room = toinv._session_id)
 								else:
 									emit('private_message', f"User : {toinv.username} is not online!")
@@ -112,7 +111,7 @@ def handle_game_message(msg):
 
 		# Balance Command:
 		elif refined_msg[0] == "/bal" or refined_msg[0] == "/balance":
-			emit("private_message", f"You have {current_user._balance} bullets")
+			emit("private_message", f"You have {flask_login.current_user._balance} bullets")
 
 		# Tip user in room Command:
 		elif refined_msg[0] == "/tip":
@@ -120,16 +119,16 @@ def handle_game_message(msg):
 				tip_amount = msg[len(refined_msg[0]) + len(refined_msg[1]) + 2:]
 				if tip_amount.isnumeric(): # check if the amount contains numbers only
 					if tip_recipient := metro_user.query.filter_by(username=refined_msg[1]).first():
-						if tip_recipient != current_user:
+						if tip_recipient != flask_login.current_user:
 							if tip_recipient._session_id:
-								if current_user._balance >= int(tip_amount) + 50: # base safety amount
-									current_user._balance -= int(tip_amount)
-									session['bullets'] = current_user._balance
+								if flask_login.current_user._balance >= int(tip_amount) + 50: # base safety amount
+									flask_login.current_user._balance -= int(tip_amount)
+									session['bullets'] = flask_login.current_user._balance
 									tip_recipient._balance += int(tip_amount)
 									db.session.commit()
 									emit('private_message', f"You tipped {tip_amount} bullets to {tip_recipient.username}!")
 
-									emit('private_message', f"{current_user.username} tipped {tip_amount} bullets to you!", room=tip_recipient._session_id)
+									emit('private_message', f"{flask_login.current_user.username} tipped {tip_amount} bullets to you!", room=tip_recipient._session_id)
 
 								else:
 									emit('private_message', "Insufficient bullets!")
@@ -158,36 +157,36 @@ def handle_game_message(msg):
 
 	# Regular Messages:
 	elif msg:
-		if current_user.is_authenticated:
+		if flask_login.current_user.is_authenticated:
 			if "chatID" in session:
 					curr_time = (datetime.now() + timedelta(hours=3)).strftime('%H:%M')
-					formated_msg = f"{curr_time} | {current_user.username} : {msg}"
+					formated_msg = f"{curr_time} | {flask_login.current_user.username} : {msg}"
 					emit("game_message", formated_msg, room=session['chatID'])
 
 
 @socketio.on("game_choose")
 def handle_game_choose(game):
 	enough_money = True
-	# for game in current_user.game_list:
-	# 	if game.owner_id == current_user.id:
+	# for game in flask_login.current_user.game_list:
+	# 	if game.owner_id == flask_login.current_user.id:
 	# 		db.session.delete(game)
 
 	if game == "pong":
-		if current_user._balance >= 5:
-			current_user._balance -= 5
-			session['bullets'] = current_user._balance
+		if flask_login.current_user._balance >= 5:
+			flask_login.current_user._balance -= 5
+			session['bullets'] = flask_login.current_user._balance
 		else:
 			enough_money = False
 	
 	if enough_money:
 		session['currgame'] = game
 		letters = string.ascii_letters
-		curr_game = metro_game(string_id = None, game_name=game, owner_id = current_user.id)
+		curr_game = metro_game(string_id = None, game_name=game, owner_id = flask_login.current_user.id)
 		curr_game.string_id = ''.join(random.choice(letters) for i in range(10))
 		db.session.add(curr_game)
 		db.session.commit()
 		curr_game.string_id += str(curr_game.id)
-		curr_game.user_list.append(current_user)
+		curr_game.user_list.append(flask_login.current_user)
 		db.session.commit()
 		leave_room(session['chatID'])
 		session['chatID'] = curr_game.string_id
@@ -196,11 +195,11 @@ def handle_game_choose(game):
 @socketio.on("game_win")
 def handle_game_won(game):
 	if game == "pong":
-		current_user._balance += 10
+		flask_login.current_user._balance += 10
 	elif game == "snake":
-		current_user._balance += 5
+		flask_login.current_user._balance += 5
 
-	session['bullets'] = current_user._balance
+	session['bullets'] = flask_login.current_user._balance
 	db.session.commit()
 
 @socketio.on("game_start")
@@ -221,12 +220,12 @@ def handle_game_started(msg):
 	session.pop('currgame', None) # Choose game
 	session.pop('startedgame', None) # Start game
 	if curr_game := metro_game.query.filter_by(string_id = session['chatID']).first():
-		if current_user in curr_game.user_list:
-			if current_user.id == curr_game.owner_id:
+		if flask_login.current_user in curr_game.user_list:
+			if flask_login.current_user.id == curr_game.owner_id:
 				db.session.delete(curr_game)
 			else:
-				curr_game.user_list.remove(current_user)
-				emit("game_message", f"{current_user.username} has left the game!" ,room=session['chatID'])
+				curr_game.user_list.remove(flask_login.current_user)
+				emit("game_message", f"{flask_login.current_user.username} has left the game!" ,room=session['chatID'])
 			db.session.commit()
 			leave_room(session['chatID'])
 			session['chatID'] = "general_game"
@@ -250,23 +249,23 @@ def recv_private_chatname(msg):
 	cid = msg[0][1:]
 	if cid != "general_game":
 		if curr_game := metro_game.query.filter_by(string_id = cid).first():
-			if current_user not in curr_game.user_list:
+			if flask_login.current_user not in curr_game.user_list:
 				if msg[1][1:-1] == "pong":
-					current_user._balance -= 5
-					session['bullets'] = current_user._balance
+					flask_login.current_user._balance -= 5
+					session['bullets'] = flask_login.current_user._balance
 				
-				curr_game.user_list.append(current_user)
+				curr_game.user_list.append(flask_login.current_user)
 				leave_room(session['chatID'])
 				session['chatID'] = cid
 				join_room(session['chatID'])
 				session['currgame'] = msg[1][1:-1]
-				emit("game_message", f"{current_user.username} has joined the game!", room=session['chatID'])
+				emit("game_message", f"{flask_login.current_user.username} has joined the game!", room=session['chatID'])
 
 @socketio.on("allow_start")
 def handle_allow_start(msg):
 	if curr_game := metro_game.query.filter_by(string_id=session['chatID']).first():
-		if current_user in curr_game.user_list:
-			if current_user.id == curr_game.owner_id:
+		if flask_login.current_user in curr_game.user_list:
+			if flask_login.current_user.id == curr_game.owner_id:
 				if session['currgame'] == "pong":
 					length = 0
 					for member in curr_game.user_list:

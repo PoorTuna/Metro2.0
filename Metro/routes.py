@@ -34,18 +34,18 @@ def unauthorized():
 
 @app.route("/", methods=['GET', 'POST'])
 def index():
-	if not current_user.is_authenticated:
+	if not flask_login.current_user.is_authenticated:
 		if 'user' in session:
 			if session_user := metro_user.query.get(int(session['user'])):
 				login_user(session_user)
 				session['bullets'] = session_user._balance
 				session['colorPalette'] = session_user.theme
 
-	if current_user.is_authenticated:
+	if flask_login.current_user.is_authenticated:
 		if 'bullets' not in session:
-			session['bullets'] = current_user._balance
+			session['bullets'] = flask_login.current_user._balance
 		if 'colorPalette' not in session:
-			session['colorPalette'] = current_user.theme
+			session['colorPalette'] = flask_login.current_user.theme
 		
 		# Checks on whether the user posted a request
 		if request.method == "POST":
@@ -81,9 +81,9 @@ def index():
 					# Must be seperated to after the chat recieves id when commited firstly.
 					curr_chat.string_id += str(curr_chat.id) # can only get the id after the first commit
 					curr_chat.file_dir = f"static/assets/chats/{curr_chat.string_id}{curr_chat.title}/"
-					curr_chat.chat_backref.append(current_user) # Add user to the backref
-					curr_chat.chat_owner_backref = current_user # make the user the owner
-					curr_chat.chat_admin_backref.append(current_user) # Add user to the admin backref
+					curr_chat.chat_backref.append(flask_login.current_user) # Add user to the backref
+					curr_chat.chat_owner_backref = flask_login.current_user # make the user the owner
+					curr_chat.chat_admin_backref.append(flask_login.current_user) # Add user to the admin backref
 					
 					db.session.commit()
 					# Create chat folder:
@@ -95,7 +95,7 @@ def index():
 
 			if session['chatID'] and session['chatID'] != "general":
 				if curr_chat := metro_chat.query.filter_by(string_id=session['chatID']).first():
-					if current_user in curr_chat.chat_backref:
+					if flask_login.current_user in curr_chat.chat_backref:
 						#Get the chat data to the user.
 						with open(f"Metro/{curr_chat.file_dir}/chat.data", "a+") as fd:
 							chat_data = fd.readlines() 
@@ -129,9 +129,9 @@ def index():
 
 		chats = []
 
-		for m_chat in current_user.chat_list:
+		for m_chat in flask_login.current_user.chat_list:
 				for m_user in m_chat.chat_backref:
-					if m_user == current_user:
+					if m_user == flask_login.current_user:
 						chats.append(m_chat)
 
 		return render_template("index.html", chats = chats)
@@ -139,15 +139,15 @@ def index():
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
-	if not current_user.is_authenticated: # Prevent user from using login if already logged in
+	if not flask_login.current_user.is_authenticated: # Prevent user from using login if already logged in
 		try:
 			if session['user']:
-				current_user = metro_user.query.get(int(session['user']))
+				flask_login.current_user = metro_user.query.get(int(session['user']))
 				return redirect(url_for("index")) #User in session
 		except:
 			pass
 		if request.method == 'POST':
-			logout_user() # overlooked protection 
+			flask_login.logout_user() # overlooked protection 
 			form_username = request.form["username"]
 			form_password = request.form["password"]
 
@@ -157,18 +157,18 @@ def login():
 				if logged_user := metro_user.query.filter_by(username = form_username).first(): # Check if the user tried to log using his username
 					if bcrypt.checkpw(form_password.encode(), logged_user.password): # Check if the passwords match + decrypt the password with the password as the key
 							login_user(logged_user) # log him with the flask_login module
-							session['user'] = current_user.id # set session parameters:
-							session['bullets'] = current_user._balance
-							session['colorPalette'] = current_user.theme
+							session['user'] = flask_login.current_user.id # set session parameters:
+							session['bullets'] = flask_login.current_user._balance
+							session['colorPalette'] = flask_login.current_user.theme
 
 				if logged_user := metro_user.query.filter_by(email = form_username).first(): # Check if the user tried to log using his email
 					if bcrypt.checkpw(form_password.encode(), logged_user.password):
 							login_user(logged_user)
-							session['user'] = current_user.id # set session parameters:
-							session['bullets'] = current_user._balance
-							session['colorPalette'] = current_user.theme
+							session['user'] = flask_login.current_user.id # set session parameters:
+							session['bullets'] = flask_login.current_user._balance
+							session['colorPalette'] = flask_login.current_user.theme
 
-				if current_user.is_authenticated:
+				if flask_login.current_user.is_authenticated:
 					return redirect(url_for("index")) #Login successful
 				
 				return render_template("login.html", err = "One of the credentials you've entered is incorrect!")
@@ -179,7 +179,7 @@ def login():
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
-	if not current_user.is_authenticated: # Prevent user from using register if already logged in
+	if not flask_login.current_user.is_authenticated: # Prevent user from using register if already logged in
 		if request.method == "POST":
 			regex = '^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$' # String to check if email is valid
 			form_username = request.form["username"] # Get username from request
@@ -220,8 +220,8 @@ def support_create():
 				if len(request.form['body']) >= 3:
 					rand_str = ''.join(random.choice(string.ascii_letters) for i in range(10)) # random path for protection
 					curr_time = (datetime.now() + timedelta(hours=3)).strftime("%d/%m/%Y, %H:%M")
-					curr_post = metro_post(title = request.form['title'], author=current_user.username, time_created = curr_time)
-					curr_post.owner_id = current_user.id
+					curr_post = metro_post(title = request.form['title'], author=flask_login.current_user.username, time_created = curr_time)
+					curr_post.owner_id = flask_login.current_user.id
 					db.session.add(curr_post)
 					db.session.commit()
 					curr_post.string_id = rand_str + str(curr_post.id) # change the string id //gets the id after added to the database
@@ -262,7 +262,7 @@ def about():
 @app.route("/logout")
 @login_required
 def logout():
-	current_user._session_id = None
+	flask_login.current_user._session_id = None
 	logout_user()
 	session.pop('user', None)
 	session.pop('bullets', None)
@@ -274,10 +274,10 @@ def logout():
 
 @app.route("/forgot", methods=['GET', 'POST'])
 def forgot():
-	if not current_user.is_authenticated: # prevent logged user from accessing this page
+	if not flask_login.current_user.is_authenticated: # prevent logged user from accessing this page
 		try:
 			if session['user']:
-				current_user = metro_user.query.get(int(session['user']))
+				flask_login.current_user = metro_user.query.get(int(session['user']))
 				session.pop('forgotEmail', None)
 				session.pop('enteredCODE', None)
 				session.pop('forgotCODE', None)
@@ -352,22 +352,23 @@ def profile():
 	chat_list = []
 	admin_list = []
 	owner_list = []
+	curr_user = flask_login.current_user
 	# Insert Name :
-	data.append(["Nickname:", current_user.username]) 
+	data.append(["Nickname:", curr_user.username]) 
 	# Insert Email :
-	data.append(["Email:", current_user.email])
+	data.append(["Email:", curr_user.email])
 	# Insert Balance :
-	data.append(["Balance:", current_user._balance])
+	data.append(["Balance:", curr_user._balance])
 	# Insert Chat List :
-	for chat in current_user.chat_list:
+	for chat in curr_user.chat_list:
 		chat_list.append(chat.title)
 	data.append(["Stations:", chat_list])
 	# Insert Admin Chat List :
-	for chat in current_user.chat_admin_list:
+	for chat in curr_user.chat_admin_list:
 		admin_list.append(chat.title)
 	data.append(["Stations you Manage:", admin_list])
 	# Insert Owner Chat List :
-	for chat in current_user.chat_owner_list:
+	for chat in curr_user.chat_owner_list:
 		owner_list.append(chat.title)
 	data.append(["Stations you Own:", owner_list])
 
@@ -376,35 +377,36 @@ def profile():
 @app.route("/settings", methods=['GET', 'POST'])
 @login_required
 def settings():
+	logged_user = flask_login.current_user
 	if request.method == "POST":
 		# Color Palette Section
 		if 'palette_option' in request.form:
 			if request.form['palette_option']:
 				palettes_option = request.form['palette_option']
-				if palettes_option in current_user.theme_list:
-					current_user.theme = palettes_option
-					session['colorPalette'] = current_user.theme
+				if palettes_option in logged_user.theme_list:
+					logged_user.theme = palettes_option
+					session['colorPalette'] = logged_user.theme
 			
 		# Password Changing Section
 		if 'password' in request.form and 'repeat_password' in request.form:
 			if request.form['password'] == request.form['repeat_password']:
 				if len(request.form['password']) >= 8:
-					if bcrypt.checkpw(request.form['password'].encode(), current_user.password):
+					if bcrypt.checkpw(request.form['password'].encode(), logged_user.password):
 						hashed_password = bcrypt.hashpw(request.form['password'], bcrypt.gensalt())
-						current_user.password = hashed_password
+						logged_user.password = hashed_password
 		
 		db.session.commit() # global for all changes
 		return redirect(url_for("index"))
 
 
-	color_palettes = current_user.theme_list.split('|')
+	color_palettes = logged_user.theme_list.split('|')
 	color_palettes.remove("")
-	return render_template("user/settings.html", palettes = color_palettes, email = current_user.email, name = current_user.username)
+	return render_template("user/settings.html", palettes = color_palettes, email = logged_user.email, name = logged_user.username)
 
 @app.route("/store")
 @login_required
 def store():
-	return render_template("store.html", palette_list = current_user.theme_list.split('|'))
+	return render_template("store.html", palette_list = flask_login.current_user.theme_list.split('|'))
 
 @app.route("/game")
 @login_required
@@ -415,9 +417,9 @@ def game():
 @app.route("/gimmemoneyplzmatethanks")
 @login_required
 def money():
-	current_user._balance += 100
+	flask_login.current_user._balance += 100
 	db.session.commit()
-	session['bullets'] = current_user._balance
+	session['bullets'] = flask_login.current_user._balance
 	return redirect(url_for("index"))
 
 
