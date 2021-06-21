@@ -433,3 +433,4 @@ def something(name):
 @login_required
 def test_game():
 	return render_template("actualgame.html")
+	

@@ -89,24 +89,31 @@ def handle_game_message(msg):
 				emit('private_message', "Invalid /tts format! Try: /tts [message]")
 
 		# Inv A Player:
-		elif 'currgame' in session and 'startedgame' not in session:
-			if refined_msg[0] == "/inv" or refined_msg[0] == "/invite":
-				if curr_game := metro_game.query.filter_by(string_id = session['chatID']).first():
-					if flask_login.current_user.id == curr_game.owner_id:
-						if len(refined_msg) >= 2:
-							name = msg[len(refined_msg[0])+ 1:]
-							if toinv := metro_user.query.filter_by(username = name).first():
+		elif 'currgame' in session and 'startedgame' not in session and (refined_msg[0] == "/inv" or refined_msg[0] == "/invite"):
+			if curr_game := metro_game.query.filter_by(string_id = session['chatID']).first():
+				if flask_login.current_user.id == curr_game.owner_id:
+					if len(refined_msg) >= 2:
+						name = msg[len(refined_msg[0])+ 1:]
+						if toinv := metro_user.query.filter_by(username = name).first():
+							if toinv != flask_login.current_user:
 								if toinv._session_id:
-									join_request = f"{flask_login.current_user.username} | {session['currgame']} | {session['chatID']}"
-									emit("join_request", join_request, room = toinv._session_id)
+									if session['currgame'] == 'pong' or session['currgame'] == 'tictactoe' or session['currgame'] == 'achtung':
+										if toinv._balance >= 5:
+											join_request = f"{flask_login.current_user.username} | {session['currgame']} | {session['chatID']}"
+											emit("join_request", join_request, room = toinv._session_id)
+
+										else:
+											emit('private_message', f"User : {toinv.username} can't afford to play!")
 								else:
 									emit('private_message', f"User : {toinv.username} is not online!")
 							else:
-								emit('private_message', f"Invalid User : {name} !")
+								emit('private_message', f"Can't invite yourself!")
 						else:
-							emit('private_message', "Invalid /inv format! Try: /inv [name]")
+							emit('private_message', f"Invalid User : {name} !")
 					else:
-						emit('private_message', "Only the host can invite players!")
+						emit('private_message', "Invalid /inv format! Try: /inv [name]")
+				else:
+					emit('private_message', "Only the host can invite players!")
 
 
 		# Balance Command:
@@ -146,9 +153,10 @@ def handle_game_message(msg):
 				emit('private_message', "Invalid /tip format! Try: /tip [user] [amount]")
 
 		# Help Command:		
-		if refined_msg[0] == "/help" or refined_msg[0] == "/?":
+		elif refined_msg[0] == "/help" or refined_msg[0] == "/?":
 			permissions = "User: /help ; /? ; /tip ; /bal ; /balance ; /w ; /tts ; /inv ; /invite"
 			emit("private_message", permissions)
+			print("xd")
 			
 		# Invalid Command:
 		
@@ -177,20 +185,40 @@ def handle_game_choose(game):
 			session['bullets'] = flask_login.current_user._balance
 		else:
 			enough_money = False
+	elif game == "tictactoe":
+		if flask_login.current_user._balance >= 5:
+			flask_login.current_user._balance -= 5
+			session['bullets'] = flask_login.current_user._balance
+		else:
+			enough_money = False
+	elif game == "achtung":
+		if flask_login.current_user._balance >= 5:
+			flask_login.current_user._balance -= 5
+			session['bullets'] = flask_login.current_user._balance
+		else:
+			enough_money = False
+	elif game == "breakout":
+		if flask_login.current_user._balance >= 5:
+			flask_login.current_user._balance -= 5
+			session['bullets'] = flask_login.current_user._balance
+		else:
+			enough_money = False
+
 	
 	if enough_money:
-		session['currgame'] = game
-		letters = string.ascii_letters
-		curr_game = metro_game(string_id = None, game_name=game, owner_id = flask_login.current_user.id)
-		curr_game.string_id = ''.join(random.choice(letters) for i in range(10))
-		db.session.add(curr_game)
-		db.session.commit()
-		curr_game.string_id += str(curr_game.id)
-		curr_game.user_list.append(flask_login.current_user)
-		db.session.commit()
-		leave_room(session['chatID'])
-		session['chatID'] = curr_game.string_id
-		join_room(session['chatID'])
+		if game:
+			session['currgame'] = game
+			letters = string.ascii_letters
+			curr_game = metro_game(string_id = None, game_name=game, owner_id = flask_login.current_user.id)
+			curr_game.string_id = ''.join(random.choice(letters) for i in range(10))
+			db.session.add(curr_game)
+			db.session.commit()
+			curr_game.string_id += str(curr_game.id)
+			curr_game.user_list.append(flask_login.current_user)
+			db.session.commit()
+			leave_room(session['chatID'])
+			session['chatID'] = curr_game.string_id
+			join_room(session['chatID'])
 
 @socketio.on("game_win")
 def handle_game_won(game):
@@ -198,6 +226,12 @@ def handle_game_won(game):
 		flask_login.current_user._balance += 10
 	elif game == "snake":
 		flask_login.current_user._balance += 5
+	elif game == "breakout":
+		flask_login.current_user._balance += 10
+	elif game == "tictactoe":
+		flask_login.current_user._balance += 10
+	elif game == "achtung":
+		flask_login.current_user._balance += 20
 
 	session['bullets'] = flask_login.current_user._balance
 	db.session.commit()
@@ -234,7 +268,7 @@ def handle_game_started(msg):
 @socketio.on("game_update")
 def handle_game_update(cmd):
 	if curr_game := metro_game.query.filter_by(string_id = session['chatID']).first():
-		emit("game_update", cmd, room= session['chatID'])
+		emit("game_update", cmd, room=session['chatID'])
 	
 @socketio.on("score_update")
 def handle_score_update(cmd):
@@ -253,20 +287,35 @@ def recv_private_chatname(msg):
 				if msg[1][1:-1] == "pong":
 					flask_login.current_user._balance -= 5
 					session['bullets'] = flask_login.current_user._balance
-				
+
+				elif msg[1][1:-1] == "breakout":
+					flask_login.current_user._balance -= 5
+					session['bullets'] = flask_login.current_user._balance
+
+				elif msg[1][1:-1] == "tictactoe":
+					flask_login.current_user._balance -= 5
+					session['bullets'] = flask_login.current_user._balance
+			
+				elif msg[1][1:-1] == "achtung":
+					flask_login.current_user._balance -= 5
+					session['bullets'] = flask_login.current_user._balance
+			
 				curr_game.user_list.append(flask_login.current_user)
 				leave_room(session['chatID'])
 				session['chatID'] = cid
 				join_room(session['chatID'])
-				session['currgame'] = msg[1][1:-1]
+				if len(msg[1][1:-1]) > 0:
+					session['currgame'] = msg[1][1:-1]
+
 				emit("game_message", f"{flask_login.current_user.username} has joined the game!", room=session['chatID'])
+				emit("player_joined",flask_login.current_user.username, room = session['chatID'])
 
 @socketio.on("allow_start")
 def handle_allow_start(msg):
 	if curr_game := metro_game.query.filter_by(string_id=session['chatID']).first():
 		if flask_login.current_user in curr_game.user_list:
 			if flask_login.current_user.id == curr_game.owner_id:
-				if session['currgame'] == "pong":
+				if session['currgame'] == "pong" or session['currgame'] == "tictactoe":
 					length = 0
 					for member in curr_game.user_list:
 						length += 1
@@ -274,8 +323,25 @@ def handle_allow_start(msg):
 						emit('allow_start', "true", room=session['chatID'])
 					else:
 						emit('private_message', f"Insufficient Players! {length}/2, try /inv [name]!")
+				elif session['currgame'] == "achtung":
+					length = 0
+					for member in curr_game.user_list:
+						length += 1
+					if length == 4:
+						emit('allow_start', "true", room=session['chatID'])
+					else:
+						emit('private_message', f"Insufficient Players! {length}/4, try /inv [name]!")				
+
 				else:
 					emit('allow_start', "true", room=session['chatID'])
 			else:
 				emit('private_message', f"Only the host can start the game!")
-				
+
+@socketio.on("request_players")
+def handle_request_players():
+	if curr_game := metro_game.query.filter_by(string_id=session['chatID']).first():
+		for member in curr_game.user_list:
+			if member.id == curr_game.owner_id:
+				emit("player_joined",member.username + " (HOST)", room = flask_login.current_user._session_id)
+			else:
+				emit("player_joined",member.username, room = flask_login.current_user._session_id)

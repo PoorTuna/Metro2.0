@@ -296,7 +296,6 @@ def handle_message(msg):
 # Socket IO change chat handler
 @socketio.on('join_private')
 def recv_private_chatname(cid):
-	print(type(cid),cid, session)
 	if cid != "general":
 		if curr_chat := metro_chat.query.filter_by(string_id = cid).first():
 			if flask_login.current_user in curr_chat.chat_backref:

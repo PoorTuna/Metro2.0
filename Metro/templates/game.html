@@ -45,15 +45,6 @@
 					<td>1</td>
 				</tr>
 
-				<!-- Arm Wrestling : -->
-				<tr class="table-dark" onclick="choose_game('armwrestle')">
-					<th scope="row">GAME IMG</th>
-					<td>Arm Wrestling</td>
-					<td>5B</td>
-					<td>10B</td>
-					<td>2</td>
-				</tr>
-
 				<!-- Breakout : -->
 				<tr class="table-dark" onclick="choose_game('breakout')">
 					<th scope="row">GAME IMG</th>
@@ -73,7 +64,7 @@
 				</tr>
 
 				<!-- TicTacToe : -->
-				<tr class="table-dark" onclick="choose_game('tictac')">
+				<tr class="table-dark" onclick="choose_game('tictactoe')">
 					<th scope="row">GAME IMG</th>
 					<td>Tic Tac Toe</td>
 					<td>5B</td>
@@ -156,18 +147,23 @@
 
 				</tr>
 				<tr>
-					<td id="players" style="background-color:var(--metro_secondary);color:var(--metro_energy);padding-bottom: 1%;">Current Players:
+					<td  style="background-color:var(--metro_secondary);color:var(--metro_primary);padding-bottom:0%">Current Players:
 					</td>
+				</tr>
+				<tr>
+					<td id="players" style="background-color:var(--metro_accents);color:var(--metro_energy)"></td>
+					
 				</tr>
 		</table>
 
 	</div>
 
-</div>
-
+	</div>
+	<script> socket.emit("request_players");</script>
 
 <!-- Game Started : -->
 {% else %}
+
 	<!-- Game Box -->
 	<div class="gamebox-game" style="color:var(--metro_energy);background-color:var(--metro_accents)">
 		<table class="table table-hover" style="background-color:var(--metro_accents);margin:0">
@@ -178,17 +174,45 @@
 
 		<canvas id="mycan" style="border:1px;border-style:solid;border-color:var(--metro_energy);background-color: var(--metro_accents);width: 100%;height: 90%; margin:0;"></canvas>
 		
-		<span style="color:var(--metro_energy);display:none" id="funny">Lmao</span>
-		<span style="color:var(--metro_tertiary);display:none" id="funny2">Lmao</span>
+		<span style="color:var(--metro_energy);display:none" id="color"></span>
+		<span style="color:var(--metro_tertiary);display:none" id="color2"></span>
+		<span style="color:var(--metro_primary);display:none" id="color3"></span>
+		<span style="color:var(--metro_emissive);display:none" id="color4"></span>
+
 		<div>
 				
 			{% if session['currgame'] == "pong" %}
+			<audio autoplay loop autoplay="autoplay" id="metro_ambience" src="{{url_for('static',filename = 'assets/audio/pong1.mp3')}}" style="display:hidden"></audio>
+			<audio autoplay loop autoplay="autoplay" id="metro_ambience2" src="{{url_for('static',filename = 'assets/audio/pong2.mp3')}}" style="display:hidden"></audio>
+	
 			<p style="color:var(--metro_energy);float:left;margin-left:1%" id="score1">Player 1 Score : <span id="p1score">0</span></p>
 			<p style="color:var(--metro_energy);text-align:right;overflow:hidden;text-align:right;margin-right:1%" id="score2">Player 2 Score : <span id="p2score">0</span></p>
 			{% elif session['currgame'] == "snake" %}
+			<audio autoplay loop autoplay="autoplay" id="metro_ambience" src="{{url_for('static',filename = 'assets/audio/snake1.mp3')}}" style="display:hidden"></audio>
+			<audio autoplay loop autoplay="autoplay" id="metro_ambience2" src="{{url_for('static',filename = 'assets/audio/snake2.mp3')}}" style="display:hidden"></audio>
+
 			<p style="color:var(--metro_energy);float:left;margin-left:1%" id="score1">Player Score : <span id="pscore">0</span> </p>
+			
+			{% elif session['currgame'] == "achtung" %}
+			<audio autoplay loop autoplay="autoplay" id="metro_ambience" src="{{url_for('static',filename = 'assets/audio/achtung1.mp3')}}" style="display:hidden"></audio>
+			<audio autoplay loop autoplay="autoplay" id="metro_ambience2" src="{{url_for('static',filename = 'assets/audio/achtung2.mp3')}}" style="display:hidden"></audio>
+
+			<p style="color:var(--metro_energy);float:left;margin-left:1%" id="score1">Player 1 Score : <span id="p1score">0</span></p>
+			<p style="color:var(--metro_tertiary);overflow:hidden;margin-right:20%;" id="score2">Player 2 Score : <span id="p2score">0</span></p>
+			<p style="color:var(--metro_primary);overflow:hidden;margin-right:20%;" id="score3">Player 3 Score : <span id="p3score">0</span></p>
+			<p style="color:var(--metro_emissive);overflow:hidden;margin-right:20%;" id="score4">Player 4 Score : <span id="p4score">0</span></p>
+			
+			{% elif session['currgame'] == "breakout" %}
+			<audio autoplay loop autoplay="autoplay" id="metro_ambience" src="{{url_for('static',filename = 'assets/audio/breakout1.mp3')}}" style="display:hidden"></audio>
+			<audio autoplay loop autoplay="autoplay" id="metro_ambience2" src="{{url_for('static',filename = 'assets/audio/breakout2.mp3')}}" style="display:hidden"></audio>
+
+			<p style="color:var(--metro_energy);float:left;margin-left:1%" id="pscore">Score : <span id="score">0</span></p>
+			<p style="color:var(--metro_energy);text-align:right;overflow:hidden;text-align:right;margin-right:1%" id="plives">Lives : <span id="lives">0</span></p>
+			{% elif session['currgame'] == "tictactoe" %}
+			<audio autoplay loop autoplay="autoplay" id="metro_ambience" src="{{url_for('static',filename = 'assets/audio/tictactoe1.mp3')}}" style="display:hidden"></audio>
+			<audio autoplay loop autoplay="autoplay" id="metro_ambience2" src="{{url_for('static',filename = 'assets/audio/tictactoe2.mp3')}}" style="display:hidden"></audio>
 			{% else %}
-			<p>funny</p>
+			<p></p>
 
 			{% endif %}
 
@@ -207,8 +231,12 @@
 
 					</tr>
 					<tr>
-						<td id="players" style="background-color:var(--metro_accents);color:var(--metro_energy);padding-bottom: 1%;">Current Players:
+						<td  style="background-color:var(--metro_secondary);color:var(--metro_primary);padding-bottom:0%">Current Players:
 						</td>
+					</tr>
+					<tr>
+						<td id="players" style="background-color:var(--metro_accents);color:var(--metro_energy)"></td>
+						
 					</tr>
 			</table>
 		</div>
@@ -228,8 +256,10 @@
 
 		</div>
 	</div>
-
-<script src="{{url_for('static',filename = 'js/games/' +session['currgame']+ '.js')}}"></script>
+	<script> socket.emit("request_players");</script>
+	<script src="{{url_for('static',filename = 'js/games/' +session['currgame']+ '.js')}}"></script>
+	<script src="{{url_for('static',filename = 'js/playaudio.js')}}"></script>
+	
 
 {% endif %}
 {% endblock %}

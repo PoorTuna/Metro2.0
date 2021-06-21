@@ -23,8 +23,8 @@ socket.on("game_player_position", function(cmd){
 const scale = 20;
 const rows = Math.trunc(canvas.width / scale); // realised it's the other way around
 const columns = Math.trunc(canvas.height / scale);
-const playerColor = window.getComputedStyle(document.getElementById("funny")).getPropertyValue('color');
-const ballColor = window.getComputedStyle(document.getElementById("funny2")).getPropertyValue('color');
+const playerColor = window.getComputedStyle(document.getElementById("color")).getPropertyValue('color');
+const ballColor = window.getComputedStyle(document.getElementById("color2")).getPropertyValue('color');
 
 var player; 
 // Player Object
@@ -147,7 +147,7 @@ function check_win(){
 		// call player 2 lost
 		ball.xSpeed = scale * -1;
 		if(curr_player == "1"){
-		socket.emit("score_update", "1")
+		socket.emit("score_update", "1");
 		}
 		
 		ball.resetLocation();
@@ -156,7 +156,7 @@ function check_win(){
 		// call player 1 lost
 		ball.xSpeed = scale;
 		if(curr_player == "1"){
-		socket.emit("score_update", "2")
+		socket.emit("score_update", "2");
 		}
 
 		ball.resetLocation();
@@ -188,14 +188,14 @@ function pongLost(){
 	//Eating function
 	alert("You Lost! your score was:" + player.score);
 		exit_game('exit')
-		location.reload();
+		setTimeout(function(){ location.reload(true); }, 1000);
 }
 function pongWin(){
 	//Eating function
 	socket.emit("game_win", "pong");
 	exit_game('exit');
 	alert("You Won! your score was:" + player.score);
-	location.reload();
+	setTimeout(function(){ location.reload(true); }, 1000);
 	player.score = 0;
 	player2.score = 0;
 }

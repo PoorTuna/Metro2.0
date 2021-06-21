@@ -8,8 +8,8 @@ var ctx = canvas.getContext("2d");
 const scale = 20;
 const rows = canvas.width / scale;
 const columns = canvas.height / scale;
-const snakeColor = window.getComputedStyle(document.getElementById("funny")).getPropertyValue('color');
-const fruitColor = window.getComputedStyle(document.getElementById("funny2")).getPropertyValue('color');
+const snakeColor = window.getComputedStyle(document.getElementById("color")).getPropertyValue('color');
+const fruitColor = window.getComputedStyle(document.getElementById("color2")).getPropertyValue('color');
 var snake_score = document.getElementById("pscore");
 
 var snake; 
@@ -137,6 +137,8 @@ function snakeLost(){
 	alert("You Lost! your score was:" + snake.total);
 	location.reload();
 	snake.total = 0;
+	snake.x = scale * 10;
+	snake.y = scale * 10;
 }
 function snakeWin(){
 	socket.emit("game_win", "snake");
@@ -144,6 +146,8 @@ function snakeWin(){
 	alert("You Won! your score was:" + snake.total);
 	location.reload();
 	snake.total = 0;
+	snake.x = scale * 10;
+	snake.y = scale * 10;
 
 	//socket stuff goes here and in snakelost
 }

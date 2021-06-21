@@ -24,3 +24,5 @@ def metro_send_mail(user, code):
 	with smtplib.SMTP_SSL('smtp.gmail.com',465) as smtp: #Added Gmails SMTP Server
 			smtp.login(EmailAdd,Pass) #This command authenticates SMTP Library using a gmail account
 			smtp.send_message(msg) #This line sends the packet
+
+			

@@ -2,6 +2,10 @@
 {%block title%}MetroFeatures{%endblock%}
 
 {%block content%}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<script src="{{url_for('static',filename = 'js/game-sockets.js')}}"></script>
 
 <link rel="stylesheet"  type = "text/css" href="{{url_for('static',filename = 'css/games.css')}}">
 	<!-- Game Box -->
@@ -12,22 +16,17 @@
 				</tr>
 		</table>
 		<canvas id="mycan" style="border:1px;border-style:solid;border-color:var(--metro_energy);background-color: var(--metro_accents);width: 100%;height: 90%; margin:0;"></canvas>
-		<span style="color:var(--metro_energy);display:none" id="funny">Lmao</span>
-		<span style="color:var(--metro_tertiary);display:none" id="funny2">Lmao</span>
-		<div>
-		{% if session['game'] == "pong" %}
-		<p style="color:var(--metro_energy);float:left;margin-left:1%" id="score1">Player 1 Score : </p>
-		<p style="color:var(--metro_energy);text-align:right;overflow:hidden;text-align:right;margin-right:1%" id="score2">Player 2 Score : </p>
-		{% elif session['game'] == "snake" %}
-		<p style="color:var(--metro_energy);float:left;margin-left:1%" id="score1">Player Score : </p>
-		{% else %}
-		<p>funny</p>
+		<span style="color:var(--metro_energy);display:none" id="color"></span>
+		<span style="color:var(--metro_tertiary);display:none" id="color2"></span>
+		<span style="color:var(--metro_primary);display:none" id="color3"></span>
+		<span style="color:var(--metro_emissive);display:none" id="color4"></span>
+		<span id="myMessage" style="color:var(--metro_emissive);display:none" id="xd"></span>
 
-		{% endif %}
+		<p style="color:var(--metro_energy);float:left;margin-left:1%" id="pscore">Score : <span id="score">0</span></p>
+		<p style="color:var(--metro_energy);text-align:right;overflow:hidden;text-align:right;margin-right:1%" id="plives">Lives : <span id="lives">0</span></p>
 
-		</div>
 	</div>
-<script src="{{url_for('static',filename = 'js/games/pong.js')}}"></script>
+<script src='/static/js/games/breakout.js'></script>
 
 
 {%endblock%}
