@@ -201,9 +201,6 @@ def register():
 		return render_template("register.html")
 	return redirect(url_for("index"))
 
-@app.route("/features")
-def features():
-	return render_template("features.html")
 
 @app.route("/support/")
 def support():

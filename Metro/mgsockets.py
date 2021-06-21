@@ -156,7 +156,6 @@ def handle_game_message(msg):
 		elif refined_msg[0] == "/help" or refined_msg[0] == "/?":
 			permissions = "User: /help ; /? ; /tip ; /bal ; /balance ; /w ; /tts ; /inv ; /invite"
 			emit("private_message", permissions)
-			print("xd")
 			
 		# Invalid Command:
 		
